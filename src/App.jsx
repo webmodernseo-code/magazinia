@@ -10,7 +10,7 @@ import { BookOpen, Play, Calendar, Search, Sparkles, Cpu, Award } from 'lucide-r
 
 function App() {
   const [dbData, setDbData] = useState(magazineData);
-  const [activeCategory, setActiveCategory] = useState('ia-tech');
+  const [activeCategory, setActiveCategory] = useState('qhse-humain');
   const [timeFilter, setTimeFilter] = useState('week'); // 'today' | 'week' | 'all' | 'archives'
   const [formatFilter, setFormatFilter] = useState('all'); // 'all' | 'videos' | 'articles'
   const [activeTagFilter, setActiveTagFilter] = useState('Tous'); // subcategory tag filter
@@ -43,29 +43,35 @@ function App() {
           return;
         }
 
-        // Reconstruct the magazineData structure dynamically
+        // Reconstruct the magazineData structure dynamically around 5 QHSE pillars
         const newData = {
-          "ia-tech": {
-            label: "IA & Tech",
-            description: "Curation éditoriale sur l'Intelligence Artificielle, le Vibecoding et l'automatisation avancée.",
+          "qhse-humain": {
+            label: "Humain & FOF",
+            description: "Comprendre comment les comportements humains influencent la sécurité, la qualité et la performance.",
             items: [],
             archives: []
           },
-          "bourse-brvm": {
-            label: "Bourse BRVM",
-            description: "Analyses financières et opportunités d'investissement sur la Bourse Régionale des Valeurs Mobilières (UEMOA).",
+          "qhse-risques": {
+            label: "Risques & Fiabilité",
+            description: "Comprendre comment construire des organisations sûres, robustes et résilientes.",
             items: [],
             archives: []
           },
-          "risques-atex": {
-            label: "Risques ATEX",
-            description: "Prévention technique, sécurité industrielle et conformité réglementaire concernant les Atmosphères Explosives.",
+          "qhse-performance": {
+            label: "Performance & Qualité",
+            description: "Comprendre comment améliorer durablement les processus et la performance.",
             items: [],
             archives: []
           },
-          "entreprendre-usa": {
-            label: "Entreprendre USA",
-            description: "Tendances entrepreneuriales aux États-Unis transposables aux marchés africains et européens.",
+          "qhse-science": {
+            label: "Science & Données",
+            description: "Comprendre comment les sciences et technologies transforment le métier QHSE.",
+            items: [],
+            archives: []
+          },
+          "qhse-strategie": {
+            label: "Stratégie & Environnement",
+            description: "Comprendre les transformations économiques, environnementales et industrielles.",
             items: [],
             archives: []
           }
@@ -80,11 +86,19 @@ function App() {
           content: row.content,
           thumbnail: row.thumbnail,
           author: row.author,
+          authorOrg: row.author_org || '',
           publishedAt: row.published_at,
           readTime: row.read_time,
-          points: row.points || [],
           url: row.url,
-          isProtected: row.is_protected
+          isProtected: row.is_protected,
+          ideas: row.ideas || [],
+          concepts: row.concepts || [],
+          methods: row.methods || [],
+          whyImportant: row.why_important || '',
+          businessApps: row.business_apps || '',
+          relatedConcepts: row.related_concepts || [],
+          expertiseLevel: row.expertise_level || 'Tous niveaux',
+          qhseScore: Number(row.qhse_score) || 8.0
         });
 
         const mapVideo = (row) => ({
@@ -96,12 +110,18 @@ function App() {
           content: row.content,
           thumbnail: row.thumbnail,
           author: row.author,
+          authorOrg: row.author_org || '',
           publishedAt: row.published_at,
-          views: row.views,
-          points: row.points || [],
+          duration: row.duration,
           url: row.url,
           videoId: row.video_id,
-          localUrl: row.local_url
+          localUrl: row.local_url,
+          learnings: row.learnings || [],
+          concepts: row.concepts || [],
+          whyImportant: row.why_important || '',
+          businessApps: row.business_apps || '',
+          expertiseLevel: row.expertise_level || 'Tous niveaux',
+          qhseScore: Number(row.qhse_score) || 8.0
         });
 
         articles.forEach(row => {
@@ -129,7 +149,7 @@ function App() {
         });
 
         setDbData(newData);
-        console.log("Données de veille chargées avec succès depuis Supabase !");
+        console.log("Données de veille QHSE chargées avec succès depuis Supabase !");
       } catch (err) {
         console.error("Erreur lors de la récupération des données de Supabase. Mode local actif :", err);
       }
@@ -145,11 +165,12 @@ function App() {
 
   const getAccentColor = (key) => {
     switch (key) {
-      case 'ia-tech': return '#2BB373';
-      case 'bourse-brvm': return '#F59E0B';
-      case 'risques-atex': return '#F97316';
-      case 'entreprendre-usa': return '#3B82F6';
-      default: return '#2BB373';
+      case 'qhse-humain': return '#8B5CF6';
+      case 'qhse-risques': return '#EF4444';
+      case 'qhse-performance': return '#10B981';
+      case 'qhse-science': return '#3B82F6';
+      case 'qhse-strategie': return '#F59E0B';
+      default: return '#10B981';
     }
   };
 
@@ -200,8 +221,8 @@ function App() {
         avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80",
         publishedAt: "Éditorial de Juillet 2026",
         thumbnail: "https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?auto=format&fit=crop&w=800&q=80",
-        summary: "Découvrez notre mission, notre méthodologie de curation intelligente et l'équipe derrière le média leader en veille stratégique.",
-        content: `### NOTRE MISSION\nDans un monde saturé d'informations, le bruit visuel et rédactionnel empêche les professionnels de se concentrer sur ce qui compte vraiment. La mission de Magazine IA est d'offrir un filtre ultra-sélectif. Nous ne retenons que les 3 meilleures vidéos et les 3 meilleurs articles par thématique clé.\n\n### NOS THÉMATIQUES CLÉS\nNous couvrons des sujets à fort impact pour les décideurs et entrepreneurs du futur :\n- **IA & Tech** : Suivi des agents autonomes, du vibecoding et de l'automatisation avancée.\n- **Bourse BRVM** : Décryptage financier du marché régional ouest-africain (UEMOA) pour guider les investisseurs.\n- **Risques Industriels & ATEX** : Prévention technique et réglementaire pour les ingénieurs en sécurité.\n- **Entreprendre USA** : Analyse des tendances business d'outre-Atlantique transposables à l'international.\n\n### NOTRE MÉTHODOLOGIE\nNotre équipe, secondée par des algorithmes d'analyse sémantique, extrait quotidiennement des centaines de sources YouTube et médias de presse. Chaque contenu sélectionné fait l'objet d'une réécriture éditoriale de son titre pour en dégager l'intérêt business immédiat, accompagné d'un résumé succinct en deux lignes.`
+        summary: "Découvrez notre mission, notre méthodologie de curation scientifique et l'équipe derrière le média leader en veille stratégique QHSE.",
+        content: `### NOTRE MISSION\nDans un monde industriel et technologique en constante évolution, les professionnels de la Qualité, de l'Hygiène, de la Sécurité et de l'Environnement (QHSE) ont besoin de s'appuyer sur des connaissances solides, validées scientifiquement et directement applicables sur le terrain. La mission de Veille.IA QHSE est d'offrir un filtre ultra-sélectif pour extraire la substantifique moelle de la recherche et des conférences spécialisées.\n\n### NOS 5 PILIERS CLÉS\nNous structurons nos curations scientifiques et techniques autour de 5 piliers fondamentaux :\n- **Pilier 1 : L'Humain & FOF** : Analyse des comportements, culture sécurité, leadership et psychologie du travail.\n- **Pilier 2 : Risques & Fiabilité** : Méthodologies d'analyse de risques (HAZOP, AMDEC, RCA) et résilience.\n- **Pilier 3 : Performance & Qualité** : Lean management, excellence opérationnelle, normes ISO 9001.\n- **Pilier 4 : Science & Données** : Applications de l'IA, data analytics, IoT et maintenance prédictive.\n- **Pilier 5 : Stratégie & Environnement** : ISO 14001, transition écologique, critères ESG et économie circulaire.\n\n### NOTRE MÉTHODOLOGIE\nNotre équipe, secondée par des outils d'analyse sémantique, extrait quotidiennement des revues scientifiques internationales, des publications universitaires et des conférences de référence (INRS, ICSI, ADEME, etc.). Chaque ressource retenue fait l'objet d'une analyse rigoureuse (synthèse d'idées, concepts clés, méthodes) et reçoit une notation stricte sur 10 basée sur sa rigueur scientifique et son utilité opérationnelle.`
       }
     };
     
@@ -211,11 +232,12 @@ function App() {
   };
 
   const getHeroTitle = () => {
-    let subject = "IA & Tech";
-    if (activeCategory === 'ia-tech') subject = "IA & Tech";
-    else if (activeCategory === 'bourse-brvm') subject = "Bourse BRVM";
-    else if (activeCategory === 'risques-atex') subject = "Risques ATEX";
-    else if (activeCategory === 'entreprendre-usa') subject = "Entreprendre USA";
+    let subject = "Humain & FOF";
+    if (activeCategory === 'qhse-humain') subject = "Humain & FOF";
+    else if (activeCategory === 'qhse-risques') subject = "Risques & Fiabilité";
+    else if (activeCategory === 'qhse-performance') subject = "Performance & Qualité";
+    else if (activeCategory === 'qhse-science') subject = "Science & Données";
+    else if (activeCategory === 'qhse-strategie') subject = "Stratégie & Environnement";
 
     return (
       <>

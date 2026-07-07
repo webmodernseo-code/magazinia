@@ -17,69 +17,65 @@ export default function Header({
 
   const getAccentColor = (key) => {
     switch (key) {
-      case 'ia-tech': return '#2BB373';
-      case 'bourse-brvm': return '#F59E0B';
-      case 'risques-atex': return '#F97316';
-      case 'entreprendre-usa': return '#3B82F6';
-      default: return '#2BB373';
+      case 'qhse-humain': return '#8B5CF6';
+      case 'qhse-risques': return '#EF4444';
+      case 'qhse-performance': return '#10B981';
+      case 'qhse-science': return '#3B82F6';
+      case 'qhse-strategie': return '#F59E0B';
+      default: return '#10B981';
     }
   };
 
   const getAccentBg = (key) => {
     switch (key) {
-      case 'ia-tech': return 'bg-[#2BB373]';
-      case 'bourse-brvm': return 'bg-[#F59E0B]';
-      case 'risques-atex': return 'bg-[#F97316]';
-      case 'entreprendre-usa': return 'bg-[#3B82F6]';
-      default: return 'bg-[#2BB373]';
+      case 'qhse-humain': return 'bg-[#8B5CF6]';
+      case 'qhse-risques': return 'bg-[#EF4444]';
+      case 'qhse-performance': return 'bg-[#10B981]';
+      case 'qhse-science': return 'bg-[#3B82F6]';
+      case 'qhse-strategie': return 'bg-[#F59E0B]';
+      default: return 'bg-[#10B981]';
     }
   };
 
   const getAccentShadow = (key) => {
     switch (key) {
-      case 'ia-tech': return 'shadow-[0_2px_10px_rgba(43,179,115,0.2)]';
-      case 'bourse-brvm': return 'shadow-[0_2px_10px_rgba(245,158,11,0.2)]';
-      case 'risques-atex': return 'shadow-[0_2px_10px_rgba(249,115,22,0.2)]';
-      case 'entreprendre-usa': return 'shadow-[0_2px_10px_rgba(59,130,246,0.2)]';
-      default: return 'shadow-[0_2px_10px_rgba(43,179,115,0.2)]';
+      case 'qhse-humain': return 'shadow-[0_2px_10px_rgba(139,92,246,0.2)]';
+      case 'qhse-risques': return 'shadow-[0_2px_10px_rgba(239,68,68,0.2)]';
+      case 'qhse-performance': return 'shadow-[0_2px_10px_rgba(16,185,129,0.2)]';
+      case 'qhse-science': return 'shadow-[0_2px_10px_rgba(59,130,246,0.2)]';
+      case 'qhse-strategie': return 'shadow-[0_2px_10px_rgba(245,158,11,0.2)]';
+      default: return 'shadow-[0_2px_10px_rgba(16,185,129,0.2)]';
     }
   };
 
   const getAccentHoverBg = (key) => {
     switch (key) {
-      case 'ia-tech': return 'hover:bg-[#228f5c]';
-      case 'bourse-brvm': return 'hover:bg-[#d97706]';
-      case 'risques-atex': return 'hover:bg-[#ea580c]';
-      case 'entreprendre-usa': return 'hover:bg-[#2563eb]';
-      default: return 'hover:bg-[#228f5c]';
+      case 'qhse-humain': return 'hover:bg-[#7c3aed]';
+      case 'qhse-risques': return 'hover:bg-[#dc2626]';
+      case 'qhse-performance': return 'hover:bg-[#059669]';
+      case 'qhse-science': return 'hover:bg-[#2563eb]';
+      case 'qhse-strategie': return 'hover:bg-[#d97706]';
+      default: return 'hover:bg-[#059669]';
     }
   };
 
   const getLogoText = (key) => {
-    switch (key) {
-      case 'ia-tech':
-        return <>magazine<span className="text-[#2BB373] font-black">.</span>ia</>;
-      case 'bourse-brvm':
-        return <>magazine<span className="text-[#F59E0B] font-black">.</span>brvm</>;
-      case 'risques-atex':
-        return <>magazine<span className="text-[#F97316] font-black">.</span>atex</>;
-      case 'entreprendre-usa':
-        return <>magazine<span className="text-[#3B82F6] font-black">.</span>usa</>;
-      default:
-        return <>magazine<span className="text-[#2BB373] font-black">.</span>ia</>;
-    }
+    const color = getAccentColor(key);
+    return <>veille<span style={{ color }} className="font-black">.</span>qhse</>;
   };
 
   const getCategoryIcon = (key) => {
     switch (key) {
-      case 'ia-tech':
-        return <span className="text-sm">🤖</span>;
-      case 'bourse-brvm':
-        return <TrendingUp className="w-3.5 h-3.5 text-[#F59E0B]" />;
-      case 'risques-atex':
-        return <ShieldAlert className="w-3.5 h-3.5 text-[#F97316]" />;
-      case 'entreprendre-usa':
-        return <span className="text-sm">🇺🇸</span>;
+      case 'qhse-humain':
+        return <span className="text-sm">🧠</span>;
+      case 'qhse-risques':
+        return <ShieldAlert className="w-3.5 h-3.5 text-[#EF4444]" />;
+      case 'qhse-performance':
+        return <span className="text-sm">🎯</span>;
+      case 'qhse-science':
+        return <span className="text-sm">💻</span>;
+      case 'qhse-strategie':
+        return <span className="text-sm">🌱</span>;
       default:
         return null;
     }
