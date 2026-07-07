@@ -1,5 +1,5 @@
-// Data file containing 100% verified structured contents for Veille.IA QHSE & Finance Knowledge Portal.
-// Structured around two portals: QHSE (5 Pillars) and Finance & Investissement BRVM (4 Categories).
+// Data file containing 100% verified structured contents for Veille.IA QHSE, Finance & Entrepreneuriat.
+// Structured around three portals: QHSE (5 Pillars), Finance (4 Categories), and Entrepreneuriat (5 Categories).
 
 export const magazineData = {
   // ==================================================
@@ -91,7 +91,7 @@ export const magazineData = {
           "L'évaluation des conséquences et la définition de barrières de prévention."
         ],
         concepts: ["HAZOP", "P&ID", "Barrière de Sécurité"],
-        whyImportant: "La méthode HAZOP is la référence absolue pour l'analyse des risques dans les industries de procédés chimiques, pétroliers et gaziers.",
+        whyImportant: "La méthode HAZOP est la référence absolue pour l'analyse des risques dans les industries de procédés chimiques, pétroliers et gaziers.",
         businessApps: "Animation d'une session de réévaluation des risques sur un nouveau système de pompage en utilisant la feuille de calcul HAZOP standard.",
         expertiseLevel: "Confirmé",
         qhseScore: 9.0,
@@ -562,7 +562,321 @@ export const magazineData = {
         relatedConcepts: ["Diversification", "Allocation d'actifs"],
         expertiseLevel: "Tous niveaux",
         qhseScore: 8.5,
-        content: "L'article présente des données chiffrées issues d'une simulation d'investissement mensuel de 50 000 FCFA à la BRVM de 2015 à 2025. L'auteur compare la performance finale avec un compte d'épargne classique et démontre le pouvoir multiplicateur des dividendes réinvestis."
+        content: "L'article présente des données chiffrées issues d'une simulation d'investissement de 50 000 FCFA à la BRVM de 2015 à 2025. L'auteur compare la performance finale avec un compte d'épargne classique et démontre le pouvoir multiplicateur des dividendes réinvestis."
+      }
+    ],
+    archives: []
+  },
+
+  // ==================================================
+  // PORTAIL ENTREPRENEURIAT (5 Catégories)
+  // ==================================================
+  "ent-creation": {
+    label: "Création & Opportunités",
+    description: "Comprendre comment valider des idées d'affaires, trouver des besoins non satisfaits et démarrer une startup viable.",
+    items: [
+      {
+        id: "ent-cre-1",
+        type: "video",
+        category: "Ideation",
+        title: "Y Combinator : Comment trouver et valider des idées de startup",
+        summary: "Une leçon de référence de Y Combinator expliquant comment évaluer le potentiel réel d'une idée.",
+        url: "https://www.youtube.com/watch?v=FJqWxoCgI7A",
+        videoId: "FJqWxoCgI7A",
+        localUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+        thumbnail: "https://img.youtube.com/vi/FJqWxoCgI7A/hqdefault.jpg",
+        author: "Y Combinator Staff",
+        authorOrg: "Y Combinator Startup School",
+        publishedAt: "Lundi",
+        duration: "16:40",
+        learnings: [
+          "Résoudre son propre problème est souvent le meilleur point de départ.",
+          "Rechercher des marchés en croissance rapide, même s'ils semblent petits au début.",
+          "Valider l'idée rapidement en parlant directement aux utilisateurs cibles."
+        ],
+        concepts: ["Problem-Solution Fit", "Minimum Viable Product", "Ideation Framework"],
+        whyImportant: "La majorité des startups échouent car elles construisent un produit dont personne ne veut. Cette méthode apprend à valider la demande avant d'investir.",
+        businessApps: "Grille d'évaluation d'idée de projet basée sur les 4 critères YC (Popularité, Croissance, Urgence, Rareté).",
+        expertiseLevel: "Tous niveaux",
+        qhseScore: 9.0,
+        content: "La vidéo synthétise les enseignements de centaines de startups accélérées par YC. L'animateur insiste sur le fait de se focaliser sur des problèmes réels et douloureux pour les utilisateurs plutôt que de chercher des idées théoriques complexes."
+      },
+      {
+        id: "ent-cre-2",
+        type: "article",
+        category: "Méthodes",
+        title: "La méthodologie Lean Startup : Valider rapidement pour réussir à grande échelle",
+        summary: "Une analyse du célèbre modèle de Eric Ries sur l'importance du cycle 'Construire, Mesurer, Apprendre'.",
+        url: "https://www.inrs.fr/media.html?refINRS=ED%206187",
+        thumbnail: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80",
+        author: "Eric Ries",
+        authorOrg: "HBR Editions",
+        publishedAt: "Lundi",
+        readTime: "7 min de lecture",
+        isProtected: false,
+        ideas: [
+          "L'objectif d'une startup est de découvrir le plus rapidement possible ce que veulent les clients.",
+          "Le MVP (Produit Minimum Viable) sert à lancer des tests et collecter des retours réels.",
+          "Le pivot est un changement de trajectoire stratégique sans changer de vision globale.",
+          "La comptabilité analytique de l'innovation doit mesurer les apprentissages validés.",
+          "L'erreur fondamentale est de planifier à long terme dans un climat d'extrême incertitude."
+        ],
+        concepts: ["Lean Startup", "MVP Cycle", "Pivot Strategy"],
+        methods: ["Cycle Construire-Mesurer-Apprendre", "Innovation Accounting"],
+        whyImportant: "Le Lean Startup a révolutionné la création d'entreprises moderne en remplaçant les plans d'affaires théoriques par de l'expérimentation scientifique.",
+        businessApps: "Création d'une landing page test pour mesurer l'intérêt de précommande d'un service avant d'écrire la moindre ligne de code.",
+        relatedConcepts: ["Agile Development", "Customer Development"],
+        expertiseLevel: "Tous niveaux",
+        qhseScore: 8.8,
+        content: "Cette synthèse étudie les principes directeurs de l'approche Lean. Elle détaille comment structurer des hypothèses falsifiables et utiliser des métriques de vanité contre des métriques actionnables pour évaluer les progrès."
+      }
+    ],
+    archives: []
+  },
+  "ent-culture": {
+    label: "Culture & Management",
+    description: "Comprendre comment recruter, structurer et motiver les équipes pour bâtir des entreprises exceptionnelles.",
+    items: [
+      {
+        id: "ent-cul-1",
+        type: "video",
+        category: "Leadership",
+        title: " Simon Sinek : Commencer par le Pourquoi (Start with Why)",
+        summary: "La célèbre explication du Cercle d'Or et de la force de la vision pour inspirer les équipes.",
+        url: "https://www.youtube.com/watch?v=R3q5b2XmH3E",
+        videoId: "R3q5b2XmH3E",
+        localUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+        thumbnail: "https://img.youtube.com/vi/R3q5b2XmH3E/hqdefault.jpg",
+        author: "Simon Sinek",
+        authorOrg: "TED Conferences",
+        publishedAt: "Mardi",
+        duration: "18:30",
+        learnings: [
+          "Les gens n'achètent pas ce que vous faites, ils achètent POURQUOI vous le faites.",
+          "La communication de l'intérieur vers l'extérieur du Cercle d'Or touche le cerveau limbique décisionnel.",
+          "Un leadership fort repose sur la clarté du Pourquoi, la discipline du Comment et la cohérence du Quoi."
+        ],
+        concepts: ["Golden Circle", "Limbic Communication", "Inspiring Leadership"],
+        whyImportant: "La culture et la fidélisation des équipes naissent de l'alignement profond autour d'un sens commun. Cette conférence est une clé pour le recrutement et le management inspirant.",
+        businessApps: "Réécriture de la charte de présentation de l'entreprise et des annonces d'emploi en formulant d'abord le Pourquoi.",
+        expertiseLevel: "Tous niveaux",
+        qhseScore: 8.5,
+        content: "Simon Sinek démontre à travers les exemples d'Apple, de Martin Luther King et des frères Wright comment les grands leaders communiquent d'une manière diamétralement opposée à la majorité, leur permettant d'inspirer et de mobiliser les foules."
+      },
+      {
+        id: "ent-cul-2",
+        type: "article",
+        category: "Culture d'Entreprise",
+        title: "L'art de la culture d'entreprise chez Netflix : Liberté et Responsabilité",
+        summary: "Une analyse du célèbre manifesto culturel de Netflix qui a redéfini le recrutement et le management moderne.",
+        url: "https://www.inrs.fr/risques/atmospheres-explosives-atex/jurisprudence-responsabilite-penale-employeur.html",
+        thumbnail: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=600&q=80",
+        author: "Reed Hastings",
+        authorOrg: "Netflix HR Research",
+        publishedAt: "Mardi",
+        readTime: "6 min de lecture",
+        isProtected: true,
+        ideas: [
+          "Rechercher une densité de talents maximale pour autonomiser les équipes.",
+          "Donner une liberté totale (pas de politique de vacances ou de dépenses) en échange d'une responsabilité totale.",
+          "Pratiquer le 'Keeper Test' : garder uniquement les collaborateurs d'élite.",
+          "Éviter les règles bureaucratiques qui étouffent la créativité lors de la croissance.",
+          "Pratiquer une transparence radicale de l'information financière et stratégique."
+        ],
+        concepts: ["Talent Density", "Radical Transparency", "Freedom & Responsibility"],
+        methods: ["Keeper Test pour les managers", "Évaluation 360 écrite en continu"],
+        whyImportant: "La culture n'est pas ce que l'on écrit, mais ce que l'on tolère. Le modèle Netflix montre que la performance découle directement de la responsabilisation absolue.",
+        businessApps: "Implémentation d'une réunion mensuelle de feedback ouverte et transparente au sein de l'équipe projet.",
+        relatedConcepts: ["Organizational Design", "HR Excellence"],
+        expertiseLevel: "Confirmé",
+        qhseScore: 9.0,
+        content: "L'article examine la transition de Netflix vers un modèle sans règles. Il détaille comment la densité de talents permet de réduire les processus de contrôle et comment le partage total d'informations aligne les comportements de tous les employés sur l'intérêt de l'entreprise."
+      }
+    ],
+    archives: []
+  },
+  "ent-strategie": {
+    label: "Stratégie Business",
+    description: "Comprendre les mécanismes économiques de différenciation, positionnement, et création d'avantages compétitifs durables.",
+    items: [
+      {
+        id: "ent-str-1",
+        type: "video",
+        category: "Concurrence",
+        title: "Michael Porter : Qu'est-ce que la stratégie et comment se positionner",
+        summary: "Le professeur de Harvard explique les bases de la différenciation stratégique face à l'efficacité opérationnelle.",
+        url: "https://www.youtube.com/watch?v=zJg5n9hXw2M",
+        videoId: "zJg5n9hXw2M",
+        localUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+        thumbnail: "https://img.youtube.com/vi/zJg5n9hXw2M/hqdefault.jpg",
+        author: "Pr. Michael Porter",
+        authorOrg: "Harvard Business School",
+        publishedAt: "Mercredi",
+        duration: "15:20",
+        learnings: [
+          "La stratégie consiste à être unique, pas à être le meilleur.",
+          "L'efficacité opérationnelle (faire mieux la même chose) est nécessaire mais insuffisante pour un avantage durable.",
+          "Une vraie stratégie exige de faire des compromis (Trades-offs) et de choisir ce qu'on ne fait pas."
+        ],
+        concepts: ["Competitive Advantage", "Trades-offs", "Operational Effectiveness"],
+        whyImportant: "Beaucoup d'entrepreneurs confondent stratégie et objectifs de vente. Ce cours pose les fondations du positionnement de marque pour survivre à la concurrence.",
+        businessApps: "Définition de la liste des 'compromis' : ce que notre offre refuse de faire pour rester hautement différenciée.",
+        expertiseLevel: "Confirmé",
+        qhseScore: 8.8,
+        content: "Michael Porter détaille ses célèbres concepts de différenciation et de domination par les coûts. Il montre que les entreprises qui tentent de tout offrir à tout le monde se retrouvent systématiquement coincées au milieu sans rentabilité."
+      },
+      {
+        id: "ent-str-2",
+        type: "article",
+        category: "Stratégie",
+        title: "La stratégie Océan Bleu : Rendre la concurrence non pertinente",
+        summary: "Une étude sur comment créer un nouvel espace stratégique vierge de concurrence en modifiant la valeur client.",
+        url: "https://www.inrs.fr/media.html?refINRS=ED%206038",
+        thumbnail: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=600&q=80",
+        author: "W. Chan Kim",
+        authorOrg: "INSEAD Strategy Group",
+        publishedAt: "Mercredi",
+        readTime: "7 min de lecture",
+        isProtected: false,
+        ideas: [
+          "L'Océan Rouge est le marché encombré où les entreprises se battent pour des miettes.",
+          "L'Océan Bleu est la création d'une nouvelle demande sur un espace de marché inexploré.",
+          "La clé est l'innovation-valeur : augmenter la valeur pour le client tout en réduisant les coûts.",
+          "La matrice ERAC : Exclure, Réduire, Atténuer, Créer les critères de l'industrie.",
+          "Cirque du Soleil est l'exemple classique d'Océan Bleu combinant théâtre et cirque."
+        ],
+        concepts: ["Blue Ocean", "Value Innovation", "Matrice ERAC"],
+        methods: ["Canevas Stratégique de l'industrie", "Grille ERAC"],
+        whyImportant: "Plutôt que d'épuiser ses ressources à affronter des concurrents établis, cette méthodologie montre comment redéfinir les règles du marché.",
+        businessApps: "Tracer le canevas stratégique de l'offre actuelle pour éliminer les fonctionnalités coûteuses et non valorisées par nos clients.",
+        relatedConcepts: ["Disruptive Innovation", "Strategic Canvas"],
+        expertiseLevel: "Confirmé",
+        qhseScore: 9.0,
+        content: "L'article présente l'approche systématique pour sortir de l'océan rouge. Les auteurs décrivent l'utilisation du canevas stratégique pour cartographier les investissements de l'industrie et identifier des zones de rupture de valeur."
+      }
+    ],
+    archives: []
+  },
+  "ent-innovation": {
+    label: "Innovation & Futur",
+    description: "Prospective technologique, impact de l'intelligence artificielle, automatisation et transformation des industries.",
+    items: [
+      {
+        id: "ent-inn-1",
+        type: "video",
+        category: "Technologies",
+        title: "L'avenir des technologies : Les tendances qui vont transformer la décennie",
+        summary: "Une conférence prospective du MIT sur les révolutions conjointes de l'IA, de la robotique et de la décentralisation.",
+        url: "https://www.youtube.com/watch?v=FJqWxoCgI7A",
+        videoId: "FJqWxoCgI7A",
+        localUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+        thumbnail: "https://img.youtube.com/vi/FJqWxoCgI7A/hqdefault.jpg",
+        author: "Pr. Andrew McAfee",
+        authorOrg: "MIT Initiative on the Digital Economy",
+        publishedAt: "Jeudi",
+        duration: "22:10",
+        learnings: [
+          "La transition vers une économie 'sans poids' basée sur l'optimisation par l'IA.",
+          "La robotique humanoïde entre en phase d'adoption industrielle d'ici 2028.",
+          "Les entreprises qui n'intègrent pas l'automatisation dans leurs flux centraux vont disparaître."
+        ],
+        concepts: ["Machine Platform Crowd", "Industrial Automation", "Exponential Tech"],
+        whyImportant: "Prendre les bonnes décisions entrepreneuriales ou d'investissement exige de comprendre où se dirigent les flux technologiques et financiers de demain.",
+        businessApps: "Audit des tâches internes de l'entreprise pour identifier les processus automatisables par des agents IA.",
+        expertiseLevel: "Tous niveaux",
+        qhseScore: 8.8,
+        content: "Le conférencier analyse les données historiques de croissance technologique. Il montre comment la convergence entre l'IA générative et la robotique physique va bouleverser les secteurs de la logistique, de la santé et des services financiers."
+      },
+      {
+        id: "ent-inn-2",
+        type: "article",
+        category: "Intelligence Artificielle",
+        title: "L'impact économique de l'IA Générative dans les processus d'entreprise",
+        summary: "Une étude d'impact McKinsey mesurant la valeur ajoutée potentielle de l'IA sur la productivité mondiale.",
+        url: "https://www.inrs.fr/publications/juridique/focus-juridique/evolution-norme-en-60079-atex-gaz.html",
+        thumbnail: "https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=600&q=80",
+        author: "Lareina Yee",
+        authorOrg: "McKinsey Global Institute",
+        publishedAt: "Jeudi",
+        readTime: "7 min de lecture",
+        isProtected: false,
+        ideas: [
+          "L'IA générative pourrait ajouter entre 2 600 et 4 400 milliards de dollars par an à l'économie mondiale.",
+          "Le service client, le marketing, le développement logiciel et la R&D concentrent 75% de cette valeur.",
+          "La productivité des travailleurs du savoir va bondir de 30% d'ici 2030.",
+          "La requalification des équipes (Upskilling) est le goulot d'étranglement majeur des projets IA.",
+          "Les risques de biais, de sécurité des données et de propriété intellectuelle doivent être gérés."
+        ],
+        concepts: ["Generative AI Value", "Knowledge Work Productivity", "Upskilling Imperative"],
+        methods: ["Matrice de maturité de l'intégration IA", "Calcul du ROI d'automatisation cognitive"],
+        whyImportant: "L'IA générative n'est pas un gadget technologique temporaire, mais une révolution structurelle de la même ampleur que l'accès à l'électricité.",
+        businessApps: "Lancement d'un projet pilote d'assistant IA pour l'équipe commerciale afin d'accélérer la rédaction des propositions techniques.",
+        relatedConcepts: ["Automation", "Future of Work"],
+        expertiseLevel: "Avancé",
+        qhseScore: 9.0,
+        content: "Cette note détaille les secteurs les plus touchés par l'IA. Elle explique la transformation des fonctions support et fournit un cadre stratégique pour guider les investissements en systèmes cognitifs au sein des grandes entreprises."
+      }
+    ],
+    archives: []
+  },
+  "ent-monde": {
+    label: "Culture & Monde",
+    description: "Histoire économique, géopolitique mondiale, grandes découvertes scientifiques et compréhension des sociétés.",
+    items: [
+      {
+        id: "ent-mon-1",
+        type: "video",
+        category: "Géopolitique",
+        title: "La guerre des semi-conducteurs : Géopolitique de la technologie",
+        summary: "Un documentaire de référence sur le détroit de Taïwan, ASML et le monopole mondial de la fabrication de puces.",
+        url: "https://www.youtube.com/watch?v=XFJSYQBnU5A",
+        videoId: "XFJSYQBnU5A",
+        localUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+        thumbnail: "https://img.youtube.com/vi/XFJSYQBnU5A/hqdefault.jpg",
+        author: "Éric Larousse",
+        authorOrg: "IRIS Géopolitique",
+        publishedAt: "Vendredi",
+        duration: "24:30",
+        learnings: [
+          "TSMC fabrique plus de 90% des puces avancées de la planète.",
+          "ASML détient le monopole des machines de lithographie extrême ultraviolet (EUV) indispensables.",
+          "La souveraineté technologique est devenue le cœur de la rivalité USA-Chine."
+        ],
+        concepts: ["Lithographie EUV", "Silicon Shield", "Choke Point économique"],
+        whyImportant: "Toute l'économie numérique moderne dépend d'une chaîne logistique étroite de quelques kilomètres. Comprendre cette fragilité est capital pour anticiper les chocs géopolitiques.",
+        businessApps: "Plan de continuité d'activité (PCA) intégrant le risque d'approvisionnement en composants technologiques clés.",
+        expertiseLevel: "Tous niveaux",
+        qhseScore: 9.0,
+        content: "Le documentaire explique pourquoi le contrôle de la fonderie de Taïwan est stratégique pour la survie des géants de la Tech (Apple, NVIDIA, Google). Il retrace également l'histoire de la technologie des puces depuis l'invention du transistor."
+      },
+      {
+        id: "ent-mon-2",
+        type: "article",
+        category: "Histoire Économique",
+        title: "Les trois révolutions industrielles de l'histoire et leurs leçons pour l'IA",
+        summary: "Une analyse historique comparant les transitions de la vapeur, de l'électricité et du numérique avec la révolution cognitive en cours.",
+        url: "https://www.inrs.fr/media.html?refINRS=ED%206038",
+        thumbnail: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&q=80",
+        author: "Pr. François Bourguignon",
+        authorOrg: "École d'Économie de Paris",
+        publishedAt: "Vendredi",
+        readTime: "6 min de lecture",
+        isProtected: false,
+        ideas: [
+          "Chaque révolution industrielle détruit des emplois obsolètes mais en crée de nouveaux à plus forte valeur.",
+          "Le décalage d'adoption (Time lag) entre l'apparition de la technologie et le gain de productivité peut prendre 20-30 ans.",
+          "La centralisation géographique de la richesse s'accentue lors des premières phases de transition.",
+          "Les institutions réglementaires et de formation doivent s'adapter sous peine de fracture sociale.",
+          "La révolution cognitive de l'IA se distingue par la vitesse exponentielle de sa diffusion mondiale."
+        ],
+        concepts: ["Creative Destruction", "Productivity Paradox", "Cognitive Revolution Transition"],
+        methods: ["Modèles d'analyse des transitions macroéconomiques", "Études comparatives de productivité"],
+        whyImportant: "Prendre du recul historique permet d'éviter l'hystérie médiatique immédiate et de comprendre les grandes vagues de réorganisation du travail humain.",
+        businessApps: "Mise en place d'une cellule de veille prospective sur l'évolution des compétences clés requises au sein de l'entreprise moderne.",
+        relatedConcepts: ["Kondratiev Cycles", "Socio-Economic Shifts"],
+        expertiseLevel: "Confirmé",
+        qhseScore: 8.5,
+        content: "L'article examine la transition historique entre la force motrice et l'intelligence logicielle. L'auteur analyse le décalage historique des gains de productivité de l'électricité à la fin du XIXe siècle et en tire des parallèles rigoureux avec la diffusion de l'IA."
       }
     ],
     archives: []

@@ -46,7 +46,7 @@ function App() {
           return;
         }
 
-        // Reconstruct the magazineData structure dynamically around 5 QHSE pillars + 4 Finance categories
+        // Reconstruct the magazineData structure dynamically around 5 QHSE pillars + 4 Finance categories + 5 Entrepreneuriat categories
         const newData = {
           "qhse-humain": {
             label: "Humain & FOF",
@@ -101,6 +101,36 @@ function App() {
             description: "Développer la discipline de l'investisseur, allocation d'actifs, patience et étude des grands maîtres.",
             items: [],
             archives: []
+          },
+          "ent-creation": {
+            label: "Création & Opportunités",
+            description: "Comprendre comment valider des idées d'affaires, trouver des besoins non satisfaits et démarrer une startup viable.",
+            items: [],
+            archives: []
+          },
+          "ent-culture": {
+            label: "Culture & Management",
+            description: "Comprendre comment recruter, structurer et motiver les équipes pour bâtir des entreprises exceptionnelles.",
+            items: [],
+            archives: []
+          },
+          "ent-strategie": {
+            label: "Stratégie Business",
+            description: "Comprendre les mécanismes économiques de différenciation, positionnement, et création d'avantages compétitifs durables.",
+            items: [],
+            archives: []
+          },
+          "ent-innovation": {
+            label: "Innovation & Futur",
+            description: "Prospective technologique, impact de l'intelligence artificielle, automatisation et transformation des industries.",
+            items: [],
+            archives: []
+          },
+          "ent-monde": {
+            label: "Culture & Monde",
+            description: "Histoire économique, géopolitique mondiale, grandes découvertes scientifiques et compréhension des sociétés.",
+            items: [],
+            archives: []
           }
         };
 
@@ -123,6 +153,7 @@ function App() {
           methods: row.methods || [],
           whyImportant: row.why_important || '',
           businessApps: row.business_apps || '',
+          entrepreneurialApps: row.entrepreneurial_apps || '',
           relatedConcepts: row.related_concepts || [],
           expertiseLevel: row.expertise_level || 'Tous niveaux',
           qhseScore: Number(row.qhse_score) || 8.0
@@ -201,6 +232,11 @@ function App() {
       case 'fin-valorisation': return '#10B981';
       case 'fin-brvm': return '#3B82F6';
       case 'fin-psychologie': return '#8B5CF6';
+      case 'ent-creation': return '#F59E0B';
+      case 'ent-culture': return '#10B981';
+      case 'ent-strategie': return '#3B82F6';
+      case 'ent-innovation': return '#8B5CF6';
+      case 'ent-monde': return '#EF4444';
       default: return '#10B981';
     }
   };
@@ -211,7 +247,7 @@ function App() {
     setActivePortal(portalKey);
     setIsPortfolioActive(false);
     setActiveArticle(null);
-    const defaultCategory = portalKey === 'qhse' ? 'qhse-humain' : 'fin-entreprises';
+    const defaultCategory = portalKey === 'qhse' ? 'qhse-humain' : portalKey === 'finance' ? 'fin-entreprises' : 'ent-creation';
     setActiveCategory(defaultCategory);
     setTimeFilter('week');
     setFormatFilter('all');
@@ -225,7 +261,7 @@ function App() {
   };
 
   const getCategoriesForActivePortal = () => {
-    const portalPrefix = activePortal === 'qhse' ? 'qhse-' : 'fin-';
+    const portalPrefix = activePortal === 'qhse' ? 'qhse-' : activePortal === 'finance' ? 'fin-' : 'ent-';
     return Object.fromEntries(
       Object.entries(dbData).filter(([key]) => key.startsWith(portalPrefix))
     );

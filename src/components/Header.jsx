@@ -30,22 +30,12 @@ export default function Header({
       case 'fin-valorisation': return '#10B981';
       case 'fin-brvm': return '#3B82F6';
       case 'fin-psychologie': return '#8B5CF6';
+      case 'ent-creation': return '#F59E0B';
+      case 'ent-culture': return '#10B981';
+      case 'ent-strategie': return '#3B82F6';
+      case 'ent-innovation': return '#8B5CF6';
+      case 'ent-monde': return '#EF4444';
       default: return '#10B981';
-    }
-  };
-
-  const getAccentBg = (key) => {
-    switch (key) {
-      case 'qhse-humain': return 'bg-[#8B5CF6]';
-      case 'qhse-risques': return 'bg-[#EF4444]';
-      case 'qhse-performance': return 'bg-[#10B981]';
-      case 'qhse-science': return 'bg-[#3B82F6]';
-      case 'qhse-strategie': return 'bg-[#F59E0B]';
-      case 'fin-entreprises': return 'bg-[#F59E0B]';
-      case 'fin-valorisation': return 'bg-[#10B981]';
-      case 'fin-brvm': return 'bg-[#3B82F6]';
-      case 'fin-psychologie': return 'bg-[#8B5CF6]';
-      default: return 'bg-[#10B981]';
     }
   };
 
@@ -60,6 +50,11 @@ export default function Header({
       case 'fin-valorisation': return 'shadow-[0_2px_10px_rgba(16,185,129,0.2)]';
       case 'fin-brvm': return 'shadow-[0_2px_10px_rgba(59,130,246,0.2)]';
       case 'fin-psychologie': return 'shadow-[0_2px_10px_rgba(139,92,246,0.2)]';
+      case 'ent-creation': return 'shadow-[0_2px_10px_rgba(245,158,11,0.2)]';
+      case 'ent-culture': return 'shadow-[0_2px_10px_rgba(16,185,129,0.2)]';
+      case 'ent-strategie': return 'shadow-[0_2px_10px_rgba(59,130,246,0.2)]';
+      case 'ent-innovation': return 'shadow-[0_2px_10px_rgba(139,92,246,0.2)]';
+      case 'ent-monde': return 'shadow-[0_2px_10px_rgba(239,68,68,0.2)]';
       default: return 'shadow-[0_2px_10px_rgba(16,185,129,0.2)]';
     }
   };
@@ -75,13 +70,18 @@ export default function Header({
       case 'fin-valorisation': return 'hover:bg-[#059669]';
       case 'fin-brvm': return 'hover:bg-[#2563eb]';
       case 'fin-psychologie': return 'hover:bg-[#7c3aed]';
+      case 'ent-creation': return 'hover:bg-[#d97706]';
+      case 'ent-culture': return 'hover:bg-[#059669]';
+      case 'ent-strategie': return 'hover:bg-[#2563eb]';
+      case 'ent-innovation': return 'hover:bg-[#7c3aed]';
+      case 'ent-monde': return 'hover:bg-[#dc2626]';
       default: return 'hover:bg-[#059669]';
     }
   };
 
   const getLogoText = (key) => {
     const color = getAccentColor(key);
-    return <>veille<span style={{ color }} className="font-black">.</span>qhse</>;
+    return <>veille<span style={{ color }} className="font-black">.</span>ia</>;
   };
 
   const getCategoryIcon = (key) => {
@@ -104,6 +104,16 @@ export default function Header({
         return <span className="text-sm">🌍</span>;
       case 'fin-psychologie':
         return <span className="text-sm">🧠</span>;
+      case 'ent-creation':
+        return <span className="text-sm">💡</span>;
+      case 'ent-culture':
+        return <span className="text-sm">👥</span>;
+      case 'ent-strategie':
+        return <span className="text-sm">📈</span>;
+      case 'ent-innovation':
+        return <span className="text-sm">🚀</span>;
+      case 'ent-monde':
+        return <span className="text-sm">🌍</span>;
       default:
         return null;
     }
@@ -141,6 +151,12 @@ export default function Header({
               className={`px-3 py-1 rounded-full cursor-pointer transition-all ${activePortal === 'finance' ? 'bg-[#F59E0B] text-white' : 'text-gray-500 hover:text-white bg-transparent'}`}
             >
               FINANCE
+            </button>
+            <button 
+              onClick={() => onPortalChange('entrepreneuriat')}
+              className={`px-3 py-1 rounded-full cursor-pointer transition-all ${activePortal === 'entrepreneuriat' ? 'bg-[#3B82F6] text-white' : 'text-gray-500 hover:text-white bg-transparent'}`}
+            >
+              BUSINESS
             </button>
           </div>
         </div>
@@ -253,18 +269,24 @@ export default function Header({
               </div>
 
               {/* Portal Selector for Mobile */}
-              <div className="flex gap-2 mb-6 p-1 bg-[#0C0E0C] border border-[#1E221F] rounded-2xl">
+              <div className="flex gap-1.5 mb-6 p-1 bg-[#0C0E0C] border border-[#1E221F] rounded-2xl">
                 <button 
                   onClick={() => { onPortalChange('qhse'); setIsMobileMenuOpen(false); }}
-                  className={`flex-1 py-3 text-center rounded-xl text-xs font-black uppercase tracking-wider cursor-pointer ${activePortal === 'qhse' ? 'bg-[#10B981] text-white' : 'text-gray-500 bg-transparent'}`}
+                  className={`flex-1 py-2.5 text-center rounded-xl text-[9px] font-black uppercase tracking-wider cursor-pointer ${activePortal === 'qhse' ? 'bg-[#10B981] text-white' : 'text-gray-500 bg-transparent'}`}
                 >
-                  Veille QHSE
+                  QHSE
                 </button>
                 <button 
                   onClick={() => { onPortalChange('finance'); setIsMobileMenuOpen(false); }}
-                  className={`flex-1 py-3 text-center rounded-xl text-xs font-black uppercase tracking-wider cursor-pointer ${activePortal === 'finance' ? 'bg-[#F59E0B] text-white' : 'text-gray-500 bg-transparent'}`}
+                  className={`flex-1 py-2.5 text-center rounded-xl text-[9px] font-black uppercase tracking-wider cursor-pointer ${activePortal === 'finance' ? 'bg-[#F59E0B] text-white' : 'text-gray-500 bg-transparent'}`}
                 >
-                  Veille Finance
+                  Finance
+                </button>
+                <button 
+                  onClick={() => { onPortalChange('entrepreneuriat'); setIsMobileMenuOpen(false); }}
+                  className={`flex-1 py-2.5 text-center rounded-xl text-[9px] font-black uppercase tracking-wider cursor-pointer ${activePortal === 'entrepreneuriat' ? 'bg-[#3B82F6] text-white' : 'text-gray-500 bg-transparent'}`}
+                >
+                  Business
                 </button>
               </div>
 

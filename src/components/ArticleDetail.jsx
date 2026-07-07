@@ -47,6 +47,12 @@ const getShortCategoryLabel = (cat) => {
   if (c.includes('valori') || c.includes('finance')) return 'Catégorie 2';
   if (c.includes('brvm') || c.includes('afriq') || c.includes('écono')) return 'Catégorie 3';
   if (c.includes('psych') || c.includes('patri') || c.includes('straté')) return 'Catégorie 4';
+
+  if (c.includes('creation') || c.includes('opportu')) return 'Catégorie 1';
+  if (c.includes('culture') || c.includes('manag')) return 'Catégorie 2';
+  if (c.includes('strateg') || c.includes('croiss')) return 'Catégorie 3';
+  if (c.includes('innov') || c.includes('techno')) return 'Catégorie 4';
+  if (c.includes('monde') || c.includes('compr')) return 'Catégorie 5';
   return cat.toUpperCase();
 };
 
@@ -81,12 +87,14 @@ export default function ArticleDetail({
     methods = [],
     whyImportant = '',
     businessApps = '',
+    entrepreneurialApps = '',
     relatedConcepts = [],
     expertiseLevel = 'Tous niveaux',
     qhseScore = 8.0
   } = article;
 
   const isFinance = id.startsWith('fin');
+  const isEntrepreneuriat = id.startsWith('ent');
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(url || window.location.href);
@@ -95,7 +103,7 @@ export default function ArticleDetail({
   };
 
   const getSourceLang = () => {
-    if (url && (url.includes('.fr') || url.includes('.io/fr') || url.includes('inrs') || url.includes('socotec') || url.includes('afnor') || url.includes('ademe') || url.includes('icsi') || url.includes('brvm') || url.includes('sika') || url.includes('jeuneafrique'))) {
+    if (url && (url.includes('.fr') || url.includes('.io/fr') || url.includes('inrs') || url.includes('socotec') || url.includes('afnor') || url.includes('ademe') || url.includes('icsi') || url.includes('brvm') || url.includes('sika') || url.includes('jeuneafrique') || url.includes('lemonde') || url.includes('lesechos'))) {
       return 'fr';
     }
     return 'us';
@@ -103,6 +111,12 @@ export default function ArticleDetail({
 
   // Render Score Badge
   const renderScoreBadge = () => {
+    const getScoreLabel = () => {
+      if (isFinance) return 'Valeur Investissement';
+      if (isEntrepreneuriat) return 'Valeur Éducative';
+      return 'Valeur QHSE';
+    };
+
     return (
       <div 
         style={{ borderColor: `${accentColor}30` }}
@@ -128,7 +142,7 @@ export default function ArticleDetail({
         </div>
         <div className="flex flex-col text-left">
           <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest">
-            {isFinance ? 'Valeur Investissement' : 'Valeur QHSE'}
+            {getScoreLabel()}
           </span>
           <span className="text-[10px] font-bold text-gray-300">Score global / 10</span>
         </div>
@@ -152,7 +166,7 @@ export default function ArticleDetail({
             <h3 style={{ color: accentColor }} className="text-xs font-black uppercase tracking-wider mb-4 flex items-center gap-2">
               <Lightbulb className="w-4 h-4" />
               {type === 'article' 
-                ? (isFinance ? "Idées principales de l'analyse" : "Idées clés de la publication") 
+                ? (isFinance ? "Idées principales de l'analyse" : isEntrepreneuriat ? "5 idées principales" : "Idées clés de la publication") 
                 : "Enseignements majeurs de la vidéo"}
             </h3>
             <ul className="space-y-3">
@@ -187,7 +201,7 @@ export default function ArticleDetail({
               </div>
             </div>
 
-            {/* Methods (Only for QHSE / Finance valuation articles) */}
+            {/* Methods */}
             {type === 'article' && methods.length > 0 && (
               <div className="bg-[#0C0E0C] border border-[#1E221F] rounded-2xl p-6 text-left font-sans">
                 <h3 className="text-xs font-black text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
@@ -228,7 +242,11 @@ export default function ArticleDetail({
           <div className="bg-[#0C0E0C] border border-[#1E221F] rounded-2xl p-6 text-left font-sans">
             <h3 className="text-xs font-black text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2">
               <Award className="w-4 h-4" style={{ color: accentColor }} />
-              {isFinance ? "Ce que l'investisseur apprend" : "Intérêt stratégique QHSE"}
+              {isFinance 
+                ? "Ce que l'investisseur apprend" 
+                : isEntrepreneuriat 
+                  ? "Ce que l'utilisateur apprend" 
+                  : "Intérêt stratégique QHSE"}
             </h3>
             <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
               {whyImportant}
@@ -238,15 +256,35 @@ export default function ArticleDetail({
           {/* Applications terrains */}
           <div 
             style={{ borderColor: `${accentColor}25` }}
-            className="bg-[#0C0E0C] border rounded-2xl p-6 text-left font-sans"
+            className="bg-[#0C0E0C] border rounded-2xl p-6 text-left font-sans animate-fade-in"
           >
             <h3 style={{ color: accentColor }} className="text-xs font-black uppercase tracking-wider mb-3 flex items-center gap-2">
               <Briefcase className="w-4 h-4" />
-              {isFinance ? "Application pratique pour un portefeuille" : "Applications possibles en entreprise"}
+              {isFinance 
+                ? "Application pratique pour un portefeuille" 
+                : isEntrepreneuriat 
+                  ? "Application professionnelle & managériale" 
+                  : "Applications possibles en entreprise"}
             </h3>
-            <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
-              {businessApps}
-            </p>
+            
+            {isEntrepreneuriat ? (
+              <div className="space-y-4 text-xs sm:text-sm text-gray-300 leading-relaxed">
+                <div>
+                  <strong className="text-white block mb-0.5">Application Professionnelle :</strong>
+                  <p>{businessApps}</p>
+                </div>
+                {entrepreneurialApps && (
+                  <div className="border-t border-white/5 pt-3 mt-3">
+                    <strong className="text-white block mb-0.5">Application Entrepreneuriale :</strong>
+                    <p>{entrepreneurialApps}</p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                {businessApps}
+              </p>
+            )}
           </div>
 
         </div>
@@ -509,7 +547,7 @@ export default function ArticleDetail({
             </h3>
           </div>
           <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
-            L'accès à l'article d'origine sur la revue technique ou financière exige une inscription ou un abonnement payant. L'IA de <strong>veille.qhse</strong> a extrait pour vous une synthèse scientifique et méthodologique complète ci-dessous.
+            L'accès à l'article d'origine sur la revue technique ou financière exige une inscription ou un abonnement payant. L'IA de <strong>veille.ia</strong> a extrait pour vous une synthèse scientifique et méthodologique complète ci-dessous.
           </p>
         </div>
       )}
