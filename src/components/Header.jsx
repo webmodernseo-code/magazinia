@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, TrendingUp, ShieldAlert } from 'lucide-react';
+import { Menu, X, TrendingUp, ShieldAlert, Lock, BookOpen } from 'lucide-react';
 
 const TelegramIcon = ({ className = "w-3.5 h-3.5" }) => (
   <svg viewBox="0 0 24 24" className={className} fill="currentColor" stroke="none">
@@ -11,7 +11,11 @@ const TelegramIcon = ({ className = "w-3.5 h-3.5" }) => (
 export default function Header({ 
   activeCategory, 
   onCategoryChange, 
-  categories
+  categories,
+  activePortal,
+  onPortalChange,
+  onOpenPortfolio,
+  isPortfolioActive
 }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -22,6 +26,10 @@ export default function Header({
       case 'qhse-performance': return '#10B981';
       case 'qhse-science': return '#3B82F6';
       case 'qhse-strategie': return '#F59E0B';
+      case 'fin-entreprises': return '#F59E0B';
+      case 'fin-valorisation': return '#10B981';
+      case 'fin-brvm': return '#3B82F6';
+      case 'fin-psychologie': return '#8B5CF6';
       default: return '#10B981';
     }
   };
@@ -33,6 +41,10 @@ export default function Header({
       case 'qhse-performance': return 'bg-[#10B981]';
       case 'qhse-science': return 'bg-[#3B82F6]';
       case 'qhse-strategie': return 'bg-[#F59E0B]';
+      case 'fin-entreprises': return 'bg-[#F59E0B]';
+      case 'fin-valorisation': return 'bg-[#10B981]';
+      case 'fin-brvm': return 'bg-[#3B82F6]';
+      case 'fin-psychologie': return 'bg-[#8B5CF6]';
       default: return 'bg-[#10B981]';
     }
   };
@@ -44,6 +56,10 @@ export default function Header({
       case 'qhse-performance': return 'shadow-[0_2px_10px_rgba(16,185,129,0.2)]';
       case 'qhse-science': return 'shadow-[0_2px_10px_rgba(59,130,246,0.2)]';
       case 'qhse-strategie': return 'shadow-[0_2px_10px_rgba(245,158,11,0.2)]';
+      case 'fin-entreprises': return 'shadow-[0_2px_10px_rgba(245,158,11,0.2)]';
+      case 'fin-valorisation': return 'shadow-[0_2px_10px_rgba(16,185,129,0.2)]';
+      case 'fin-brvm': return 'shadow-[0_2px_10px_rgba(59,130,246,0.2)]';
+      case 'fin-psychologie': return 'shadow-[0_2px_10px_rgba(139,92,246,0.2)]';
       default: return 'shadow-[0_2px_10px_rgba(16,185,129,0.2)]';
     }
   };
@@ -55,6 +71,10 @@ export default function Header({
       case 'qhse-performance': return 'hover:bg-[#059669]';
       case 'qhse-science': return 'hover:bg-[#2563eb]';
       case 'qhse-strategie': return 'hover:bg-[#d97706]';
+      case 'fin-entreprises': return 'hover:bg-[#d97706]';
+      case 'fin-valorisation': return 'hover:bg-[#059669]';
+      case 'fin-brvm': return 'hover:bg-[#2563eb]';
+      case 'fin-psychologie': return 'hover:bg-[#7c3aed]';
       default: return 'hover:bg-[#059669]';
     }
   };
@@ -76,6 +96,14 @@ export default function Header({
         return <span className="text-sm">💻</span>;
       case 'qhse-strategie':
         return <span className="text-sm">🌱</span>;
+      case 'fin-entreprises':
+        return <span className="text-sm">🏢</span>;
+      case 'fin-valorisation':
+        return <span className="text-sm">📊</span>;
+      case 'fin-brvm':
+        return <span className="text-sm">🌍</span>;
+      case 'fin-psychologie':
+        return <span className="text-sm">🧠</span>;
       default:
         return null;
     }
@@ -91,15 +119,36 @@ export default function Header({
       {/* Top Navbar Capsule (Glassmorphism Dark Style) */}
       <div className="w-full dark-glass rounded-full px-6 py-2.5 sm:py-3.5 flex justify-between items-center shadow-[0_8px_30px_rgba(0,0,0,0.6)]">
         
-        {/* Brand Logo - Dynamic based on active category */}
-        <div className="flex items-center gap-1.5 text-sm font-black text-white uppercase tracking-widest font-sans cursor-pointer select-none">
-          {getLogoText(activeCategory)}
+        {/* Logo and Portal Selector (Left) */}
+        <div className="flex items-center gap-4">
+          <div 
+            onClick={() => onPortalChange(activePortal)}
+            className="flex items-center gap-1.5 text-sm font-black text-white uppercase tracking-widest font-sans cursor-pointer select-none"
+          >
+            {getLogoText(activeCategory)}
+          </div>
+          
+          {/* Portal Switcher Capsule */}
+          <div className="hidden sm:flex bg-[#111311] border border-[#1E221F] rounded-full p-0.5 text-[8px] font-black uppercase tracking-widest">
+            <button 
+              onClick={() => onPortalChange('qhse')}
+              className={`px-3 py-1 rounded-full cursor-pointer transition-all ${activePortal === 'qhse' ? 'bg-[#10B981] text-white' : 'text-gray-500 hover:text-white bg-transparent'}`}
+            >
+              QHSE
+            </button>
+            <button 
+              onClick={() => onPortalChange('finance')}
+              className={`px-3 py-1 rounded-full cursor-pointer transition-all ${activePortal === 'finance' ? 'bg-[#F59E0B] text-white' : 'text-gray-500 hover:text-white bg-transparent'}`}
+            >
+              FINANCE
+            </button>
+          </div>
         </div>
 
         {/* Central Subject Navigation (Visible on Desktop) */}
         <nav className="hidden md:flex items-center gap-6 lg:gap-8">
           {Object.entries(categories).map(([key, category]) => {
-            const isSelected = activeCategory === key;
+            const isSelected = activeCategory === key && !isPortfolioActive;
             const accentColor = getAccentColor(key);
             return (
               <button
@@ -124,9 +173,25 @@ export default function Header({
           })}
         </nav>
 
-        {/* Action Buttons (Telegram + Mobile Menu) */}
+        {/* Action Buttons (Telegram + Private Portfolio + Mobile Menu) */}
         <div className="flex items-center gap-2">
-          {/* Telegram Action with dynamic hover and shadow color matching the active category */}
+          {/* Private Portfolio Action (Only for Finance Portal) */}
+          {activePortal === 'finance' && (
+            <button 
+              onClick={onOpenPortfolio}
+              style={{ 
+                borderColor: isPortfolioActive ? '#F59E0B' : '#1E221F',
+                backgroundColor: isPortfolioActive ? 'rgba(245,158,11,0.1)' : 'transparent',
+                color: isPortfolioActive ? '#FFFFFF' : '#F59E0B'
+              }}
+              className="flex items-center gap-1.5 px-4 py-2 border rounded-full text-[9px] font-black uppercase tracking-widest transition-all cursor-pointer bg-transparent focus:outline-none"
+            >
+              <Lock className="w-3.5 h-3.5" />
+              <span>Carnet Privé</span>
+            </button>
+          )}
+
+          {/* Telegram Action */}
           <a 
             href="https://t.me/veilleia"
             target="_blank"
@@ -149,7 +214,7 @@ export default function Header({
 
       </div>
 
-      {/* Mobile Covered Panel (Full screen overlay style) */}
+      {/* Mobile Covered Panel */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div 
@@ -161,13 +226,12 @@ export default function Header({
           >
             <div>
               {/* Header inside menu */}
-              <div className="flex justify-between items-center pb-6 border-b border-[#1E221F] mb-8">
+              <div className="flex justify-between items-center pb-6 border-b border-[#1E221F] mb-6">
                 <div className="text-sm font-black text-white uppercase tracking-widest font-sans">
                   {getLogoText(activeCategory)}
                 </div>
                 
                 <div className="flex items-center gap-3">
-                  {/* Telegram Circle in Mobile Menu */}
                   <a 
                     href="https://t.me/veilleia"
                     target="_blank"
@@ -188,14 +252,39 @@ export default function Header({
                 </div>
               </div>
 
+              {/* Portal Selector for Mobile */}
+              <div className="flex gap-2 mb-6 p-1 bg-[#0C0E0C] border border-[#1E221F] rounded-2xl">
+                <button 
+                  onClick={() => { onPortalChange('qhse'); setIsMobileMenuOpen(false); }}
+                  className={`flex-1 py-3 text-center rounded-xl text-xs font-black uppercase tracking-wider cursor-pointer ${activePortal === 'qhse' ? 'bg-[#10B981] text-white' : 'text-gray-500 bg-transparent'}`}
+                >
+                  Veille QHSE
+                </button>
+                <button 
+                  onClick={() => { onPortalChange('finance'); setIsMobileMenuOpen(false); }}
+                  className={`flex-1 py-3 text-center rounded-xl text-xs font-black uppercase tracking-wider cursor-pointer ${activePortal === 'finance' ? 'bg-[#F59E0B] text-white' : 'text-gray-500 bg-transparent'}`}
+                >
+                  Veille Finance
+                </button>
+              </div>
+
               {/* Subject Navigation Links for Mobile */}
               <div className="flex flex-col gap-3 text-left">
-                <div className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2 px-1">
-                  Sujets de veille
+                <div className="flex justify-between items-center px-1">
+                  <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Sujets de veille</span>
+                  {activePortal === 'finance' && (
+                    <button 
+                      onClick={() => { onOpenPortfolio(); setIsMobileMenuOpen(false); }}
+                      className="text-[9px] font-black text-[#F59E0B] uppercase tracking-widest flex items-center gap-1 bg-transparent border-none cursor-pointer"
+                    >
+                      <Lock className="w-3 h-3" />
+                      Carnet Privé
+                    </button>
+                  )}
                 </div>
                 <div className="grid grid-cols-1 gap-2.5">
                   {Object.entries(categories).map(([key, category]) => {
-                    const isSelected = activeCategory === key;
+                    const isSelected = activeCategory === key && !isPortfolioActive;
                     const accentColor = getAccentColor(key);
                     return (
                       <button

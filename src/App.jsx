@@ -4,12 +4,15 @@ import Header from './components/Header';
 import MagazineGrid from './components/MagazineGrid';
 import ArticleDetail from './components/ArticleDetail';
 import VideoModal from './components/VideoModal';
+import PortfolioDashboard from './components/PortfolioDashboard';
 import { magazineData } from './data/magazineData';
 import { supabase } from './lib/supabaseClient';
 import { BookOpen, Play, Calendar, Search, Sparkles, Cpu, Award } from 'lucide-react';
 
 function App() {
   const [dbData, setDbData] = useState(magazineData);
+  const [activePortal, setActivePortal] = useState('qhse'); // 'qhse' | 'finance'
+  const [isPortfolioActive, setIsPortfolioActive] = useState(false);
   const [activeCategory, setActiveCategory] = useState('qhse-humain');
   const [timeFilter, setTimeFilter] = useState('week'); // 'today' | 'week' | 'all' | 'archives'
   const [formatFilter, setFormatFilter] = useState('all'); // 'all' | 'videos' | 'articles'
@@ -43,7 +46,7 @@ function App() {
           return;
         }
 
-        // Reconstruct the magazineData structure dynamically around 5 QHSE pillars
+        // Reconstruct the magazineData structure dynamically around 5 QHSE pillars + 4 Finance categories
         const newData = {
           "qhse-humain": {
             label: "Humain & FOF",
@@ -72,6 +75,30 @@ function App() {
           "qhse-strategie": {
             label: "Stratégie & Environnement",
             description: "Comprendre les transformations économiques, environnementales et industrielles.",
+            items: [],
+            archives: []
+          },
+          "fin-entreprises": {
+            label: "Entreprises & Analyse",
+            description: "Comprendre les entreprises cotées capables de créer de la valeur sur le long terme.",
+            items: [],
+            archives: []
+          },
+          "fin-valorisation": {
+            label: "Valorisation & Finance",
+            description: "Développer une capacité de lecture des états financiers, calcul de valeur intrinsèque et marge de sécurité.",
+            items: [],
+            archives: []
+          },
+          "fin-brvm": {
+            label: "BRVM & Économie",
+            description: "Comprendre le marché financier régional de la BRVM, les décisions de la BCEAO et l'économie ouest-africaine.",
+            items: [],
+            archives: []
+          },
+          "fin-psychologie": {
+            label: "Psychologie & Patrimoine",
+            description: "Développer la discipline de l'investisseur, allocation d'actifs, patience et étude des grands maîtres.",
             items: [],
             archives: []
           }
@@ -149,7 +176,7 @@ function App() {
         });
 
         setDbData(newData);
-        console.log("Données de veille QHSE chargées avec succès depuis Supabase !");
+        console.log("Données de veille QHSE et Finance chargées avec succès depuis Supabase !");
       } catch (err) {
         console.error("Erreur lors de la récupération des données de Supabase. Mode local actif :", err);
       }
@@ -170,11 +197,39 @@ function App() {
       case 'qhse-performance': return '#10B981';
       case 'qhse-science': return '#3B82F6';
       case 'qhse-strategie': return '#F59E0B';
+      case 'fin-entreprises': return '#F59E0B';
+      case 'fin-valorisation': return '#10B981';
+      case 'fin-brvm': return '#3B82F6';
+      case 'fin-psychologie': return '#8B5CF6';
       default: return '#10B981';
     }
   };
 
   const accentColor = getAccentColor(activeCategory);
+
+  const handlePortalChange = (portalKey) => {
+    setActivePortal(portalKey);
+    setIsPortfolioActive(false);
+    setActiveArticle(null);
+    const defaultCategory = portalKey === 'qhse' ? 'qhse-humain' : 'fin-entreprises';
+    setActiveCategory(defaultCategory);
+    setTimeFilter('week');
+    setFormatFilter('all');
+    setActiveTagFilter('Tous');
+    setSearchQuery('');
+  };
+
+  const handleOpenPortfolio = () => {
+    setIsPortfolioActive(true);
+    setActiveArticle(null);
+  };
+
+  const getCategoriesForActivePortal = () => {
+    const portalPrefix = activePortal === 'qhse' ? 'qhse-' : 'fin-';
+    return Object.fromEntries(
+      Object.entries(dbData).filter(([key]) => key.startsWith(portalPrefix))
+    );
+  };
 
   // Reset filters when changing category/subject from Header
   const handleCategoryChange = (categoryKey) => {
@@ -238,6 +293,10 @@ function App() {
     else if (activeCategory === 'qhse-performance') subject = "Performance & Qualité";
     else if (activeCategory === 'qhse-science') subject = "Science & Données";
     else if (activeCategory === 'qhse-strategie') subject = "Stratégie & Environnement";
+    else if (activeCategory === 'fin-entreprises') subject = "Entreprises & Analyse";
+    else if (activeCategory === 'fin-valorisation') subject = "Finance & Valorisation";
+    else if (activeCategory === 'fin-brvm') subject = "BRVM & Économie";
+    else if (activeCategory === 'fin-psychologie') subject = "Psychologie & Patrimoine";
 
     return (
       <>
@@ -343,14 +402,29 @@ function App() {
       <Header 
         activeCategory={activeCategory} 
         onCategoryChange={handleCategoryChange}
-        categories={categories}
+        categories={getCategoriesForActivePortal()}
+        activePortal={activePortal}
+        onPortalChange={handlePortalChange}
+        onOpenPortfolio={handleOpenPortfolio}
+        isPortfolioActive={isPortfolioActive}
       />
 
       {/* Main Content scrollable pane */}
       <div className="flex-1 overflow-y-auto no-scrollbar flex flex-col pt-4 bg-[#050505]">
         
         <AnimatePresence mode="wait">
-          {activeArticle ? (
+          {isPortfolioActive ? (
+            /* Immersive Private Portfolio View */
+            <motion.div
+              key="portfolio-dashboard"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.2 }}
+            >
+              <PortfolioDashboard accentColor={accentColor} />
+            </motion.div>
+          ) : activeArticle ? (
             /* Immersive Article Detail View */
             <motion.div
               key="article-detail"

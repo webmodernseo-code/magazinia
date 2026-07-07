@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Share2, ExternalLink, Check, Copy, Play, Award, Lightbulb, BookOpen, Layers, Briefcase, Zap } from 'lucide-react';
+import { ArrowLeft, Share2, ExternalLink, Check, Copy, Play, Award, Lightbulb, BookOpen, Layers, Briefcase, Zap, ShieldAlert } from 'lucide-react';
 
 const getRealDateForDay = (dayName) => {
   const daysOfWeek = {
@@ -42,6 +42,11 @@ const getShortCategoryLabel = (cat) => {
   if (c.includes('perf') || c.includes('qual')) return 'Pilier 3';
   if (c.includes('scien') || c.includes('donn')) return 'Pilier 4';
   if (c.includes('strat') || c.includes('envir')) return 'Pilier 5';
+  
+  if (c.includes('entrepris') || c.includes('fondam')) return 'Catégorie 1';
+  if (c.includes('valori') || c.includes('finance')) return 'Catégorie 2';
+  if (c.includes('brvm') || c.includes('afriq') || c.includes('écono')) return 'Catégorie 3';
+  if (c.includes('psych') || c.includes('patri') || c.includes('straté')) return 'Catégorie 4';
   return cat.toUpperCase();
 };
 
@@ -81,6 +86,8 @@ export default function ArticleDetail({
     qhseScore = 8.0
   } = article;
 
+  const isFinance = id.startsWith('fin');
+
   const handleCopyLink = () => {
     navigator.clipboard.writeText(url || window.location.href);
     setCopied(true);
@@ -94,7 +101,7 @@ export default function ArticleDetail({
     return 'us';
   };
 
-  // Render Score Badge with circular progression feel
+  // Render Score Badge
   const renderScoreBadge = () => {
     return (
       <div 
@@ -120,15 +127,17 @@ export default function ArticleDetail({
           <span className="text-sm font-black text-white">{qhseScore}</span>
         </div>
         <div className="flex flex-col text-left">
-          <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest">Valeur QHSE</span>
+          <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest">
+            {isFinance ? 'Valeur Investissement' : 'Valeur QHSE'}
+          </span>
           <span className="text-[10px] font-bold text-gray-300">Score global / 10</span>
         </div>
       </div>
     );
   };
 
-  // RENDER DYNAMIC QHSE FIELDS
-  const renderQhseAnalysis = () => {
+  // RENDER DYNAMIC ANALYSIS FIELDS
+  const renderAnalysis = () => {
     return (
       <div className="space-y-8 mt-10 border-t border-[#1E221F] pt-8">
         
@@ -142,7 +151,9 @@ export default function ArticleDetail({
           >
             <h3 style={{ color: accentColor }} className="text-xs font-black uppercase tracking-wider mb-4 flex items-center gap-2">
               <Lightbulb className="w-4 h-4" />
-              {type === 'article' ? "Idées clés de la publication" : "Enseignements majeurs de la vidéo"}
+              {type === 'article' 
+                ? (isFinance ? "Idées principales de l'analyse" : "Idées clés de la publication") 
+                : "Enseignements majeurs de la vidéo"}
             </h3>
             <ul className="space-y-3">
               {(type === 'article' ? ideas : learnings).map((item, index) => (
@@ -176,12 +187,12 @@ export default function ArticleDetail({
               </div>
             </div>
 
-            {/* Methods (Only for Articles) */}
+            {/* Methods (Only for QHSE / Finance valuation articles) */}
             {type === 'article' && methods.length > 0 && (
               <div className="bg-[#0C0E0C] border border-[#1E221F] rounded-2xl p-6 text-left font-sans">
                 <h3 className="text-xs font-black text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
                   <Layers className="w-4 h-4" style={{ color: accentColor }} />
-                  Méthodes ou modèles présentés
+                  {isFinance ? "Méthodes de valorisation ou ratios" : "Méthodes ou modèles présentés"}
                 </h3>
                 <div className="flex flex-col gap-2">
                   {methods.map((method, index) => (
@@ -202,7 +213,7 @@ export default function ArticleDetail({
               </div>
               <div className="text-right">
                 <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest block mb-1">Type de source</span>
-                <span className="text-xs font-bold text-gray-200 uppercase">{type === 'article' ? 'Revue / Article' : 'Conférence / Vidéo'}</span>
+                <span className="text-xs font-bold text-gray-200 uppercase">{type === 'article' ? 'Revue / Rapport' : 'Conférence / Vidéo'}</span>
               </div>
             </div>
 
@@ -213,25 +224,25 @@ export default function ArticleDetail({
         {/* Why this is important & Business application */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           
-          {/* Importance QHSE */}
+          {/* Importance */}
           <div className="bg-[#0C0E0C] border border-[#1E221F] rounded-2xl p-6 text-left font-sans">
             <h3 className="text-xs font-black text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2">
               <Award className="w-4 h-4" style={{ color: accentColor }} />
-              Intérêt stratégique QHSE
+              {isFinance ? "Ce que l'investisseur apprend" : "Intérêt stratégique QHSE"}
             </h3>
             <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
               {whyImportant}
             </p>
           </div>
 
-          {/* Applications terrains en entreprise */}
+          {/* Applications terrains */}
           <div 
             style={{ borderColor: `${accentColor}25` }}
             className="bg-[#0C0E0C] border rounded-2xl p-6 text-left font-sans"
           >
             <h3 style={{ color: accentColor }} className="text-xs font-black uppercase tracking-wider mb-3 flex items-center gap-2">
               <Briefcase className="w-4 h-4" />
-              Applications possibles en entreprise
+              {isFinance ? "Application pratique pour un portefeuille" : "Applications possibles en entreprise"}
             </h3>
             <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
               {businessApps}
@@ -338,8 +349,8 @@ export default function ArticleDetail({
           </p>
         </div>
 
-        {/* Detailed QHSE Analysis Block */}
-        {renderQhseAnalysis()}
+        {/* Detailed Analysis Block */}
+        {renderAnalysis()}
 
         {/* Detailed context text */}
         {content && (
@@ -498,7 +509,7 @@ export default function ArticleDetail({
             </h3>
           </div>
           <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
-            L'accès à l'article d'origine sur la revue technique exige une inscription ou un abonnement payant. L'IA de <strong>veille.qhse</strong> a extrait pour vous une synthèse scientifique et méthodologique complète ci-dessous.
+            L'accès à l'article d'origine sur la revue technique ou financière exige une inscription ou un abonnement payant. L'IA de <strong>veille.qhse</strong> a extrait pour vous une synthèse scientifique et méthodologique complète ci-dessous.
           </p>
         </div>
       )}
@@ -513,8 +524,8 @@ export default function ArticleDetail({
         </p>
       </div>
 
-      {/* Detailed QHSE Analysis Block */}
-      {renderQhseAnalysis()}
+      {/* Detailed Analysis Block */}
+      {renderAnalysis()}
 
       {/* Full Content (if available) */}
       {content && (
