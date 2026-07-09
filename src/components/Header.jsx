@@ -202,28 +202,31 @@ export default function Header({
 
       </div>
 
-      {/* Mobile Menu — floating panel overlay */}
+      {/* Mobile Menu — floating panel */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <>
-            {/* Dark backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
+          <motion.div
+            key="mobile-menu"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
+            className="fixed inset-0 z-[200]"
+          >
+            {/* Backdrop — click to close */}
+            <div
+              className="absolute inset-0"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="fixed inset-0 z-[199]"
-              style={{ backgroundColor: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)' }}
+              style={{ backgroundColor: 'rgba(0,0,0,0.72)', backdropFilter: 'blur(5px)' }}
             />
 
             {/* Floating panel */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.96, y: -8 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.96, y: -8 }}
-              transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-              className="fixed inset-4 z-[200] rounded-3xl flex flex-col overflow-hidden"
+              initial={{ scale: 0.95, y: -12, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.95, y: -12, opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 340, damping: 30 }}
+              className="absolute inset-4 rounded-3xl flex flex-col overflow-hidden"
               style={{ backgroundColor: '#0c0c0e', border: '1px solid rgba(255,255,255,0.09)' }}
             >
               {/* Header */}
@@ -304,9 +307,10 @@ export default function Header({
                 </p>
               </div>
             </motion.div>
-          </>
+          </motion.div>
         )}
       </AnimatePresence>
+
 
     </header>
   );
