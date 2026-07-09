@@ -202,68 +202,67 @@ export default function Header({
 
       </div>
 
-      {/* Mobile Covered Panel */}
+      {/* Mobile Menu — floating panel overlay */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div 
-            initial={{ y: '-100%' }}
-            animate={{ y: 0 }}
-            exit={{ y: '-100%' }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="fixed inset-0 z-[200] flex flex-col p-6"
-            style={{ backgroundColor: '#0a0a0f' }}
-          >
-              {/* Header inside menu */}
-              <div className="flex justify-between items-center pb-5 border-b border-white/10 mb-6">
+          <>
+            {/* Dark backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="fixed inset-0 z-[199]"
+              style={{ backgroundColor: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)' }}
+            />
+
+            {/* Floating panel */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96, y: -8 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: -8 }}
+              transition={{ type: 'spring', stiffness: 320, damping: 28 }}
+              className="fixed inset-4 z-[200] rounded-3xl flex flex-col overflow-hidden"
+              style={{ backgroundColor: '#0c0c0e', border: '1px solid rgba(255,255,255,0.09)' }}
+            >
+              {/* Header */}
+              <div className="flex justify-between items-center px-6 pt-6 pb-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
                 <div className="text-sm font-sans font-black text-white uppercase tracking-widest">
                   {getLogoText()}
                 </div>
-                
-                <div className="flex items-center gap-3">
-                  <a 
-                    href="https://t.me/veilleia"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ backgroundColor: portalColor }}
-                    className="p-2.5 text-white rounded-full flex items-center justify-center shadow-md cursor-pointer"
-                  >
-                    <TelegramIcon className="w-4 h-4 text-white" />
-                  </a>
-                  <button 
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="p-2.5 rounded-full text-white/60 hover:text-white transition-colors cursor-pointer focus:outline-none"
-                    style={{ backgroundColor: '#1c1c24', border: '1px solid rgba(255,255,255,0.1)' }}
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
+                <button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="p-2 rounded-full text-white/50 hover:text-white transition-colors cursor-pointer focus:outline-none"
+                  style={{ backgroundColor: '#1e1e26', border: '1px solid rgba(255,255,255,0.1)' }}
+                >
+                  <X className="w-4 h-4" />
+                </button>
               </div>
 
-              {/* Portal Selector — single unified panel */}
-              <div className="flex flex-col gap-3 text-left">
-                <div className="flex justify-between items-center px-1 mb-1">
-                  <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">Portails Magazinia</span>
-                  {activePortal === 'finance' && (
-                    <button 
+              {/* Portal items */}
+              <div className="flex-1 flex flex-col justify-center px-5 py-4 gap-1">
+                {activePortal === 'finance' && (
+                  <div className="flex justify-end px-2 mb-2">
+                    <button
                       onClick={() => { onOpenPortfolio(); setIsMobileMenuOpen(false); }}
                       className="text-[9px] font-black text-[#10B981] uppercase tracking-widest flex items-center gap-1 bg-transparent border-none cursor-pointer"
                     >
                       <Lock className="w-3 h-3" />
                       Carnet Privé
                     </button>
-                  )}
-                </div>
+                  </div>
+                )}
 
-                {/* Single unified container */}
-                <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#141418', border: '1px solid rgba(255,255,255,0.07)' }}>
+                <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#141417', border: '1px solid rgba(255,255,255,0.06)' }}>
                   {portals.map((portal, index) => {
                     const isSelected = activePortal === portal.id && !isPortfolioActive;
                     return (
                       <div key={portal.id}>
                         <button
                           onClick={() => { onPortalChange(portal.id); setIsMobileMenuOpen(false); }}
-                          className="w-full flex items-center gap-4 px-4 py-4 text-left transition-all cursor-pointer select-none active:scale-[0.99]"
-                          style={{ backgroundColor: isSelected ? `${portal.color}10` : 'transparent' }}
+                          className="w-full flex items-center gap-4 px-5 py-4 text-left transition-all cursor-pointer select-none active:scale-[0.99]"
+                          style={{ backgroundColor: isSelected ? `${portal.color}12` : 'transparent' }}
                         >
                           <PortalIconBadge
                             Icon={portal.Icon}
@@ -275,38 +274,40 @@ export default function Header({
                           <div className="flex-1 min-w-0">
                             <div
                               className="text-xs font-black uppercase tracking-widest"
-                              style={{ color: isSelected ? portal.color : 'rgba(255,255,255,0.9)' }}
+                              style={{ color: isSelected ? portal.color : 'rgba(255,255,255,0.88)' }}
                             >
                               {portal.label}
                             </div>
-                            <div className="text-[10px] mt-0.5 truncate font-medium" style={{ color: 'rgba(255,255,255,0.38)' }}>
+                            <div className="text-[10px] mt-0.5 truncate font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>
                               {portal.desc}
                             </div>
                           </div>
                           <ChevronRight
-                            size={14}
-                            style={{ color: isSelected ? portal.color : 'rgba(255,255,255,0.25)' }}
+                            size={13}
+                            style={{ color: isSelected ? portal.color : 'rgba(255,255,255,0.2)' }}
                             className="flex-shrink-0"
                           />
                         </button>
-                        {/* Divider between items (not after last) */}
                         {index < portals.length - 1 && (
-                          <div className="mx-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }} />
+                          <div className="mx-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }} />
                         )}
                       </div>
                     );
                   })}
                 </div>
               </div>
-            </div>
 
-            {/* Footer inside mobile menu */}
-            <div className="text-[10px] uppercase tracking-widest text-center pt-5 mt-6" style={{ color: 'rgba(255,255,255,0.25)', borderTop: '1px solid rgba(255,255,255,0.07)' }}>
-              © 2026 Magazinia — Premium Editorial
-            </div>
-          </motion.div>
+              {/* Footer */}
+              <div className="px-6 pb-5 text-center">
+                <p className="text-[9px] uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.2)' }}>
+                  © 2026 Magazinia — Premium Editorial
+                </p>
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
+
     </header>
   );
 }
