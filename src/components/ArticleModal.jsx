@@ -15,8 +15,63 @@ export default function ArticleModal({ article, onClose }) {
     readTime,
     publishedAt,
     category,
+    categoryKey,
+    category_key,
     thumbnail
   } = article;
+
+  const [imgSrc, setImgSrc] = React.useState(thumbnail || '/favicon.svg');
+
+  React.useEffect(() => {
+    setImgSrc(thumbnail || '/favicon.svg');
+  }, [thumbnail]);
+
+  const getCategoryLocalFallback = (catKey, itemTitle = '') => {
+    const c = catKey ? catKey.toLowerCase() : '';
+    const t = itemTitle ? itemTitle.toLowerCase() : '';
+    if (c.includes('qhse')) {
+      if (t.includes('légifrance') || t.includes('employeur') || t.includes('sécurité')) {
+        return '/images/articles/qhse-legifrance.png';
+      }
+      if (t.includes('aida') || t.includes('seveso') || t.includes('inspection')) {
+        return '/images/articles/qhse-aida.png';
+      }
+      if (t.includes('barpi') || t.includes('aria') || t.includes('déversement') || t.includes('solvant')) {
+        return '/images/articles/qhse-barpi.png';
+      }
+      if (t.includes('actu-environnement') || t.includes('csrd') || t.includes('carbone')) {
+        return '/images/articles/qhse-actuenv.png';
+      }
+      const fallbackList = [
+        '/images/articles/qhse-legifrance.png',
+        '/images/articles/qhse-aida.png',
+        '/images/articles/qhse-barpi.png',
+        '/images/articles/qhse-actuenv.png'
+      ];
+      const idx = itemTitle ? (itemTitle.length % fallbackList.length) : 0;
+      return fallbackList[idx];
+    }
+    if (c.includes('fin') || c.includes('brvm')) {
+      return '/images/articles/fin-ent-2.png';
+    }
+    if (c.includes('ent') || c.includes('usa')) {
+      return '/images/articles/ent-cre-2.png';
+    }
+    if (c.includes('ia') || c.includes('tech')) {
+      return '/images/articles/ia-t-1.png';
+    }
+    return '/images/articles/ia-t-1.png';
+  };
+
+  const handleImageError = () => {
+    const catK = categoryKey || category_key || category || '';
+    const fallbackLocal = getCategoryLocalFallback(catK, title);
+    if (imgSrc !== fallbackLocal) {
+      setImgSrc(fallbackLocal);
+    } else if (imgSrc !== '/favicon.svg') {
+      setImgSrc('/favicon.svg');
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-10 overflow-y-auto">
@@ -50,9 +105,10 @@ export default function ArticleModal({ article, onClose }) {
           {/* Cover Image */}
           <div className="relative w-full h-[250px] sm:h-[350px] bg-[#050505]">
             <img 
-              src={thumbnail} 
+              src={imgSrc} 
               alt={title} 
               className="w-full h-full object-cover"
+              onError={handleImageError}
             />
             {/* Soft dark gradient on image */}
             <div className="absolute inset-0 bg-gradient-to-t from-[#0C0E0C] via-[#0C0E0C]/30 to-transparent"></div>

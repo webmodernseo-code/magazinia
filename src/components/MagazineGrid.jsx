@@ -27,23 +27,31 @@ export default function MagazineGrid({
   activeFilter, 
   onOpenArticle, 
   onOpenVideo,
+  bookmarkedIds = [],
+  onToggleBookmark,
   accentColor = '#2BB373'
 }) {
   
+  const getThumbnail = (item) => {
+    if (item.type !== 'video') return item.thumbnail || 'https://images.unsplash.com/photo-1618401471353-b98aedd07871?auto=format&fit=crop&w=600&q=80';
+    const vId = item.videoId || (item.url ? (item.url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^#&?]+)/)?.[1]) : null);
+    return vId ? `https://img.youtube.com/vi/${vId}/hqdefault.jpg` : (item.thumbnail || 'https://images.unsplash.com/photo-1618401471353-b98aedd07871?auto=format&fit=crop&w=600&q=80');
+  };
+
   // --- 1. ARCHIVE VIEW LAYOUT (Timeline / Frise chronologique) ---
   if (activeFilter === 'archives') {
     if (!archives || archives.length === 0) {
       return (
-        <div className="w-full max-w-4xl mx-auto py-20 text-center text-gray-400 font-sans px-6 bg-[#050505]">
-          <Calendar className="w-12 h-12 mx-auto text-gray-500 mb-3" />
+        <div className="w-full max-w-4xl mx-auto py-20 text-center text-[var(--text-muted)] font-sans px-6 bg-[var(--bg-color)] transition-colors duration-300">
+          <Calendar className="w-12 h-12 mx-auto text-[var(--text-muted)] mb-3" />
           <p>Aucune publication archivée trouvée pour cette recherche ou ce tag.</p>
         </div>
       );
     }
 
     return (
-      <div className="w-full max-w-4xl mx-auto px-6 sm:px-8 pt-10 pb-16 bg-[#050505] flex flex-col text-left">
-        <h2 className="text-xl font-black text-white font-sans mb-8 flex items-center gap-2">
+      <div className="w-full max-w-4xl mx-auto px-6 sm:px-8 pt-10 pb-16 bg-[var(--bg-color)] flex flex-col text-left transition-colors duration-300">
+        <h2 className="text-xl font-black text-[var(--text-color)] font-sans mb-8 flex items-center gap-2 transition-colors duration-300">
           <Calendar className="w-5 h-5" style={{ color: accentColor }} />
           Archives du mois dernier (30 derniers jours)
         </h2>
@@ -62,21 +70,21 @@ export default function MagazineGrid({
               >
                 {/* Timeline node dot */}
                 <div 
-                  className="absolute -left-[41px] top-2 w-5 h-5 rounded-full bg-[#050505] border-4 transition-colors shadow-sm" 
+                  className="absolute -left-[41px] top-2 w-5 h-5 rounded-full bg-[var(--bg-color)] border-4 transition-colors shadow-sm" 
                   style={{ borderColor: accentColor }}
                 />
 
                 {/* Content Card */}
                 <div 
                   onClick={() => isVideo ? onOpenVideo(item) : onOpenArticle(item)}
-                  className="bg-[#0C0E0C] border border-[#1E221F] rounded-2xl p-5 shadow-sm hover:border-transparent transition-all cursor-pointer flex flex-col md:flex-row gap-5 max-w-3xl"
+                  className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl p-5 shadow-sm hover:border-transparent transition-all cursor-pointer flex flex-col md:flex-row gap-5 max-w-3xl"
                 >
                   {/* Miniature Left */}
-                  <div className="w-full md:w-44 h-28 rounded-xl overflow-hidden shrink-0 bg-[#050505] border border-[#1E221F] relative">
-                    <img src={item.thumbnail} alt={item.title} className="w-full h-full object-cover" />
+                  <div className="w-full md:w-44 h-28 rounded-xl overflow-hidden shrink-0 bg-[var(--bg-color)] border border-[var(--border-color)] relative">
+                    <img src={getThumbnail(item)} alt={item.title} className="w-full h-full object-cover" />
                     {isVideo && (
                       <div className="absolute inset-0 bg-black/35 flex items-center justify-center">
-                        <div className="w-8 h-8 bg-[#0C0E0C]/90 rounded-full flex items-center justify-center shadow-md">
+                        <div className="w-8 h-8 bg-[var(--card-bg)]/90 rounded-full flex items-center justify-center shadow-md">
                           <Play className="w-3.5 h-3.5 fill-current ml-0.5" style={{ color: accentColor }} />
                         </div>
                       </div>
@@ -97,21 +105,21 @@ export default function MagazineGrid({
                         >
                           {item.category}
                         </span>
-                        <span className="text-xs text-gray-500 font-sans font-bold">
+                        <span className="text-xs text-[var(--text-muted)] font-sans font-bold">
                           Archivé le {item.publishedAt}
                         </span>
                       </div>
                       
-                      <h3 className="text-base font-extrabold text-white font-sans leading-snug mb-2 group-hover:text-gray-300 transition-colors">
+                      <h3 className="text-base font-extrabold text-[var(--text-color)] font-sans leading-snug mb-2 group-hover:text-[var(--text-muted)] transition-colors">
                         {item.title}
                       </h3>
                       
-                      <p className="text-xs text-[#9AA29E] font-sans line-clamp-2 leading-relaxed">
+                      <p className="text-xs text-[var(--text-muted)] font-sans line-clamp-2 leading-relaxed">
                         {item.summary}
                       </p>
                     </div>
 
-                    <div className="flex items-center gap-2 mt-4 text-xs font-sans text-gray-400">
+                    <div className="flex items-center gap-2 mt-4 text-xs font-sans text-[var(--text-muted)]">
                       <div 
                         style={{ 
                           backgroundColor: `${accentColor}15`,
@@ -122,7 +130,7 @@ export default function MagazineGrid({
                       >
                         {getAuthorInitials(item.author)}
                       </div>
-                      <span className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider">{item.author}</span>
+                      <span className="text-[10px] font-extrabold text-[var(--text-muted)] uppercase tracking-wider">{item.author}</span>
                       <span>•</span>
                       <span>{isVideo ? item.views : item.readTime}</span>
                     </div>
@@ -145,16 +153,16 @@ export default function MagazineGrid({
   if (activeFilter === 'videos') {
     if (sortedItems.length === 0) {
       return (
-        <div className="w-full max-w-4xl mx-auto py-20 text-center text-gray-400 font-sans px-6 bg-[#050505]">
-          <Play className="w-12 h-12 mx-auto text-gray-550 mb-3" />
+        <div className="w-full max-w-4xl mx-auto py-20 text-center text-[var(--text-muted)] font-sans px-6 bg-[var(--bg-color)] transition-colors duration-300">
+          <Play className="w-12 h-12 mx-auto text-[var(--text-muted)] mb-3" />
           <p>Aucune vidéo disponible pour cette recherche ou ce tag.</p>
         </div>
       );
     }
 
     return (
-      <div className="w-full max-w-4xl mx-auto px-6 sm:px-8 pt-10 pb-16 bg-[#050505] flex flex-col text-left">
-        <h2 className="text-xl font-black text-white font-sans mb-6 flex items-center gap-2">
+      <div className="w-full max-w-4xl mx-auto px-6 sm:px-8 pt-10 pb-16 bg-[var(--bg-color)] flex flex-col text-left transition-colors duration-300">
+        <h2 className="text-xl font-black text-[var(--text-color)] font-sans mb-6 flex items-center gap-2 transition-colors duration-300">
           <Play className="w-5 h-5" style={{ color: accentColor }} />
           Vidéos de la rubrique ({sortedItems.length})
         </h2>
@@ -167,6 +175,8 @@ export default function MagazineGrid({
                 layout="bento"
                 onOpenArticle={onOpenArticle}
                 onOpenVideo={onOpenVideo}
+                isBookmarked={bookmarkedIds.includes(item.url)}
+                onToggleBookmark={onToggleBookmark}
                 accentColor={accentColor}
               />
             ))}
@@ -180,16 +190,16 @@ export default function MagazineGrid({
   if (activeFilter === 'articles') {
     if (sortedItems.length === 0) {
       return (
-        <div className="w-full max-w-4xl mx-auto py-20 text-center text-gray-400 font-sans px-6 bg-[#050505]">
-          <BookOpen className="w-12 h-12 mx-auto text-gray-550 mb-3" />
+        <div className="w-full max-w-4xl mx-auto py-20 text-center text-[var(--text-muted)] font-sans px-6 bg-[var(--bg-color)] transition-colors duration-300">
+          <BookOpen className="w-12 h-12 mx-auto text-[var(--text-muted)] mb-3" />
           <p>Aucun article disponible pour cette recherche ou ce tag.</p>
         </div>
       );
     }
 
     return (
-      <div className="w-full max-w-4xl mx-auto px-6 sm:px-8 pt-10 pb-16 bg-[#050505] flex flex-col text-left">
-        <h2 className="text-xl font-black text-white font-sans mb-6 flex items-center gap-2">
+      <div className="w-full max-w-4xl mx-auto px-6 sm:px-8 pt-10 pb-16 bg-[var(--bg-color)] flex flex-col text-left transition-colors duration-300">
+        <h2 className="text-xl font-black text-[var(--text-color)] font-sans mb-6 flex items-center gap-2 transition-colors duration-300">
           <BookOpen className="w-5 h-5" style={{ color: accentColor }} />
           Articles de la rubrique ({sortedItems.length})
         </h2>
@@ -202,6 +212,8 @@ export default function MagazineGrid({
                 layout="bento"
                 onOpenArticle={onOpenArticle}
                 onOpenVideo={onOpenVideo}
+                isBookmarked={bookmarkedIds.includes(item.url)}
+                onToggleBookmark={onToggleBookmark}
                 accentColor={accentColor}
               />
             ))}
@@ -214,95 +226,30 @@ export default function MagazineGrid({
   // --- 4. BENTO "À LA UNE" DEFAULT VIEW ---
   if (!sortedItems || sortedItems.length === 0) {
     return (
-      <div className="w-full max-w-4xl mx-auto py-20 text-center text-gray-400 font-sans bg-[#050505]">
+      <div className="w-full max-w-4xl mx-auto py-20 text-center text-[var(--text-muted)] font-sans bg-[var(--bg-color)] transition-colors duration-300">
         Aucun contenu disponible correspondant aux critères.
       </div>
     );
   }
 
-  const heroItem = sortedItems[0];
-  const sideItem = sortedItems[1];
-  const middleItems = sortedItems.slice(2, 5);
-  const bannerItem = sortedItems[5];
-
   return (
-    <div className="w-full max-w-4xl mx-auto px-6 sm:px-8 pt-10 pb-16 bg-[#050505] flex flex-col gap-8">
-      {/* 3-Column Bento Grid */}
+    <div className="w-full max-w-4xl mx-auto px-6 sm:px-8 pt-10 pb-16 bg-[var(--bg-color)] flex flex-col gap-8 transition-colors duration-300">
+      {/* 3-Column Uniform Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        
-        {/* Card 1: Large Featured Hero Card */}
-        {heroItem && (
-          <div className="lg:col-span-2 md:col-span-2">
+        <AnimatePresence mode="popLayout">
+          {sortedItems.map((item) => (
             <VibrantCard 
-              item={heroItem}
-              layout="hero"
-              onOpenArticle={onOpenArticle}
-              onOpenVideo={onOpenVideo}
-              accentColor={accentColor}
-            />
-          </div>
-        )}
-
-        {/* Card 2: Regular Bento Card */}
-        {sideItem && (
-          <div className="lg:col-span-1 md:col-span-2 lg:md:col-span-1">
-            <VibrantCard 
-              item={sideItem}
+              key={item.id}
+              item={item}
               layout="bento"
               onOpenArticle={onOpenArticle}
               onOpenVideo={onOpenVideo}
+              isBookmarked={bookmarkedIds.includes(item.url)}
+              onToggleBookmark={onToggleBookmark}
               accentColor={accentColor}
             />
-          </div>
-        )}
-
-        {/* Cards 3, 4, 5: Regular Bento Cards */}
-        <AnimatePresence mode="popLayout">
-          {middleItems.map((item) => (
-            <div key={item.id} className="lg:col-span-1 md:col-span-1">
-              <VibrantCard 
-                key={item.id}
-                item={item}
-                layout="bento"
-                onOpenArticle={onOpenArticle}
-                onOpenVideo={onOpenVideo}
-                accentColor={accentColor}
-              />
-            </div>
           ))}
         </AnimatePresence>
-
-        {/* Card 6: Horizontal Banner Card */}
-        {bannerItem && (
-          <div className="lg:col-span-3 md:col-span-2">
-            <VibrantCard 
-              item={bannerItem}
-              layout="hero"
-              onOpenArticle={onOpenArticle}
-              onOpenVideo={onOpenVideo}
-              accentColor={accentColor}
-            />
-          </div>
-        )}
-
-        {/* Extra items (if any) in standard 3-column layout */}
-        {sortedItems.length > 6 && (
-          <AnimatePresence mode="popLayout">
-            {sortedItems.slice(6).map((item) => (
-              <div key={item.id} className="lg:col-span-1 md:col-span-1">
-                <VibrantCard 
-                  key={item.id}
-                  item={item}
-                  layout="bento"
-                  onOpenArticle={onOpenArticle}
-                  onOpenVideo={onOpenVideo}
-                  accentColor={accentColor}
-                />
-              </div>
-            ))}
-          </AnimatePresence>
-        )}
-
       </div>
     </div>
   );

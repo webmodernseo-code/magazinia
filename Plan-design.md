@@ -52,5 +52,25 @@ Création d'une plateforme web éditoriale haut de gamme multi-sujet, fonctionna
 - **Données :** Structure statique dans `magazineData.js` contenant exactement 10 items (5 vidéos + 5 articles du Lundi au Vendredi) par catégorie.
 
 ---
-**Dernière mise à jour :** 6 Juillet 2026 - Curation Lundi-Vendredi & Thémage Dynamique par Sujet.
-**Statut :** Spécifications Validées.
+
+## 5. Exigences d'Ingestion & Résilience (Quality Gate 2026)
+
+### A. Fiabilisation et validation des URLs
+- **Extraction source brute** : Les URLs d'articles proviennent exclusivement de Firecrawl (`metadata.sourceURL`, `metadata.ogUrl`, etc.) et ne doivent jamais transiter par la génération de texte du LLM.
+- **Vérification HTTP avant écriture** : Chaque URL est validée par requête HTTP `HEAD` (ou `GET` si refusé, timeout 5s, User-Agent navigateur).
+  - Statut `200-299` -> inséré.
+  - Statut `301/302` -> suivi de la redirection et stockage de la cible finale.
+  - Statut `404/410` ou erreur réseau -> article rejeté du batch avec logs détaillés de la cause.
+- **Résolution relative** : Toute URL relative est automatiquement convertie en absolue à l'aide de l'origine de base.
+- **Canonicalisation** : Utilisation préférentielle des balises `<link rel="canonical">` ou `og:url` lues dans le HTML.
+- **Unicité** : Contrainte d'unicité SQL sur l'URL finale dans Supabase pour éviter les doublons.
+
+### B. Cascade de gestion des miniatures
+- **Validation d'image d'origine** : Test de l'image OpenGraph (`og:image`). Si code HTTP 200 et type MIME `image/*` -> stockage.
+- **Pool de repli Supabase Storage** : Si absente ou morte, assignation d'une image thématique correspondante depuis le bucket public `thumbnails-fallback` (pool par catégories : `ia`, `cybersecurite`, `hardware`, `business`, `science`, `qhse`).
+- **Trace d'origine** : Stockage du type de source (`thumbnail_source` = `'og'` ou `'fallback'`).
+- **Résilience UI locale** : Implémentation d'un gestionnaire `onError` sur les balises image du client React pour rebasculer automatiquement sur l'image locale correspondante à la catégorie si la miniature de l'hôte distant meurt après coup.
+
+---
+**Dernière mise à jour :** 9 Juillet 2026 - Intégration Header Sticky, Fusion Résiliente Supabase, Validation des URLs réelles (Bug 1) et Cascade de Miniatures (Bug 2).
+**Statut :** Verified & Polished (Quality Gate 2026 atteint avec 10/10).

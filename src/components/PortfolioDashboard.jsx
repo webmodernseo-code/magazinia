@@ -197,37 +197,37 @@ export default function PortfolioDashboard({ accentColor = '#F59E0B' }) {
 
   if (!isAuthenticated) {
     return (
-      <div className="w-full max-w-md mx-auto px-6 py-12 bg-[#0C0E0C] border border-[#1E221F] rounded-[32px] text-center my-12 font-sans shadow-[0_8px_30px_rgba(0,0,0,0.6)]">
+      <div className="w-full max-w-md mx-auto px-6 py-12 bg-[var(--card-bg)] border border-[var(--border-color)] rounded-[32px] text-center my-12 font-sans shadow-[0_8px_30px_rgba(0,0,0,0.6)]">
         <div 
           style={{ backgroundColor: `${accentColor}10`, color: accentColor }}
           className="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-white/5"
         >
           <Lock className="w-5 h-5" />
         </div>
-        <h2 className="text-xl font-black text-white tracking-tight mb-2 uppercase">Carnet d'Investissement Privé</h2>
-        <p className="text-xs text-gray-500 mb-8 leading-relaxed">
+        <h2 className="text-xl font-black text-[var(--text-color)] tracking-tight mb-2 uppercase">Carnet d'Investissement Privé</h2>
+        <p className="text-xs text-[var(--text-muted)] mb-8 leading-relaxed">
           Ce module contient vos données de portefeuille, votre journal de décisions et vos analyses de risques. Veuillez vous authentifier pour y accéder.
         </p>
 
         <form onSubmit={handleLogin} className="space-y-4 text-left">
           <div>
-            <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2">Identifiant</label>
+            <label className="text-[9px] font-black text-[var(--pill-text)] uppercase tracking-widest block mb-2">Identifiant</label>
             <input 
               type="text" 
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Ex: admin"
-              className="w-full px-4 py-3 bg-[#050505] border border-[#1E221F] rounded-xl text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#F59E0B]/50 transition-colors"
+              className="w-full px-4 py-3 bg-[var(--bg-color)] border border-[var(--border-color)] rounded-xl text-xs text-[var(--text-color)] placeholder-gray-600 focus:outline-none focus:border-[#F59E0B]/50 transition-colors"
             />
           </div>
           <div>
-            <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2">Mot de passe</label>
+            <label className="text-[9px] font-black text-[var(--pill-text)] uppercase tracking-widest block mb-2">Mot de passe</label>
             <input 
               type="password" 
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Ex: brvm2026"
-              className="w-full px-4 py-3 bg-[#050505] border border-[#1E221F] rounded-xl text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#F59E0B]/50 transition-colors"
+              className="w-full px-4 py-3 bg-[var(--bg-color)] border border-[var(--border-color)] rounded-xl text-xs text-[var(--text-color)] placeholder-gray-600 focus:outline-none focus:border-[#F59E0B]/50 transition-colors"
             />
           </div>
 
@@ -238,7 +238,7 @@ export default function PortfolioDashboard({ accentColor = '#F59E0B' }) {
           <button 
             type="submit"
             style={{ backgroundColor: accentColor }}
-            className="w-full py-3.5 mt-4 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:scale-[1.01] active:scale-95 transition-all duration-200 border-none cursor-pointer"
+            className="w-full py-3.5 mt-4 text-[var(--text-color)] text-[10px] font-black uppercase tracking-widest rounded-xl hover:scale-[1.01] active:scale-95 transition-all duration-200 border-none cursor-pointer"
           >
             S'authentifier
           </button>
@@ -248,12 +248,12 @@ export default function PortfolioDashboard({ accentColor = '#F59E0B' }) {
   }
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 py-8 text-left bg-[#050505] text-white rounded-[32px] mb-12 mt-6 animate-fade-in font-sans">
+    <div className="w-full max-w-6xl mx-auto px-4 py-8 text-left bg-[var(--bg-color)] text-[var(--text-color)] rounded-[32px] mb-12 mt-6 animate-fade-in font-sans">
       
       {/* Upper Navigation Bar */}
-      <div className="flex justify-between items-center border-b border-[#1E221F] pb-6 mb-8">
+      <div className="flex justify-between items-center border-b border-[var(--border-color)] pb-6 mb-8">
         <div>
-          <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest block mb-1">Espace Personnel</span>
+          <span className="text-[8px] font-black text-[var(--text-muted)] uppercase tracking-widest block mb-1">Espace Personnel</span>
           <h1 className="text-xl sm:text-2xl font-black uppercase tracking-tight flex items-center gap-2">
             Carnet d'Investissement
           </h1>
@@ -268,7 +268,7 @@ export default function PortfolioDashboard({ accentColor = '#F59E0B' }) {
       </div>
 
       {/* Sub Tabs */}
-      <div className="flex gap-2 mb-8 border-b border-[#1E221F]/40 pb-4">
+      <div className="flex gap-2 mb-8 border-b border-[var(--border-color)]/40 pb-4">
         {[
           { key: 'portfolio', label: 'Portefeuille & Suivi' },
           { key: 'decisions', label: 'Journal des Décisions' },
@@ -293,56 +293,56 @@ export default function PortfolioDashboard({ accentColor = '#F59E0B' }) {
         <div className="space-y-8">
           {/* Key Figures Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <div className="bg-[#0C0E0C] border border-[#1E221F] rounded-2xl p-6 relative overflow-hidden">
-              <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest block mb-1">Capital Investi</span>
-              <span className="text-2xl font-black text-white">{totalValuation.toLocaleString('fr-FR')} FCFA</span>
+            <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl p-6 relative overflow-hidden">
+              <span className="text-[8px] font-black text-[var(--text-muted)] uppercase tracking-widest block mb-1">Capital Investi</span>
+              <span className="text-2xl font-black text-[var(--text-color)]">{totalValuation.toLocaleString('fr-FR')} FCFA</span>
               <div className="absolute right-4 bottom-4 text-emerald-500 flex items-center gap-1 text-[10px] font-bold">
                 <TrendingUp className="w-3.5 h-3.5" /> +8.4%
               </div>
             </div>
-            <div className="bg-[#0C0E0C] border border-[#1E221F] rounded-2xl p-6">
-              <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest block mb-1">Nombre de Lignes</span>
-              <span className="text-2xl font-black text-white">{transactions.length} entreprises</span>
+            <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl p-6">
+              <span className="text-[8px] font-black text-[var(--text-muted)] uppercase tracking-widest block mb-1">Nombre de Lignes</span>
+              <span className="text-2xl font-black text-[var(--text-color)]">{transactions.length} entreprises</span>
             </div>
-            <div className="bg-[#0C0E0C] border border-[#1E221F] rounded-2xl p-6 relative overflow-hidden">
-              <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest block mb-1">Rendement Moyen</span>
-              <span className="text-2xl font-black text-white">6.8%</span>
+            <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl p-6 relative overflow-hidden">
+              <span className="text-[8px] font-black text-[var(--text-muted)] uppercase tracking-widest block mb-1">Rendement Moyen</span>
+              <span className="text-2xl font-black text-[var(--text-color)]">6.8%</span>
             </div>
           </div>
 
           {/* Portfolio Lines */}
-          <div className="bg-[#0C0E0C] border border-[#1E221F] rounded-2xl overflow-hidden">
-            <div className="px-6 py-4 border-b border-[#1E221F] bg-[#111311]/40">
-              <h3 className="text-xs font-black uppercase tracking-wider text-gray-300">Vos Lignes en Portefeuille</h3>
+          <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl overflow-hidden">
+            <div className="px-6 py-4 border-b border-[var(--border-color)] bg-[var(--pill-bg)]/40">
+              <h3 className="text-xs font-black uppercase tracking-wider text-[var(--text-muted)]">Vos Lignes en Portefeuille</h3>
             </div>
             <div className="divide-y divide-[#1E221F]">
               {transactions.length === 0 ? (
-                <div className="p-6 text-center text-xs text-gray-500">Aucune entreprise en portefeuille pour le moment.</div>
+                <div className="p-6 text-center text-xs text-[var(--text-muted)]">Aucune entreprise en portefeuille pour le moment.</div>
               ) : (
                 transactions.map((tx) => (
                   <div key={tx.id} className="p-6 flex flex-col md:flex-row md:items-start justify-between gap-6">
                     <div className="space-y-2">
                       <div className="flex items-center gap-2.5">
                         <span style={{ backgroundColor: accentColor }} className="w-2 h-2 rounded-full"></span>
-                        <h4 className="text-base font-black text-white">{tx.company}</h4>
-                        <span className="text-[9px] font-extrabold uppercase tracking-widest bg-white/5 border border-white/10 px-2 py-0.5 rounded text-gray-400">
+                        <h4 className="text-base font-black text-[var(--text-color)]">{tx.company}</h4>
+                        <span className="text-[9px] font-extrabold uppercase tracking-widest bg-white/5 border border-white/10 px-2 py-0.5 rounded text-[var(--pill-text)]">
                           {tx.horizon}
                         </span>
                       </div>
-                      <p className="text-xs text-gray-400 max-w-xl leading-relaxed">
-                        <strong className="text-gray-300">Thèse : </strong> {tx.thesis}
+                      <p className="text-xs text-[var(--pill-text)] max-w-xl leading-relaxed">
+                        <strong className="text-[var(--text-muted)]">Thèse : </strong> {tx.thesis}
                       </p>
                       {tx.hypotheses && (
-                        <p className="text-xs text-gray-400 max-w-xl leading-relaxed">
-                          <strong className="text-gray-300">Hypothèses clés : </strong> {tx.hypotheses}
+                        <p className="text-xs text-[var(--pill-text)] max-w-xl leading-relaxed">
+                          <strong className="text-[var(--text-muted)]">Hypothèses clés : </strong> {tx.hypotheses}
                         </p>
                       )}
                     </div>
                     <div className="flex md:flex-col items-end gap-2 shrink-0">
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-[var(--text-muted)]">
                         {tx.quantity} actions @ {tx.price.toLocaleString('fr-FR')} FCFA
                       </span>
-                      <span className="text-sm font-extrabold text-white">
+                      <span className="text-sm font-extrabold text-[var(--text-color)]">
                         {(tx.price * tx.quantity).toLocaleString('fr-FR')} FCFA
                       </span>
                     </div>
@@ -353,26 +353,26 @@ export default function PortfolioDashboard({ accentColor = '#F59E0B' }) {
           </div>
 
           {/* Hypothèses vs Réalités Alert Board */}
-          <div className="bg-[#0C0E0C] border border-[#1E221F] rounded-2xl p-6">
-            <h3 className="text-xs font-black uppercase tracking-wider text-gray-300 mb-4 flex items-center gap-2">
+          <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl p-6">
+            <h3 className="text-xs font-black uppercase tracking-wider text-[var(--text-muted)] mb-4 flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 text-amber-500" />
               Suivi d'Alertes : Hypothèses vs Résultats observés
             </h3>
             <div className="space-y-4">
-              <div className="border border-white/5 rounded-xl p-4 bg-[#111311]/40 flex gap-4">
+              <div className="border border-white/5 rounded-xl p-4 bg-[var(--pill-bg)]/40 flex gap-4">
                 <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="text-xs font-bold text-white">Sonatel — Résistance opérationnelle au Mali</h4>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <h4 className="text-xs font-bold text-[var(--text-color)]">Sonatel — Résistance opérationnelle au Mali</h4>
+                  <p className="text-xs text-[var(--pill-text)] mt-1">
                     Les résultats du premier semestre confirment une hausse de 6.4% du trafic de données au Mali, validant l'hypothèse de résilience du marché local.
                   </p>
                 </div>
               </div>
-              <div className="border border-white/5 rounded-xl p-4 bg-[#111311]/40 flex gap-4">
+              <div className="border border-white/5 rounded-xl p-4 bg-[var(--pill-bg)]/40 flex gap-4">
                 <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="text-xs font-bold text-white">Ecobank CI — Risque de crédit en hausse</h4>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <h4 className="text-xs font-bold text-[var(--text-color)]">Ecobank CI — Risque de crédit en hausse</h4>
+                  <p className="text-xs text-[var(--pill-text)] mt-1">
                     Augmentation temporaire de 1.2% du coût du risque par rapport à nos hypothèses de base. À surveiller lors des prochains trimestres.
                   </p>
                 </div>
@@ -386,30 +386,30 @@ export default function PortfolioDashboard({ accentColor = '#F59E0B' }) {
       {activeSubTab === 'decisions' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Form to add decision */}
-          <div className="bg-[#0C0E0C] border border-[#1E221F] rounded-2xl p-6 h-fit">
-            <h3 className="text-xs font-black uppercase tracking-wider text-gray-300 mb-6 flex items-center gap-2">
+          <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl p-6 h-fit">
+            <h3 className="text-xs font-black uppercase tracking-wider text-[var(--text-muted)] mb-6 flex items-center gap-2">
               <Plus className="w-4 h-4" style={{ color: accentColor }} />
               Nouvelle Décision
             </h3>
             <form onSubmit={handleAddTransaction} className="space-y-4 text-left">
               <div>
-                <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2">Entreprise</label>
+                <label className="text-[9px] font-black text-[var(--pill-text)] uppercase tracking-widest block mb-2">Entreprise</label>
                 <input 
                   type="text" 
                   value={company}
                   onChange={(e) => setCompany(e.target.value)}
                   placeholder="Ex: Sonatel"
                   required
-                  className="w-full px-4 py-3 bg-[#050505] border border-[#1E221F] rounded-xl text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#F59E0B]/50 transition-colors"
+                  className="w-full px-4 py-3 bg-[var(--bg-color)] border border-[var(--border-color)] rounded-xl text-xs text-[var(--text-color)] placeholder-gray-600 focus:outline-none focus:border-[#F59E0B]/50 transition-colors"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2">Décision</label>
+                  <label className="text-[9px] font-black text-[var(--pill-text)] uppercase tracking-widest block mb-2">Décision</label>
                   <select 
                     value={decision}
                     onChange={(e) => setDecision(e.target.value)}
-                    className="w-full px-4 py-3 bg-[#050505] border border-[#1E221F] rounded-xl text-xs text-white focus:outline-none focus:border-[#F59E0B]/50 transition-colors"
+                    className="w-full px-4 py-3 bg-[var(--bg-color)] border border-[var(--border-color)] rounded-xl text-xs text-[var(--text-color)] focus:outline-none focus:border-[#F59E0B]/50 transition-colors"
                   >
                     <option value="Achat">Achat</option>
                     <option value="Renforcement">Renforcement</option>
@@ -417,11 +417,11 @@ export default function PortfolioDashboard({ accentColor = '#F59E0B' }) {
                   </select>
                 </div>
                 <div>
-                  <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2">Horizon</label>
+                  <label className="text-[9px] font-black text-[var(--pill-text)] uppercase tracking-widest block mb-2">Horizon</label>
                   <select 
                     value={horizon}
                     onChange={(e) => setHorizon(e.target.value)}
-                    className="w-full px-4 py-3 bg-[#050505] border border-[#1E221F] rounded-xl text-xs text-white focus:outline-none focus:border-[#F59E0B]/50 transition-colors"
+                    className="w-full px-4 py-3 bg-[var(--bg-color)] border border-[var(--border-color)] rounded-xl text-xs text-[var(--text-color)] focus:outline-none focus:border-[#F59E0B]/50 transition-colors"
                   >
                     <option value="5 ans">5 ans</option>
                     <option value="10 ans">10 ans</option>
@@ -431,70 +431,70 @@ export default function PortfolioDashboard({ accentColor = '#F59E0B' }) {
               </div>
               <div className="grid grid-cols-3 gap-2">
                 <div className="col-span-1">
-                  <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2">Quantité</label>
+                  <label className="text-[9px] font-black text-[var(--pill-text)] uppercase tracking-widest block mb-2">Quantité</label>
                   <input 
                     type="number" 
                     value={quantity}
                     onChange={(e) => setQuantity(e.target.value)}
                     placeholder="10"
                     required
-                    className="w-full px-3 py-3 bg-[#050505] border border-[#1E221F] rounded-xl text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#F59E0B]/50 transition-colors"
+                    className="w-full px-3 py-3 bg-[var(--bg-color)] border border-[var(--border-color)] rounded-xl text-xs text-[var(--text-color)] placeholder-gray-600 focus:outline-none focus:border-[#F59E0B]/50 transition-colors"
                   />
                 </div>
                 <div className="col-span-2">
-                  <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2">Prix unitaire (FCFA)</label>
+                  <label className="text-[9px] font-black text-[var(--pill-text)] uppercase tracking-widest block mb-2">Prix unitaire (FCFA)</label>
                   <input 
                     type="number" 
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
                     placeholder="19000"
                     required
-                    className="w-full px-3 py-3 bg-[#050505] border border-[#1E221F] rounded-xl text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#F59E0B]/50 transition-colors"
+                    className="w-full px-3 py-3 bg-[var(--bg-color)] border border-[var(--border-color)] rounded-xl text-xs text-[var(--text-color)] placeholder-gray-600 focus:outline-none focus:border-[#F59E0B]/50 transition-colors"
                   />
                 </div>
               </div>
               <div>
-                <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2">Montant global (FCFA)</label>
+                <label className="text-[9px] font-black text-[var(--pill-text)] uppercase tracking-widest block mb-2">Montant global (FCFA)</label>
                 <input 
                   type="number" 
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder="190000"
                   required
-                  className="w-full px-4 py-3 bg-[#050505] border border-[#1E221F] rounded-xl text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#F59E0B]/50 transition-colors"
+                  className="w-full px-4 py-3 bg-[var(--bg-color)] border border-[var(--border-color)] rounded-xl text-xs text-[var(--text-color)] placeholder-gray-600 focus:outline-none focus:border-[#F59E0B]/50 transition-colors"
                 />
               </div>
               <div>
-                <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2">Thèse d'investissement</label>
+                <label className="text-[9px] font-black text-[var(--pill-text)] uppercase tracking-widest block mb-2">Thèse d'investissement</label>
                 <textarea 
                   value={thesis}
                   onChange={(e) => setThesis(e.target.value)}
                   placeholder="Pourquoi cette entreprise ?"
-                  className="w-full px-4 py-3 bg-[#050505] border border-[#1E221F] rounded-xl text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#F59E0B]/50 h-20 transition-colors resize-none font-sans"
+                  className="w-full px-4 py-3 bg-[var(--bg-color)] border border-[var(--border-color)] rounded-xl text-xs text-[var(--text-color)] placeholder-gray-600 focus:outline-none focus:border-[#F59E0B]/50 h-20 transition-colors resize-none font-sans"
                 />
               </div>
               <div>
-                <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2">Hypothèses clés</label>
+                <label className="text-[9px] font-black text-[var(--pill-text)] uppercase tracking-widest block mb-2">Hypothèses clés</label>
                 <textarea 
                   value={hypotheses}
                   onChange={(e) => setHypotheses(e.target.value)}
                   placeholder="Qu'est-ce qui va générer de la croissance ?"
-                  className="w-full px-4 py-3 bg-[#050505] border border-[#1E221F] rounded-xl text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#F59E0B]/50 h-16 transition-colors resize-none font-sans"
+                  className="w-full px-4 py-3 bg-[var(--bg-color)] border border-[var(--border-color)] rounded-xl text-xs text-[var(--text-color)] placeholder-gray-600 focus:outline-none focus:border-[#F59E0B]/50 h-16 transition-colors resize-none font-sans"
                 />
               </div>
               <div>
-                <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2">Risques identifiés</label>
+                <label className="text-[9px] font-black text-[var(--pill-text)] uppercase tracking-widest block mb-2">Risques identifiés</label>
                 <textarea 
                   value={risks}
                   onChange={(e) => setRisks(e.target.value)}
                   placeholder="Ce qui pourrait invalider la thèse"
-                  className="w-full px-4 py-3 bg-[#050505] border border-[#1E221F] rounded-xl text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#F59E0B]/50 h-16 transition-colors resize-none font-sans"
+                  className="w-full px-4 py-3 bg-[var(--bg-color)] border border-[var(--border-color)] rounded-xl text-xs text-[var(--text-color)] placeholder-gray-600 focus:outline-none focus:border-[#F59E0B]/50 h-16 transition-colors resize-none font-sans"
                 />
               </div>
               <button 
                 type="submit"
                 style={{ backgroundColor: accentColor }}
-                className="w-full py-3 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:scale-[1.01] active:scale-95 transition-all duration-200 border-none cursor-pointer mt-2"
+                className="w-full py-3 text-[var(--text-color)] text-[10px] font-black uppercase tracking-widest rounded-xl hover:scale-[1.01] active:scale-95 transition-all duration-200 border-none cursor-pointer mt-2"
               >
                 Acter la décision
               </button>
@@ -503,13 +503,13 @@ export default function PortfolioDashboard({ accentColor = '#F59E0B' }) {
 
           {/* List of decisions */}
           <div className="lg:col-span-2 space-y-6">
-            <h3 className="text-xs font-black uppercase tracking-wider text-gray-400 flex items-center gap-2">
-              <BookOpen className="w-4 h-4 text-gray-500" />
+            <h3 className="text-xs font-black uppercase tracking-wider text-[var(--pill-text)] flex items-center gap-2">
+              <BookOpen className="w-4 h-4 text-[var(--text-muted)]" />
               Journal Historique des Décisions
             </h3>
             <div className="space-y-4">
               {transactions.map((tx) => (
-                <div key={tx.id} className="bg-[#0C0E0C] border border-[#1E221F] rounded-2xl p-6 relative">
+                <div key={tx.id} className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl p-6 relative">
                   <button 
                     onClick={() => handleDeleteTransaction(tx.id)}
                     className="absolute top-4 right-4 text-gray-600 hover:text-red-400 transition-colors bg-transparent border-none cursor-pointer"
@@ -528,34 +528,34 @@ export default function PortfolioDashboard({ accentColor = '#F59E0B' }) {
                     >
                       {tx.decision}
                     </span>
-                    <span className="text-[10px] font-black text-gray-400">{tx.date}</span>
+                    <span className="text-[10px] font-black text-[var(--pill-text)]">{tx.date}</span>
                   </div>
 
-                  <h4 className="text-base font-black text-white mb-3">{tx.company}</h4>
+                  <h4 className="text-base font-black text-[var(--text-color)] mb-3">{tx.company}</h4>
 
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 bg-[#050505]/40 border border-white/5 rounded-xl p-4 text-left font-sans">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 bg-[var(--bg-color)]/40 border border-white/5 rounded-xl p-4 text-left font-sans">
                     <div>
-                      <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest block mb-0.5">Montant</span>
-                      <span className="text-xs font-bold text-gray-300">{tx.amount.toLocaleString('fr-FR')} F</span>
+                      <span className="text-[8px] font-black text-[var(--text-muted)] uppercase tracking-widest block mb-0.5">Montant</span>
+                      <span className="text-xs font-bold text-[var(--text-muted)]">{tx.amount.toLocaleString('fr-FR')} F</span>
                     </div>
                     <div>
-                      <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest block mb-0.5">Prix</span>
-                      <span className="text-xs font-bold text-gray-300">{tx.price.toLocaleString('fr-FR')} F</span>
+                      <span className="text-[8px] font-black text-[var(--text-muted)] uppercase tracking-widest block mb-0.5">Prix</span>
+                      <span className="text-xs font-bold text-[var(--text-muted)]">{tx.price.toLocaleString('fr-FR')} F</span>
                     </div>
                     <div>
-                      <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest block mb-0.5">Quantité</span>
-                      <span className="text-xs font-bold text-gray-300">{tx.quantity}</span>
+                      <span className="text-[8px] font-black text-[var(--text-muted)] uppercase tracking-widest block mb-0.5">Quantité</span>
+                      <span className="text-xs font-bold text-[var(--text-muted)]">{tx.quantity}</span>
                     </div>
                     <div>
-                      <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest block mb-0.5">Horizon</span>
-                      <span className="text-xs font-bold text-gray-300">{tx.horizon}</span>
+                      <span className="text-[8px] font-black text-[var(--text-muted)] uppercase tracking-widest block mb-0.5">Horizon</span>
+                      <span className="text-xs font-bold text-[var(--text-muted)]">{tx.horizon}</span>
                     </div>
                   </div>
 
-                  <div className="space-y-3 font-sans text-xs text-gray-300 leading-relaxed text-left">
-                    <p><strong className="text-gray-400">Thèse :</strong> {tx.thesis}</p>
-                    <p><strong className="text-gray-400">Hypothèses :</strong> {tx.hypotheses}</p>
-                    <p><strong className="text-gray-400">Risques :</strong> {tx.risks}</p>
+                  <div className="space-y-3 font-sans text-xs text-[var(--text-muted)] leading-relaxed text-left">
+                    <p><strong className="text-[var(--pill-text)]">Thèse :</strong> {tx.thesis}</p>
+                    <p><strong className="text-[var(--pill-text)]">Hypothèses :</strong> {tx.hypotheses}</p>
+                    <p><strong className="text-[var(--pill-text)]">Risques :</strong> {tx.risks}</p>
                   </div>
                 </div>
               ))}
@@ -567,30 +567,30 @@ export default function PortfolioDashboard({ accentColor = '#F59E0B' }) {
       {activeSubTab === 'errors' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Form to add error */}
-          <div className="bg-[#0C0E0C] border border-[#1E221F] rounded-2xl p-6 h-fit">
-            <h3 className="text-xs font-black uppercase tracking-wider text-gray-300 mb-6 flex items-center gap-2">
+          <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl p-6 h-fit">
+            <h3 className="text-xs font-black uppercase tracking-wider text-[var(--text-muted)] mb-6 flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 text-amber-500" />
               Déclarer une Erreur
             </h3>
             <form onSubmit={handleAddError} className="space-y-4 text-left">
               <div>
-                <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2">Entreprise concernée</label>
+                <label className="text-[9px] font-black text-[var(--pill-text)] uppercase tracking-widest block mb-2">Entreprise concernée</label>
                 <input 
                   type="text" 
                   value={errCompany}
                   onChange={(e) => setErrCompany(e.target.value)}
                   placeholder="Ex: Onatel BF"
                   required
-                  className="w-full px-4 py-3 bg-[#050505] border border-[#1E221F] rounded-xl text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#F59E0B]/50 transition-colors"
+                  className="w-full px-4 py-3 bg-[var(--bg-color)] border border-[var(--border-color)] rounded-xl text-xs text-[var(--text-color)] placeholder-gray-600 focus:outline-none focus:border-[#F59E0B]/50 transition-colors"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2">Type d'erreur</label>
+                  <label className="text-[9px] font-black text-[var(--pill-text)] uppercase tracking-widest block mb-2">Type d'erreur</label>
                   <select 
                     value={errType}
                     onChange={(e) => setErrType(e.target.value)}
-                    className="w-full px-4 py-3 bg-[#050505] border border-[#1E221F] rounded-xl text-xs text-white focus:outline-none focus:border-[#F59E0B]/50 transition-colors"
+                    className="w-full px-4 py-3 bg-[var(--bg-color)] border border-[var(--border-color)] rounded-xl text-xs text-[var(--text-color)] focus:outline-none focus:border-[#F59E0B]/50 transition-colors"
                   >
                     <option value="Erreur d'analyse">Erreur d'analyse</option>
                     <option value="Erreur émotionnelle">Erreur émotionnelle</option>
@@ -599,11 +599,11 @@ export default function PortfolioDashboard({ accentColor = '#F59E0B' }) {
                   </select>
                 </div>
                 <div>
-                  <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2">Thèse correcte au départ ?</label>
+                  <label className="text-[9px] font-black text-[var(--pill-text)] uppercase tracking-widest block mb-2">Thèse correcte au départ ?</label>
                   <select 
                     value={errHadReason}
                     onChange={(e) => setErrHadReason(e.target.value)}
-                    className="w-full px-4 py-3 bg-[#050505] border border-[#1E221F] rounded-xl text-xs text-white focus:outline-none focus:border-[#F59E0B]/50 transition-colors"
+                    className="w-full px-4 py-3 bg-[var(--bg-color)] border border-[var(--border-color)] rounded-xl text-xs text-[var(--text-color)] focus:outline-none focus:border-[#F59E0B]/50 transition-colors"
                   >
                     <option value="Oui">Oui</option>
                     <option value="Non">Non</option>
@@ -611,38 +611,38 @@ export default function PortfolioDashboard({ accentColor = '#F59E0B' }) {
                 </div>
               </div>
               <div>
-                <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2">Pourquoi ai-je acheté ?</label>
+                <label className="text-[9px] font-black text-[var(--pill-text)] uppercase tracking-widest block mb-2">Pourquoi ai-je acheté ?</label>
                 <textarea 
                   value={errReasonBuy}
                   onChange={(e) => setErrReasonBuy(e.target.value)}
                   placeholder="Rappeler l'intention de départ"
                   required
-                  className="w-full px-4 py-3 bg-[#050505] border border-[#1E221F] rounded-xl text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#F59E0B]/50 h-16 transition-colors resize-none font-sans"
+                  className="w-full px-4 py-3 bg-[var(--bg-color)] border border-[var(--border-color)] rounded-xl text-xs text-[var(--text-color)] placeholder-gray-600 focus:outline-none focus:border-[#F59E0B]/50 h-16 transition-colors resize-none font-sans"
                 />
               </div>
               <div>
-                <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2">Résultat obtenu</label>
+                <label className="text-[9px] font-black text-[var(--pill-text)] uppercase tracking-widest block mb-2">Résultat obtenu</label>
                 <textarea 
                   value={errResult}
                   onChange={(e) => setErrResult(e.target.value)}
                   placeholder="Qu'est-ce qui s'est réellement passé ?"
-                  className="w-full px-4 py-3 bg-[#050505] border border-[#1E221F] rounded-xl text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#F59E0B]/50 h-16 transition-colors resize-none font-sans"
+                  className="w-full px-4 py-3 bg-[var(--bg-color)] border border-[var(--border-color)] rounded-xl text-xs text-[var(--text-color)] placeholder-gray-600 focus:outline-none focus:border-[#F59E0B]/50 h-16 transition-colors resize-none font-sans"
                 />
               </div>
               <div>
-                <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2">Enseignements / Règle d'or à en tirer</label>
+                <label className="text-[9px] font-black text-[var(--pill-text)] uppercase tracking-widest block mb-2">Enseignements / Règle d'or à en tirer</label>
                 <textarea 
                   value={errLessons}
                   onChange={(e) => setErrLessons(e.target.value)}
                   placeholder="La règle d'or pour enrichir mon manuel personnel d'investissement"
                   required
-                  className="w-full px-4 py-3 bg-[#050505] border border-[#1E221F] rounded-xl text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#F59E0B]/50 h-20 transition-colors resize-none font-sans"
+                  className="w-full px-4 py-3 bg-[var(--bg-color)] border border-[var(--border-color)] rounded-xl text-xs text-[var(--text-color)] placeholder-gray-600 focus:outline-none focus:border-[#F59E0B]/50 h-20 transition-colors resize-none font-sans"
                 />
               </div>
               <button 
                 type="submit"
                 style={{ backgroundColor: accentColor }}
-                className="w-full py-3 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:scale-[1.01] active:scale-95 transition-all duration-200 border-none cursor-pointer mt-2"
+                className="w-full py-3 text-[var(--text-color)] text-[10px] font-black uppercase tracking-widest rounded-xl hover:scale-[1.01] active:scale-95 transition-all duration-200 border-none cursor-pointer mt-2"
               >
                 Inscrire au Manuel
               </button>
@@ -651,13 +651,13 @@ export default function PortfolioDashboard({ accentColor = '#F59E0B' }) {
 
           {/* Errors log */}
           <div className="lg:col-span-2 space-y-6">
-            <h3 className="text-xs font-black uppercase tracking-wider text-gray-400 flex items-center gap-2">
-              <BookOpen className="w-4 h-4 text-gray-500" />
+            <h3 className="text-xs font-black uppercase tracking-wider text-[var(--pill-text)] flex items-center gap-2">
+              <BookOpen className="w-4 h-4 text-[var(--text-muted)]" />
               Manuel Personnel d'Investissement (Journal des Erreurs)
             </h3>
             <div className="space-y-4">
               {errorsLog.map((err) => (
-                <div key={err.id} className="bg-[#0C0E0C] border border-[#1E221F] rounded-2xl p-6 relative">
+                <div key={err.id} className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl p-6 relative">
                   <button 
                     onClick={() => handleDeleteError(err.id)}
                     className="absolute top-4 right-4 text-gray-600 hover:text-red-400 transition-colors bg-transparent border-none cursor-pointer"
@@ -669,21 +669,21 @@ export default function PortfolioDashboard({ accentColor = '#F59E0B' }) {
                     <span className="bg-amber-955/80 border border-amber-900/35 text-amber-500 text-[8px] font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded">
                       {err.errType}
                     </span>
-                    <span className="text-[9px] font-extrabold uppercase tracking-widest bg-white/5 border border-white/10 px-2 py-0.5 rounded text-gray-400">
+                    <span className="text-[9px] font-extrabold uppercase tracking-widest bg-white/5 border border-white/10 px-2 py-0.5 rounded text-[var(--pill-text)]">
                       Thèse valide ? {err.hadReason}
                     </span>
                   </div>
 
-                  <h4 className="text-base font-black text-white mb-4">{err.company}</h4>
+                  <h4 className="text-base font-black text-[var(--text-color)] mb-4">{err.company}</h4>
 
-                  <div className="space-y-4 font-sans text-xs text-gray-300 leading-relaxed text-left">
-                    <div className="border-l-2 border-[#1E221F] pl-4">
-                      <strong className="text-gray-400 block mb-1">Pourquoi l'achat a été effectué :</strong>
+                  <div className="space-y-4 font-sans text-xs text-[var(--text-muted)] leading-relaxed text-left">
+                    <div className="border-l-2 border-[var(--border-color)] pl-4">
+                      <strong className="text-[var(--pill-text)] block mb-1">Pourquoi l'achat a été effectué :</strong>
                       {err.reasonBuy}
                     </div>
                     {err.result && (
-                      <div className="border-l-2 border-[#1E221F] pl-4">
-                        <strong className="text-gray-400 block mb-1">Résultat :</strong>
+                      <div className="border-l-2 border-[var(--border-color)] pl-4">
+                        <strong className="text-[var(--pill-text)] block mb-1">Résultat :</strong>
                         {err.result}
                       </div>
                     )}

@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Share2, ExternalLink, Check, Copy, Play, Award, Lightbulb, BookOpen, Layers, Briefcase, Zap, ShieldAlert } from 'lucide-react';
+import { supabase } from '../lib/supabaseClient';
 
 const getRealDateForDay = (dayName) => {
   const daysOfWeek = {
@@ -16,7 +17,10 @@ const getRealDateForDay = (dayName) => {
   const today = new Date();
   const currentDayNumber = today.getDay() || 7; // 1 = Lundi, ..., 7 = Dimanche
   
-  const diff = targetDayNumber - currentDayNumber;
+  let diff = targetDayNumber - currentDayNumber;
+  if (diff > 0) {
+    diff -= 7;
+  }
   const targetDate = new Date(today);
   targetDate.setDate(today.getDate() + diff);
   
@@ -35,7 +39,19 @@ const getAuthorInitials = (authorName) => {
   return cleanName.slice(0, 2).toUpperCase();
 };
 
-const getShortCategoryLabel = (cat) => {
+const getShortCategoryLabel = (cat, catKey = '') => {
+  if (!cat) return 'QHSE';
+  const ck = catKey.toLowerCase();
+  if (ck.startsWith('qhse')) {
+    const c = cat.toLowerCase();
+    if (c.includes('humain') || c.includes('fof')) return 'Pilier 1';
+    if (c.includes('risqu') || c.includes('fiab') || c.includes('secur') || c.includes('conform') || c.includes('norm')) return 'Pilier 2';
+    if (c.includes('perf') || c.includes('qual')) return 'Pilier 3';
+    if (c.includes('scien') || c.includes('donn')) return 'Pilier 4';
+    if (c.includes('strat') || c.includes('envir')) return 'Pilier 5';
+    return 'QHSE';
+  }
+  
   const c = cat.toLowerCase();
   if (c.includes('humain') || c.includes('fof')) return 'Pilier 1';
   if (c.includes('risqu') || c.includes('fiab')) return 'Pilier 2';
@@ -59,16 +75,20 @@ const getShortCategoryLabel = (cat) => {
 export default function ArticleDetail({ 
   article, 
   onBack, 
-  accentColor = '#10B981', 
+  accentColor = '#3B82F6', 
   onWatchVideo 
 }) {
   const [copied, setCopied] = useState(false);
   const [backHovered, setBackHovered] = useState(false);
+  const [reported, setReported] = useState(false);
+  const [showReportSuccess, setShowReportSuccess] = useState(false);
 
   const {
     id,
     type,
     category,
+    categoryKey,
+    category_key,
     title,
     summary,
     content,
@@ -92,6 +112,76 @@ export default function ArticleDetail({
     expertiseLevel = 'Tous niveaux',
     qhseScore = 8.0
   } = article;
+
+  const [imgSrc, setImgSrc] = useState(thumbnail || '/favicon.svg');
+
+  useEffect(() => {
+    setImgSrc(thumbnail || '/favicon.svg');
+  }, [thumbnail]);
+
+  const getCategoryLocalFallback = (catKey, itemTitle = '') => {
+    const c = catKey ? catKey.toLowerCase() : '';
+    const t = itemTitle ? itemTitle.toLowerCase() : '';
+    if (c.includes('qhse')) {
+      if (t.includes('légifrance') || t.includes('employeur') || t.includes('sécurité')) {
+        return '/images/articles/qhse-legifrance.png';
+      }
+      if (t.includes('aida') || t.includes('seveso') || t.includes('inspection')) {
+        return '/images/articles/qhse-aida.png';
+      }
+      if (t.includes('barpi') || t.includes('aria') || t.includes('déversement') || t.includes('solvant')) {
+        return '/images/articles/qhse-barpi.png';
+      }
+      if (t.includes('actu-environnement') || t.includes('csrd') || t.includes('carbone')) {
+        return '/images/articles/qhse-actuenv.png';
+      }
+      const fallbackList = [
+        '/images/articles/qhse-legifrance.png',
+        '/images/articles/qhse-aida.png',
+        '/images/articles/qhse-barpi.png',
+        '/images/articles/qhse-actuenv.png'
+      ];
+      const idx = itemTitle ? (itemTitle.length % fallbackList.length) : 0;
+      return fallbackList[idx];
+    }
+    if (c.includes('fin') || c.includes('brvm')) {
+      return '/images/articles/fin-ent-2.png';
+    }
+    if (c.includes('ent') || c.includes('usa')) {
+      return '/images/articles/ent-cre-2.png';
+    }
+    if (c.includes('ia') || c.includes('tech')) {
+      return '/images/articles/ia-t-1.png';
+    }
+    return '/images/articles/ia-t-1.png';
+  };
+
+  const handleImageError = () => {
+    const catK = categoryKey || category_key || category || '';
+    const fallbackLocal = getCategoryLocalFallback(catK, title);
+    if (imgSrc !== fallbackLocal) {
+      setImgSrc(fallbackLocal);
+    } else if (imgSrc !== '/favicon.svg') {
+      setImgSrc('/favicon.svg');
+    }
+  };
+
+  const handleReportBroken = async () => {
+    if (reported) return;
+    setReported(true);
+    setShowReportSuccess(true);
+    setTimeout(() => setShowReportSuccess(false), 5000);
+    
+    if (supabase) {
+      try {
+        await supabase
+          .from('broken_reports')
+          .insert([{ article_id: id, url: url, reported_at: new Date().toISOString() }]);
+      } catch (err) {
+        console.warn("Could not sync broken report to database:", err);
+      }
+    }
+  };
 
   const isFinance = id.startsWith('fin');
   const isEntrepreneuriat = id.startsWith('ent');
@@ -119,15 +209,14 @@ export default function ArticleDetail({
 
     return (
       <div 
-        style={{ borderColor: `${accentColor}30` }}
-        className="flex items-center gap-3 bg-[#111311]/80 backdrop-blur border rounded-2xl p-4 shadow-md font-sans"
+        className="flex items-center gap-3 bg-[var(--card-bg)]/80 backdrop-blur border border-[var(--border-color)] rounded-2xl p-4 shadow-md font-sans transition-colors duration-300"
       >
         <div className="relative flex items-center justify-center w-12 h-12">
           {/* Circular SVG Tracker */}
           <svg className="absolute w-full h-full transform -rotate-90">
             <circle 
               cx="24" cy="24" r="20" 
-              stroke="#1A1C1A" strokeWidth="3" 
+              stroke="var(--border-color)" strokeWidth="3" 
               fill="transparent" 
             />
             <circle 
@@ -138,13 +227,13 @@ export default function ArticleDetail({
               strokeDashoffset={125.6 - (125.6 * qhseScore) / 10} 
             />
           </svg>
-          <span className="text-sm font-black text-white">{qhseScore}</span>
+          <span className="text-sm font-black text-[var(--text-color)]">{qhseScore}</span>
         </div>
         <div className="flex flex-col text-left">
-          <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest">
+          <span className="text-[8px] font-black text-[var(--text-muted)] uppercase tracking-widest">
             {getScoreLabel()}
           </span>
-          <span className="text-[10px] font-bold text-gray-300">Score global / 10</span>
+          <span className="text-[10px] font-bold text-[var(--text-muted)]">Score global / 10</span>
         </div>
       </div>
     );
@@ -153,7 +242,7 @@ export default function ArticleDetail({
   // RENDER DYNAMIC ANALYSIS FIELDS
   const renderAnalysis = () => {
     return (
-      <div className="space-y-8 mt-10 border-t border-[#1E221F] pt-8">
+      <div className="space-y-8 mt-10 border-t border-[var(--border-color)] pt-8 transition-colors">
         
         {/* Core summary or findings */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -161,7 +250,7 @@ export default function ArticleDetail({
           {/* Key Ideas or Learnings */}
           <div 
             style={{ backgroundColor: `${accentColor}05`, borderColor: `${accentColor}15` }}
-            className="border rounded-2xl p-6 text-left font-sans"
+            className="border rounded-2xl p-6 text-left font-sans transition-colors"
           >
             <h3 style={{ color: accentColor }} className="text-xs font-black uppercase tracking-wider mb-4 flex items-center gap-2">
               <Lightbulb className="w-4 h-4" />
@@ -171,7 +260,7 @@ export default function ArticleDetail({
             </h3>
             <ul className="space-y-3">
               {(type === 'article' ? ideas : learnings).map((item, index) => (
-                <li key={index} className="flex gap-2.5 text-xs sm:text-sm text-gray-300 leading-relaxed">
+                <li key={index} className="flex gap-2.5 text-xs sm:text-sm text-[var(--text-color)] leading-relaxed">
                   <span style={{ color: accentColor }} className="font-bold select-none">{index + 1}.</span>
                   <span>{item}</span>
                 </li>
@@ -183,8 +272,8 @@ export default function ArticleDetail({
           <div className="flex flex-col gap-6">
             
             {/* Concepts */}
-            <div className="bg-[#0C0E0C] border border-[#1E221F] rounded-2xl p-6 text-left font-sans">
-              <h3 className="text-xs font-black text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+            <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl p-6 text-left font-sans transition-colors">
+              <h3 className="text-xs font-black text-[var(--text-muted)] uppercase tracking-wider mb-4 flex items-center gap-2">
                 <BookOpen className="w-4 h-4" style={{ color: accentColor }} />
                 Concepts importants traités
               </h3>
@@ -193,7 +282,7 @@ export default function ArticleDetail({
                   <span 
                     key={index}
                     style={{ backgroundColor: `${accentColor}10`, color: accentColor, borderColor: `${accentColor}25` }}
-                    className="border text-[10px] font-extrabold uppercase tracking-wider px-3 py-1.5 rounded-lg"
+                    className="border text-[10px] font-extrabold uppercase tracking-wider px-3 py-1.5 rounded-lg transition-colors"
                   >
                     {concept}
                   </span>
@@ -203,14 +292,14 @@ export default function ArticleDetail({
 
             {/* Methods */}
             {type === 'article' && methods.length > 0 && (
-              <div className="bg-[#0C0E0C] border border-[#1E221F] rounded-2xl p-6 text-left font-sans">
-                <h3 className="text-xs font-black text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+              <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl p-6 text-left font-sans transition-colors">
+                <h3 className="text-xs font-black text-[var(--text-muted)] uppercase tracking-wider mb-4 flex items-center gap-2">
                   <Layers className="w-4 h-4" style={{ color: accentColor }} />
                   {isFinance ? "Méthodes de valorisation ou ratios" : "Méthodes ou modèles présentés"}
                 </h3>
                 <div className="flex flex-col gap-2">
                   {methods.map((method, index) => (
-                    <div key={index} className="flex items-center gap-2 text-xs sm:text-sm text-gray-300">
+                    <div key={index} className="flex items-center gap-2 text-xs sm:text-sm text-[var(--text-muted)]">
                       <span style={{ backgroundColor: accentColor }} className="w-1.5 h-1.5 rounded-full shrink-0"></span>
                       <span className="font-medium">{method}</span>
                     </div>
@@ -220,14 +309,14 @@ export default function ArticleDetail({
             )}
 
             {/* Niveau requis & Archive infos */}
-            <div className="bg-[#0C0E0C] border border-[#1E221F] rounded-2xl p-6 text-left font-sans flex justify-between items-center">
+            <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl p-6 text-left font-sans flex justify-between items-center transition-colors">
               <div>
-                <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest block mb-1">Niveau requis</span>
-                <span className="text-xs font-bold text-gray-200">{expertiseLevel}</span>
+                <span className="text-[8px] font-black text-[var(--text-muted)] uppercase tracking-widest block mb-1">Niveau requis</span>
+                <span className="text-xs font-bold text-[var(--text-color)]">{expertiseLevel}</span>
               </div>
               <div className="text-right">
-                <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest block mb-1">Type de source</span>
-                <span className="text-xs font-bold text-gray-200 uppercase">{type === 'article' ? 'Revue / Rapport' : 'Conférence / Vidéo'}</span>
+                <span className="text-[8px] font-black text-[var(--text-muted)] uppercase tracking-widest block mb-1">Type de source</span>
+                <span className="text-xs font-bold text-[var(--text-color)] uppercase">{type === 'article' ? 'Revue / Rapport' : 'Conférence / Vidéo'}</span>
               </div>
             </div>
 
@@ -239,8 +328,8 @@ export default function ArticleDetail({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           
           {/* Importance */}
-          <div className="bg-[#0C0E0C] border border-[#1E221F] rounded-2xl p-6 text-left font-sans">
-            <h3 className="text-xs font-black text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+          <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl p-6 text-left font-sans transition-colors">
+            <h3 className="text-xs font-black text-[var(--text-muted)] uppercase tracking-wider mb-3 flex items-center gap-2">
               <Award className="w-4 h-4" style={{ color: accentColor }} />
               {isFinance 
                 ? "Ce que l'investisseur apprend" 
@@ -248,7 +337,7 @@ export default function ArticleDetail({
                   ? "Ce que l'utilisateur apprend" 
                   : "Intérêt stratégique QHSE"}
             </h3>
-            <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
+            <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
               {whyImportant}
             </p>
           </div>
@@ -256,7 +345,7 @@ export default function ArticleDetail({
           {/* Applications terrains */}
           <div 
             style={{ borderColor: `${accentColor}25` }}
-            className="bg-[#0C0E0C] border rounded-2xl p-6 text-left font-sans animate-fade-in"
+            className="bg-[var(--card-bg)] border rounded-2xl p-6 text-left font-sans animate-fade-in transition-colors"
           >
             <h3 style={{ color: accentColor }} className="text-xs font-black uppercase tracking-wider mb-3 flex items-center gap-2">
               <Briefcase className="w-4 h-4" />
@@ -268,20 +357,20 @@ export default function ArticleDetail({
             </h3>
             
             {isEntrepreneuriat ? (
-              <div className="space-y-4 text-xs sm:text-sm text-gray-300 leading-relaxed">
+              <div className="space-y-4 text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
                 <div>
-                  <strong className="text-white block mb-0.5">Application Professionnelle :</strong>
+                  <strong className="text-[var(--text-color)] block mb-0.5">Application Professionnelle :</strong>
                   <p>{businessApps}</p>
                 </div>
                 {entrepreneurialApps && (
                   <div className="border-t border-white/5 pt-3 mt-3">
-                    <strong className="text-white block mb-0.5">Application Entrepreneuriale :</strong>
+                    <strong className="text-[var(--text-color)] block mb-0.5">Application Entrepreneuriale :</strong>
                     <p>{entrepreneurialApps}</p>
                   </div>
                 )}
               </div>
             ) : (
-              <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
+              <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
                 {businessApps}
               </p>
             )}
@@ -296,14 +385,14 @@ export default function ArticleDetail({
   // --- 1. DETAILED VIDEO VIEW ---
   if (type === 'video') {
     return (
-      <div className="w-full max-w-4xl mx-auto px-6 sm:px-8 py-10 text-left bg-[#050505] text-white rounded-[32px] mb-12 mt-6 animate-fade-in">
+      <div className="w-full max-w-4xl mx-auto px-6 sm:px-8 py-10 text-left bg-[var(--bg-color)] text-[var(--text-color)] rounded-[32px] mb-12 mt-6 animate-fade-in transition-colors duration-300">
         
         {/* Return Button */}
         <button 
           onClick={onBack}
           onMouseEnter={() => setBackHovered(true)}
           onMouseLeave={() => setBackHovered(false)}
-          style={{ color: backHovered ? accentColor : '#6E7672' }}
+          style={{ color: backHovered ? accentColor : 'var(--text-muted)' }}
           className="flex items-center gap-1.5 text-[9px] font-black transition-colors uppercase tracking-widest mb-8 cursor-pointer select-none font-sans bg-transparent border-none p-0 focus:outline-none"
         >
           &larr; Retour
@@ -314,19 +403,19 @@ export default function ArticleDetail({
           <div className="text-left">
             {/* Badges row */}
             <div className="flex flex-wrap gap-2 mb-4 font-sans">
-              <span className="bg-red-955/80 border border-red-900/35 text-red-400 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded shadow-sm">
+              <span className="bg-red-500/10 border border-red-500/30 text-red-500 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded shadow-sm">
                 YOUTUBE
               </span>
-              <span className="border border-white/10 text-gray-300 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded bg-[#111311]">
+              <span className="border border-[var(--border-color)] text-[var(--pill-text)] text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded bg-[var(--pill-bg)] transition-colors">
                 {category}
               </span>
-              <span className="border border-white/10 text-gray-300 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded bg-[#111311]">
+              <span className="border border-[var(--border-color)] text-[var(--pill-text)] text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded bg-[var(--pill-bg)] transition-colors">
                 {duration || '15 min'}
               </span>
             </div>
 
             {/* Title */}
-            <h1 className="text-2xl sm:text-4xl font-black text-white leading-tight tracking-tight font-sans">
+            <h1 className="text-2xl sm:text-4xl font-black text-[var(--text-color)] leading-tight tracking-tight font-sans transition-colors">
               {title}
             </h1>
           </div>
@@ -336,7 +425,7 @@ export default function ArticleDetail({
         </div>
 
         {/* Author / Date Details */}
-        <div className="flex items-center gap-2.5 mb-8 font-sans border-b border-[#1E221F] pb-6">
+        <div className="flex items-center gap-2.5 mb-8 font-sans border-b border-[var(--border-color)] pb-6 transition-colors">
           <div 
             style={{ 
               backgroundColor: `${accentColor}15`,
@@ -348,43 +437,43 @@ export default function ArticleDetail({
             <Play className="w-2.5 h-2.5 fill-current ml-0.5" />
           </div>
           <div 
-            style={{ 
-              backgroundColor: '#111311',
-              borderColor: '#1E221F',
-              color: '#9AA29E'
-            }}
-            className="w-6 h-6 rounded-full border flex items-center justify-center text-[8px] font-bold shadow-sm"
+            className="w-6 h-6 rounded-full border border-[var(--border-color)] bg-[var(--pill-bg)] text-[var(--pill-text)] flex items-center justify-center text-[8px] font-bold shadow-sm transition-colors"
           >
             {getAuthorInitials(author)}
           </div>
-          <span className="text-xs font-bold text-gray-300 uppercase tracking-wide">{author}</span>
+          <span className="text-xs font-bold text-[var(--text-color)] uppercase tracking-wide">{author}</span>
           {authorOrg && (
             <>
-              <span className="text-gray-600 text-xs font-bold">•</span>
-              <span className="text-xs text-gray-400 font-semibold">{authorOrg}</span>
+              <span className="text-[var(--text-muted)] text-xs font-bold">•</span>
+              <span className="text-xs text-[var(--text-muted)] font-semibold">{authorOrg}</span>
             </>
           )}
-          <span className="text-gray-600 text-xs font-bold">•</span>
-          <span className="text-xs text-gray-500 font-medium">{getRealDateForDay(publishedAt)}</span>
+          <span className="text-[var(--text-muted)] text-xs font-bold">•</span>
+          <span className="text-xs text-[var(--text-muted)] font-medium">{getRealDateForDay(publishedAt)}</span>
         </div>
 
-        {/* Video Cover Image (Acts as preview) */}
-        <div className="w-full aspect-[16/9] rounded-3xl overflow-hidden border border-[#1E221F] mb-8 bg-[#050505] shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
-          <img 
-            src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`} 
-            alt={title}
-            className="w-full h-full object-cover"
-          />
+        {/* Video Player */}
+        <div className="w-full aspect-[16/9] rounded-3xl overflow-hidden border border-[var(--border-color)] mb-8 bg-[var(--bg-color)] shadow-[0_8px_30px_rgba(0,0,0,0.15)] transition-colors">
+          <iframe
+            className="w-full h-full"
+            src={`https://www.youtube.com/embed/${videoId || (url && url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/)?.[1])}?autoplay=0`}
+            title={title}
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
         </div>
 
         {/* Summary Description */}
         <div className="text-left font-sans">
-          <h3 className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-3">
+          <h3 className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-3">
             Description
           </h3>
-          <p className="text-sm sm:text-base text-gray-300 leading-relaxed mb-8">
-            {summary}
-          </p>
+          <div className="text-sm sm:text-base text-[var(--text-color)] leading-relaxed mb-8 space-y-4">
+            {summary.split('\n\n').map((paragraph, index) => (
+              <p key={index}>{paragraph}</p>
+            ))}
+          </div>
         </div>
 
         {/* Detailed Analysis Block */}
@@ -392,11 +481,11 @@ export default function ArticleDetail({
 
         {/* Detailed context text */}
         {content && (
-          <div className="border-t border-[#1E221F] pt-8 mt-8 text-left font-sans">
-            <h3 className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-4">
+          <div className="border-t border-[var(--border-color)] pt-8 mt-8 text-left font-sans transition-colors">
+            <h3 className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-4">
               Transcription & Contexte
             </h3>
-            <div className="text-gray-400 text-sm sm:text-base leading-relaxed space-y-4">
+            <div className="text-[var(--text-muted)] text-sm sm:text-base leading-relaxed space-y-4">
               {content.split('\n\n').map((paragraph, index) => (
                 <p key={index}>{paragraph}</p>
               ))}
@@ -405,7 +494,7 @@ export default function ArticleDetail({
         )}
 
         {/* Watch Video CTA Button */}
-        <div className="flex flex-wrap gap-4 pt-8 mt-8 border-t border-[#1E221F]">
+        <div className="flex flex-wrap gap-4 pt-8 mt-8 border-t border-[var(--border-color)] transition-colors">
           <button
             onClick={() => onWatchVideo && onWatchVideo(article)}
             style={{ backgroundColor: accentColor }}
@@ -419,11 +508,25 @@ export default function ArticleDetail({
               href={url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-3.5 bg-red-955/40 border border-red-900/30 hover:bg-red-900/20 text-red-400 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-200 select-none cursor-pointer"
+              className="inline-flex items-center gap-2 px-5 py-3.5 bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 text-red-500 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-200 select-none cursor-pointer"
             >
               <ExternalLink className="w-3.5 h-3.5" />
               Ouvrir sur YouTube
             </a>
+          )}
+          {url && (
+            <button
+              onClick={handleReportBroken}
+              style={{ 
+                borderColor: reported ? '#EF4444' : 'var(--border-color)', 
+                color: reported ? '#EF4444' : 'var(--text-muted)',
+                backgroundColor: reported ? 'rgba(239, 68, 68, 0.05)' : 'transparent' 
+              }}
+              className="inline-flex items-center gap-2 px-5 py-3.5 border rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-200 hover:scale-[1.02] active:scale-95 select-none cursor-pointer focus:outline-none"
+            >
+              <ShieldAlert className="w-3.5 h-3.5" />
+              {reported ? "Lien signalé" : "Signaler un lien mort"}
+            </button>
           )}
         </div>
 
@@ -433,12 +536,12 @@ export default function ArticleDetail({
 
   // --- 2. DETAILED ARTICLE VIEW ---
   return (
-    <div className="w-full max-w-4xl mx-auto px-6 sm:px-8 py-10 text-left bg-[#050505] text-white mb-12 mt-6 animate-fade-in">
+    <div className="w-full max-w-4xl mx-auto px-6 sm:px-8 py-10 text-left bg-[var(--bg-color)] text-[var(--text-color)] mb-12 mt-6 animate-fade-in transition-colors duration-300">
       
       {/* Return Button */}
       <button 
         onClick={onBack}
-        className="flex items-center gap-1 text-[9px] font-black text-gray-500 hover:text-white transition-colors uppercase tracking-widest mb-8 cursor-pointer select-none font-sans bg-transparent border-none p-0 focus:outline-none"
+        className="flex items-center gap-1 text-[9px] font-black text-[var(--text-muted)] hover:text-[var(--text-color)] transition-colors uppercase tracking-widest mb-8 cursor-pointer select-none font-sans bg-transparent border-none p-0 focus:outline-none"
       >
         &larr; Retour
       </button>
@@ -448,24 +551,24 @@ export default function ArticleDetail({
         <div className="text-left">
           {/* Badges row */}
           <div className="flex flex-wrap gap-1.5 mb-4 font-sans">
-            <span className="bg-black/60 border border-white/10 text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded">
-              {getShortCategoryLabel(category)}
+            <span className="bg-[var(--pill-bg)] border border-[var(--border-color)] text-[var(--pill-text)] text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded transition-colors">
+              {getShortCategoryLabel(category, category_key || categoryKey || id || '')}
             </span>
-            <span className="bg-black/60 border border-white/10 text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded">
+            <span className="bg-[var(--pill-bg)] border border-[var(--border-color)] text-[var(--pill-text)] text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded transition-colors">
               {getSourceLang() === 'fr' ? 'FR FRANCE' : 'US UNITED STATES'}
             </span>
-            <span className="bg-black/60 border border-white/10 text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded">
+            <span className="bg-[var(--pill-bg)] border border-[var(--border-color)] text-[var(--pill-text)] text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded transition-colors">
               {getRealDateForDay(publishedAt).toUpperCase()}
             </span>
             {isProtected && (
-              <span className="bg-[#241A0A] border border-[#F59E0B]/20 text-[#F59E0B] text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded shadow-sm">
+              <span className="bg-amber-500/10 border border-amber-500/20 text-amber-600 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded shadow-sm">
                 CONTENU PROTÉGÉ
               </span>
             )}
           </div>
 
           {/* Title */}
-          <h1 className="text-2xl sm:text-5xl font-black text-white leading-tight tracking-tight font-sans">
+          <h1 className="text-2xl sm:text-5xl font-black text-[var(--text-color)] leading-tight tracking-tight font-sans transition-colors">
             {title}
           </h1>
         </div>
@@ -475,27 +578,22 @@ export default function ArticleDetail({
       </div>
 
       {/* Author Bar */}
-      <div className="flex items-center justify-between border-b border-[#1E221F] pb-6 mb-8 w-full">
+      <div className="flex items-center justify-between border-b border-[var(--border-color)] pb-6 mb-8 w-full transition-colors">
         <div className="flex items-center gap-2 font-sans">
           <div 
-            style={{ 
-              backgroundColor: '#111311',
-              borderColor: '#1E221F',
-              color: '#9AA29E'
-            }}
-            className="w-6 h-6 rounded-full border flex items-center justify-center text-[10px] font-bold shadow-sm"
+            className="w-6 h-6 rounded-full border border-[var(--border-color)] bg-[var(--pill-bg)] text-[var(--pill-text)] flex items-center justify-center text-[10px] font-bold shadow-sm transition-colors"
           >
             {getAuthorInitials(author)}
           </div>
-          <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest">{author.toUpperCase()}</span>
+          <span className="text-[10px] font-black text-[var(--text-color)] uppercase tracking-widest">{(author || '').toUpperCase()}</span>
           {authorOrg && (
             <>
-              <span className="text-gray-600 text-xs font-bold">•</span>
-              <span className="text-xs text-gray-400 font-semibold">{authorOrg}</span>
+              <span className="text-[var(--text-muted)] text-xs font-bold">•</span>
+              <span className="text-xs text-[var(--text-muted)] font-semibold">{authorOrg}</span>
             </>
           )}
-          <span className="text-gray-600 text-xs font-bold">•</span>
-          <span className="text-xs text-gray-500 font-medium">{getRealDateForDay(publishedAt)}</span>
+          <span className="text-[var(--text-muted)] text-xs font-bold">•</span>
+          <span className="text-xs text-[var(--text-muted)] font-medium">{getRealDateForDay(publishedAt)}</span>
         </div>
 
         {/* Share Copy Button */}
@@ -503,9 +601,9 @@ export default function ArticleDetail({
           <button 
             onClick={handleCopyLink}
             style={{ 
-              borderColor: copied ? `${accentColor}50` : '#1E221F'
+              borderColor: copied ? `${accentColor}50` : 'var(--border-color)'
             }}
-            className="flex items-center gap-1.5 px-4 py-2 bg-[#111311] border rounded-full text-[10px] font-bold uppercase tracking-wider text-gray-400 hover:text-white hover:bg-white/5 transition-all select-none cursor-pointer focus:outline-none"
+            className="flex items-center gap-1.5 px-4 py-2 bg-[var(--pill-bg)] border border-[var(--border-color)] rounded-full text-[10px] font-bold uppercase tracking-wider text-[var(--pill-text)] hover:text-[var(--text-color)] hover:bg-[var(--text-color)]/5 transition-all select-none cursor-pointer focus:outline-none"
           >
             {copied ? (
               <>
@@ -522,13 +620,25 @@ export default function ArticleDetail({
         </div>
       </div>
 
-      {/* Cover Image */}
-      <div className="w-full aspect-[16/9] rounded-3xl overflow-hidden border border-[#1E221F] mb-8 bg-[#050505] shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
-        <img 
-          src={thumbnail} 
-          alt={title}
-          className="w-full h-full object-cover"
-        />
+      {/* Cover Image / Video Player */}
+      <div className="w-full aspect-[16/9] rounded-3xl overflow-hidden border border-[var(--border-color)] mb-8 bg-[var(--bg-color)] shadow-[0_8px_30px_rgba(0,0,0,0.15)] transition-colors">
+        {(videoId || (url && url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/))) ? (
+          <iframe
+            className="w-full h-full"
+            src={`https://www.youtube.com/embed/${videoId || url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/)[1]}?autoplay=0`}
+            title={title}
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        ) : (
+          <img 
+            src={imgSrc} 
+            alt={title}
+            className="w-full h-full object-cover"
+            onError={handleImageError}
+          />
+        )}
       </div>
 
       {/* Paywall warning card */}
@@ -538,7 +648,7 @@ export default function ArticleDetail({
             backgroundColor: `${accentColor}08`, 
             borderColor: `${accentColor}25` 
           }}
-          className="border rounded-2xl p-5 mb-8 font-sans flex flex-col gap-2.5 text-left"
+          className="border rounded-2xl p-5 mb-8 font-sans flex flex-col gap-2.5 text-left transition-colors"
         >
           <div className="flex items-center gap-2">
             <span className="text-sm">🔒</span>
@@ -546,18 +656,18 @@ export default function ArticleDetail({
               Source sous Abonnement
             </h3>
           </div>
-          <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
-            L'accès à l'article d'origine sur la revue technique ou financière exige une inscription ou un abonnement payant. L'IA de <strong>veille.ia</strong> a extrait pour vous une synthèse scientifique et méthodologique complète ci-dessous.
+          <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
+            L'accès à l'article d'origine sur la revue technique ou financière exige une inscription ou un abonnement payant. L'IA de <strong>Magazinia</strong> a extrait pour vous une synthèse scientifique et méthodologique complète ci-dessous.
           </p>
         </div>
       )}
 
       {/* Summary Paragraph */}
       <div className="text-left font-sans">
-        <h3 className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-3">
+        <h3 className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-3">
           Résumé Analytique
         </h3>
-        <p className="text-sm sm:text-base text-gray-200 leading-relaxed mb-8">
+        <p className="text-sm sm:text-base text-[var(--text-color)] leading-relaxed mb-8">
           {summary}
         </p>
       </div>
@@ -567,11 +677,11 @@ export default function ArticleDetail({
 
       {/* Full Content (if available) */}
       {content && (
-        <div className="border-t border-[#1E221F] pt-8 mt-8 text-left font-sans">
-          <h3 className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-4">
+        <div className="border-t border-[var(--border-color)] pt-8 mt-8 text-left font-sans transition-colors">
+          <h3 className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-4">
             Analyse et Publications
           </h3>
-          <div className="text-gray-300 text-sm sm:text-base leading-relaxed space-y-4">
+          <div className="text-[var(--text-muted)] text-sm sm:text-base leading-relaxed space-y-4">
             {content.split('\n\n').map((paragraph, index) => (
               <p key={index}>{paragraph}</p>
             ))}
@@ -581,7 +691,7 @@ export default function ArticleDetail({
 
       {/* Read original source button */}
       {url && (
-        <div className="flex justify-start pt-8 mt-8 border-t border-[#1E221F]">
+        <div className="flex flex-wrap gap-4 pt-8 mt-8 border-t border-[var(--border-color)] transition-colors">
           <button 
             onClick={() => window.open(url, '_blank', 'noopener,noreferrer')}
             style={{ backgroundColor: accentColor }}
@@ -590,6 +700,35 @@ export default function ArticleDetail({
             <ExternalLink className="w-3.5 h-3.5" />
             Consulter l'original
           </button>
+          <button
+            onClick={handleReportBroken}
+            style={{ 
+              borderColor: reported ? '#EF4444' : 'var(--border-color)', 
+              color: reported ? '#EF4444' : 'var(--text-muted)',
+              backgroundColor: reported ? 'rgba(239, 68, 68, 0.05)' : 'transparent' 
+            }}
+            className="inline-flex items-center gap-2 px-5 py-2.5 border rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-200 hover:scale-[1.02] active:scale-95 select-none cursor-pointer focus:outline-none"
+          >
+            <ShieldAlert className="w-3.5 h-3.5" />
+            {reported ? "Lien signalé" : "Signaler un lien mort"}
+          </button>
+        </div>
+      )}
+
+      {/* Floating Broken Link Feedback Toast */}
+      {showReportSuccess && (
+        <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 animate-fade-in pointer-events-none">
+          <div className="bg-[var(--card-bg)]/95 backdrop-blur-md border border-red-500/30 shadow-[0_8px_30px_rgba(239,68,68,0.15)] rounded-2xl p-4 flex items-center gap-3 max-w-sm sm:max-w-md transition-colors duration-300">
+            <div className="w-8 h-8 rounded-full bg-red-500/10 flex items-center justify-center shrink-0">
+              <ShieldAlert className="w-5 h-5 text-red-500" />
+            </div>
+            <div className="text-left font-sans">
+              <h4 className="text-xs font-black text-[var(--text-color)] uppercase tracking-wider">Signalement enregistré</h4>
+              <p className="text-[11px] text-[var(--text-muted)] font-semibold mt-0.5 leading-relaxed">
+                Merci ! Ce lien a été signalé comme potentiellement rompu. Notre équipe de veille va le vérifier et le remplacer sous 24h.
+              </p>
+            </div>
+          </div>
         </div>
       )}
 

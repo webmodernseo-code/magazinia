@@ -27,3 +27,14 @@ dist-ssr
 .env
 .env.*
 !.env.example
+
+# Scripts de debug, patch et maintenance (non nécessaires en production)
+check_*.js
+debug_*.js
+patch_*.js
+inspect_db.js
+fix_videos.js
+validate_urls.js
+validate_videos.js
+list_article_urls.js
+Audit.md

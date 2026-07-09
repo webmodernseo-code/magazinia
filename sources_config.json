@@ -1,0 +1,260 @@
+{
+  "project": "Magazinia - Strategic Intelligence Portals",
+  "version": "1.2.0",
+  "description": "Configuration list of strategic content sources, designed to automate crawling and scraping using the Firecrawl API for all portals.",
+  "portals": {
+    "qhse": {
+      "label": "QHSE & Ingénierie",
+      "categories": {
+        "qhse-conformite": {
+          "label": "Réglementation & Normes",
+          "sources": [
+            { "name": "Légifrance - Code du Travail & Environnement", "url": "https://www.legifrance.gouv.fr", "type": "article" },
+            { "name": "AIDA INERIS - Réglementation ICPE", "url": "https://aida.ineris.fr", "type": "article" },
+            { "name": "AFNOR - Normes ISO", "url": "https://www.afnor.org", "type": "article" },
+            { "name": "ECHA - Réglementation REACH / CLP", "url": "https://echa.europa.eu", "type": "article" },
+            { "name": "ANSES - Risques Sanitaires & VLEP", "url": "https://www.anses.fr", "type": "article" }
+          ]
+        },
+        "qhse-prevention": {
+          "label": "Prévention & Risques",
+          "sources": [
+            { "name": "INRS - Santé & Sécurité au Travail", "url": "https://www.inrs.fr", "type": "article" },
+            { "name": "BARPI ARIA - Accidents Industriels", "url": "aria.developpement-durable.gouv.fr", "type": "article" },
+            { "name": "Géorisques - PPRT & Cartographie des risques", "url": "https://www.georisques.gouv.fr", "type": "article" },
+            { "name": "Face au Risque - Sûreté & Incendie", "url": "https://www.faceaurisque.com", "type": "article" },
+            { "name": "HST - Hygiène et Sécurité du Travail", "url": "https://www.inrs.fr/media.html?refINRS=revue-hst", "type": "article" },
+            { "name": "INRS France (YouTube Channel)", "url": "https://www.youtube.com/@INRSFrance", "type": "video" }
+          ]
+        },
+        "qhse-performance": {
+          "label": "Performance & RSE",
+          "sources": [
+            { "name": "Actu-Environnement - Actualité HSE", "url": "https://www.actu-environnement.com", "type": "article" },
+            { "name": "Éditions Tissot - Obligations Employeur Vulgarisées", "url": "https://www.tissot-editions.fr", "type": "article" },
+            { "name": "Préventica - Innovation & Salons Santé au Travail", "url": "https://www.preventica.com", "type": "article" }
+          ]
+        }
+      }
+    },
+    "finance": {
+      "label": "Finance & Valorisation",
+      "categories": {
+        "fin-entreprises": {
+          "label": "Analyses & Valorisation",
+          "sources": [
+            {
+              "name": "Sika Finance - Sonatel Reports",
+              "url": "https://www.sikafinance.com/marches/sonatel-dividende-2026-en-hausse_35112",
+              "type": "article",
+              "scraping_rule": "Scrape fundamental analysis, balance sheets, dividends, and financial statements of listed companies."
+            },
+            {
+              "name": "Investopedia - DCF Valuation",
+              "url": "https://www.investopedia.com/terms/d/dcf.asp",
+              "type": "article",
+              "scraping_rule": "Extract equity research guides, discounted cash flow (DCF) models, and intrinsic value calculation formulas."
+            }
+          ]
+        },
+        "fin-brvm": {
+          "label": "Macroéconomie & BRVM",
+          "sources": [
+            {
+              "name": "Sika Finance - BCEAO Decisions",
+              "url": "https://www.sikafinance.com/marches/la-bceao-maintient-ses-taux-directeurs-inchanges_36123",
+              "type": "article",
+              "scraping_rule": "Monitor BRVM stock market index, central bank interest rate decisions (BCEAO), and macroeconomic indicators in the UEMOA region."
+            }
+          ]
+        },
+        "fin-psychologie": {
+          "label": "Psychologie & Comportement",
+          "sources": [
+            {
+              "name": "Sika Finance - DCA Strategies",
+              "url": "https://www.sikafinance.com/marches/brvm-la-methode-dca-pour-investir_34567",
+              "type": "article",
+              "scraping_rule": "Monitor publications on behavioral finance, dollar-cost averaging (DCA), and investor sentiment models."
+            }
+          ]
+        }
+      }
+    },
+    "entrepreneuriat": {
+      "label": "Business & Stratégie",
+      "categories": {
+        "ent-creation": {
+          "label": "Création & Validation",
+          "sources": [
+            {
+              "name": "The Lean Startup - Eric Ries",
+              "url": "https://theleanstartup.com/",
+              "type": "article",
+              "scraping_rule": "Extract articles, diagrams, and case studies about Lean Startup iteration cycle, MVP validation, and product-market fit."
+            }
+          ]
+        },
+        "ent-strategie": {
+          "label": "Stratégie & Culture",
+          "sources": [
+            {
+              "name": "Blue Ocean Strategy Hub",
+              "url": "https://www.blueoceanstrategy.com/what-is-blue-ocean-strategy/",
+              "type": "article",
+              "scraping_rule": "Extract case studies, value curves, and strategic canvases on market creation and Blue Ocean models."
+            },
+            {
+              "name": "Netflix Jobs - Culture Hub",
+              "url": "https://jobs.netflix.com/culture",
+              "type": "article",
+              "scraping_rule": "Scrape HR frameworks, high-performance culture manifestos, freedom & responsibility, and employee empowerment practices."
+            },
+            {
+              "name": "History - Industrial Revolutions",
+              "url": "https://www.history.com/topics/industrial-revolution/industrial-revolution",
+              "type": "article",
+              "scraping_rule": "Extract lessons, historical timelines, and societal disruptions from past industrial revolutions applied to the AI age."
+            }
+          ]
+        },
+        "ent-innovation": {
+          "label": "Innovation & IA",
+          "sources": [
+            {
+              "name": "McKinsey Digital Insights - Generative AI",
+              "url": "https://www.mckinsey.com/capabilities/mckinsey-digital/our-insights/the-economic-potential-of-generative-ai-the-next-productivity-frontier",
+              "type": "article",
+              "scraping_rule": "Monitor reports on the economic impact of Generative AI, automation indexes, and organizational transformation models."
+            }
+          ]
+        }
+      }
+    },
+    "veille_ia": {
+      "label": "Veille IA",
+      "categories": {
+        "ia-informer": {
+          "label": "S'informer (Actualité)",
+          "description": "TLDR AI, ActuIA, et les actualités directes des laboratoires d'IA.",
+          "sources": [
+            {
+              "name": "TLDR AI",
+              "url": "https://tldr.tech/ai",
+              "type": "article",
+              "scraping_rule": "Scrape the daily AI newsletter for recent news summaries, tool launches, and open-source updates."
+            },
+            {
+              "name": "ActuIA",
+              "url": "https://www.actuia.com/",
+              "type": "article",
+              "scraping_rule": "Extract French daily news, French research breakthroughs, and AI policy announcements."
+            },
+            {
+              "name": "Anthropic News (RSS)",
+              "url": "https://www.anthropic.com/news",
+              "type": "article",
+              "scraping_rule": "Scrape Anthropic research, Claude model updates, and safety papers via their news feed."
+            },
+            {
+              "name": "OpenAI Blog (RSS)",
+              "url": "https://openai.com/blog",
+              "type": "article",
+              "scraping_rule": "Scrape OpenAI reasoning model releases, APIs, benchmarks, and safety guidelines."
+            },
+            {
+              "name": "Google DeepMind Blog (RSS)",
+              "url": "https://blog.google/technology/ai/",
+              "type": "article",
+              "scraping_rule": "Scrape Gemini and AlphaFold announcements, science-focused research papers."
+            },
+            {
+              "name": "Mistral AI News (RSS)",
+              "url": "https://mistral.ai/news/",
+              "type": "article",
+              "scraping_rule": "Scrape sovereign open-weights LLMs, benchmarks, and European AI compliance statements."
+            },
+            {
+              "name": "Hugging Face Papers (RSS)",
+              "url": "https://huggingface.co/papers",
+              "type": "article",
+              "scraping_rule": "Extract daily trending ML research papers, model weights releases, and community ratings."
+            }
+          ]
+        },
+        "ia-comprendre": {
+          "label": "Comprendre (Analyse)",
+          "description": "Signaux faibles, critiques de fond, et communautés techniques.",
+          "sources": [
+            {
+              "name": "Import AI (Substack)",
+              "url": "https://importai.substack.com/",
+              "type": "article",
+              "scraping_rule": "Extract weekly analysis of global AI geopolitics, compute trends, and hardware efficiency parameters."
+            },
+            {
+              "name": "Hacker News (YCombinator)",
+              "url": "https://news.ycombinator.com/news",
+              "type": "article",
+              "scraping_rule": "Filter and scrape top AI/ML discussions, developer reviews of new models, and technical releases."
+            },
+            {
+              "name": "Reddit r/LocalLLaMA",
+              "url": "https://www.reddit.com/r/LocalLLaMA/",
+              "type": "article",
+              "scraping_rule": "Scrape trending local model benchmarks (Ollama, llama.cpp), fine-tuning tips, and GGUF quantization parameters."
+            },
+            {
+              "name": "Reddit r/singularity",
+              "url": "https://www.reddit.com/r/singularity/",
+              "type": "article",
+              "scraping_rule": "Monitor global breakthroughs, AGI predictions, and raw discussions about computational acceleration."
+            }
+          ]
+        },
+        "ia-pratiquer": {
+          "label": "Pratiquer (YouTube)",
+          "description": "Apprendre à faire : automatisation, no-code, implémentations techniques et architecture LLM.",
+          "sources": [
+            {
+              "name": "Baptiste Simard (YouTube)",
+              "channel_search": "Baptiste Simard",
+              "type": "video",
+              "scraping_rule": "Extract tutorials on business workflows automation, French SaaS building, and custom database integrations."
+            },
+            {
+              "name": "Shubham Sharma (YouTube)",
+              "channel_search": "Shubham Sharma",
+              "type": "video",
+              "scraping_rule": "Extract tutorials on no-code tools (Make.com, Glide, Airtable) and practical AI tool configurations."
+            },
+            {
+              "name": "Nate Herk (YouTube)",
+              "channel_search": "Nate Herk",
+              "type": "video",
+              "scraping_rule": "Extract step-by-step guides on building multi-agent systems with n8n, LangChain, and API-based automations."
+            },
+            {
+              "name": "Liam Ottley (YouTube)",
+              "channel_search": "Liam Ottley",
+              "type": "video",
+              "scraping_rule": "Extract video tutorials on selling and deploying custom AI automation agency (AAA) solutions for enterprise clients."
+            },
+            {
+              "name": "Matthew Berman (YouTube)",
+              "channel_search": "Matthew Berman",
+              "type": "video",
+              "scraping_rule": "Extract video testing of new open-source models, installation tutorials, and comparing local LLMs."
+            },
+            {
+              "name": "Andrej Karpathy (YouTube)",
+              "channel_search": "Andrej Karpathy",
+              "type": "video",
+              "scraping_rule": "Extract deep scientific courses explaining LLM training from scratch, tokenization, neural network architectures, and PyTorch coding."
+            }
+          ]
+        }
+      }
+    }
+  }
+}

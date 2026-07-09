@@ -3,23 +3,81 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Header from './components/Header';
 import MagazineGrid from './components/MagazineGrid';
 import ArticleDetail from './components/ArticleDetail';
+import VibrantCard from './components/VibrantCard';
 import VideoModal from './components/VideoModal';
+import InfoPageDetail from './components/InfoPageDetail';
 import PortfolioDashboard from './components/PortfolioDashboard';
 import { magazineData } from './data/magazineData';
 import { supabase } from './lib/supabaseClient';
-import { BookOpen, Play, Calendar, Search, Sparkles, Cpu, Award } from 'lucide-react';
+import { BookOpen, Play, Calendar, Search, Sparkles, Cpu, Star } from 'lucide-react';
 
 function App() {
   const [dbData, setDbData] = useState(magazineData);
-  const [activePortal, setActivePortal] = useState('qhse'); // 'qhse' | 'finance'
+  const [activePortal, setActivePortal] = useState('ia'); // Default to 'ia' portal
   const [isPortfolioActive, setIsPortfolioActive] = useState(false);
-  const [activeCategory, setActiveCategory] = useState('qhse-humain');
+  const [activeCategory, setActiveCategory] = useState('Tous'); // Default to 'Tous' showing all categories
   const [timeFilter, setTimeFilter] = useState('week'); // 'today' | 'week' | 'all' | 'archives'
   const [formatFilter, setFormatFilter] = useState('all'); // 'all' | 'videos' | 'articles'
-  const [activeTagFilter, setActiveTagFilter] = useState('Tous'); // subcategory tag filter
   const [searchQuery, setSearchQuery] = useState(''); // search query
   const [activeArticle, setActiveArticle] = useState(null); // immersive reading view
+  const [activeInfoPage, setActiveInfoPage] = useState(null); // 'mentions' | 'politique' | 'propos' | null
   const [selectedVideo, setSelectedVideo] = useState(null); // video modal
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true); // Header and filter visibility on scroll
+  const [lastScrollY, setLastScrollY] = useState(0); // Track last scroll position
+  const [isDarkMode, setIsDarkMode] = useState(true); // Theme control
+
+  // Bookmarks State & Persistence
+  const [bookmarkedItems, setBookmarkedItems] = useState(() => {
+    try {
+      const saved = localStorage.getItem('magazinia_bookmarks');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('magazinia_bookmarks', JSON.stringify(bookmarkedItems));
+    } catch (e) {
+      console.error("Échec de la sauvegarde des favoris :", e);
+    }
+  }, [bookmarkedItems]);
+
+  const handleToggleBookmark = (item) => {
+    setBookmarkedItems(prev => {
+      const exists = prev.some(i => i.url === item.url);
+      if (exists) {
+        return prev.filter(i => i.url !== item.url);
+      } else {
+        return [...prev, item];
+      }
+    });
+  };
+
+  // Toggle Dark/Light class on document element
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
+
+  // Handle scroll to keep header sticky and visible
+  const handleScroll = (e) => {
+    setIsHeaderVisible(true);
+  };
+
+  // Set document title dynamically
+  useEffect(() => {
+    let portalName = 'IA';
+    if (activePortal === 'qhse') portalName = 'QHSE';
+    else if (activePortal === 'finance') portalName = 'Finance';
+    else if (activePortal === 'entrepreneuriat') portalName = 'Business';
+
+    document.title = `Magazinia - Magazin.${portalName}`;
+  }, [activePortal]);
 
   useEffect(() => {
     const loadSupabaseData = async () => {
@@ -46,93 +104,14 @@ function App() {
           return;
         }
 
-        // Reconstruct the magazineData structure dynamically around 5 QHSE pillars + 4 Finance categories + 5 Entrepreneuriat categories
-        const newData = {
-          "qhse-humain": {
-            label: "Humain & FOF",
-            description: "Comprendre comment les comportements humains influencent la sécurité, la qualité et la performance.",
-            items: [],
-            archives: []
-          },
-          "qhse-risques": {
-            label: "Risques & Fiabilité",
-            description: "Comprendre comment construire des organisations sûres, robustes et résilientes.",
-            items: [],
-            archives: []
-          },
-          "qhse-performance": {
-            label: "Performance & Qualité",
-            description: "Comprendre comment améliorer durablement les processus et la performance.",
-            items: [],
-            archives: []
-          },
-          "qhse-science": {
-            label: "Science & Données",
-            description: "Comprendre comment les sciences et technologies transforment le métier QHSE.",
-            items: [],
-            archives: []
-          },
-          "qhse-strategie": {
-            label: "Stratégie & Environnement",
-            description: "Comprendre les transformations économiques, environnementales et industrielles.",
-            items: [],
-            archives: []
-          },
-          "fin-entreprises": {
-            label: "Entreprises & Analyse",
-            description: "Comprendre les entreprises cotées capables de créer de la valeur sur le long terme.",
-            items: [],
-            archives: []
-          },
-          "fin-valorisation": {
-            label: "Valorisation & Finance",
-            description: "Développer une capacité de lecture des états financiers, calcul de valeur intrinsèque et marge de sécurité.",
-            items: [],
-            archives: []
-          },
-          "fin-brvm": {
-            label: "BRVM & Économie",
-            description: "Comprendre le marché financier régional de la BRVM, les décisions de la BCEAO et l'économie ouest-africaine.",
-            items: [],
-            archives: []
-          },
-          "fin-psychologie": {
-            label: "Psychologie & Patrimoine",
-            description: "Développer la discipline de l'investisseur, allocation d'actifs, patience et étude des grands maîtres.",
-            items: [],
-            archives: []
-          },
-          "ent-creation": {
-            label: "Création & Opportunités",
-            description: "Comprendre comment valider des idées d'affaires, trouver des besoins non satisfaits et démarrer une startup viable.",
-            items: [],
-            archives: []
-          },
-          "ent-culture": {
-            label: "Culture & Management",
-            description: "Comprendre comment recruter, structurer et motiver les équipes pour bâtir des entreprises exceptionnelles.",
-            items: [],
-            archives: []
-          },
-          "ent-strategie": {
-            label: "Stratégie Business",
-            description: "Comprendre les mécanismes économiques de différenciation, positionnement, et création d'avantages compétitifs durables.",
-            items: [],
-            archives: []
-          },
-          "ent-innovation": {
-            label: "Innovation & Futur",
-            description: "Prospective technologique, impact de l'intelligence artificielle, automatisation et transformation des industries.",
-            items: [],
-            archives: []
-          },
-          "ent-monde": {
-            label: "Culture & Monde",
-            description: "Histoire économique, géopolitique mondiale, grandes découvertes scientifiques et compréhension des sociétés.",
-            items: [],
-            archives: []
-          }
-        };
+        // Clone the local magazineData to preserve all portals and categories
+        const newData = JSON.parse(JSON.stringify(magazineData));
+        
+        // Reset local default items & archives to prevent duplication with Supabase entries
+        Object.keys(newData).forEach(catKey => {
+          newData[catKey].items = [];
+          newData[catKey].archives = [];
+        });
 
         const mapArticle = (row) => ({
           id: row.id,
@@ -186,6 +165,8 @@ function App() {
           const catKey = row.category_key;
           if (newData[catKey]) {
             const item = mapArticle(row);
+            newData[catKey].items = (newData[catKey].items || []).filter(i => i.url !== item.url);
+            newData[catKey].archives = (newData[catKey].archives || []).filter(i => i.url !== item.url);
             if (row.published_at.toLowerCase().includes('mois')) {
               newData[catKey].archives.push(item);
             } else {
@@ -198,6 +179,8 @@ function App() {
           const catKey = row.category_key;
           if (newData[catKey]) {
             const item = mapVideo(row);
+            newData[catKey].items = (newData[catKey].items || []).filter(i => i.url !== item.url);
+            newData[catKey].archives = (newData[catKey].archives || []).filter(i => i.url !== item.url);
             if (row.published_at.toLowerCase().includes('mois')) {
               newData[catKey].archives.push(item);
             } else {
@@ -207,7 +190,7 @@ function App() {
         });
 
         setDbData(newData);
-        console.log("Données de veille QHSE et Finance chargées avec succès depuis Supabase !");
+        console.log("Données de veille Magazinia chargées avec succès depuis Supabase !");
       } catch (err) {
         console.error("Erreur lors de la récupération des données de Supabase. Mode local actif :", err);
       }
@@ -216,123 +199,135 @@ function App() {
     loadSupabaseData();
   }, []);
 
-  const categories = dbData;
-  const currentCategoryData = categories[activeCategory];
-  const items = currentCategoryData ? currentCategoryData.items : [];
-  const archives = currentCategoryData ? currentCategoryData.archives : [];
+  // Helpers to resolve categories and merge active portal contents
+  const getCategoriesForActivePortal = () => {
+    const portalPrefix = activePortal === 'qhse' ? 'qhse-' : activePortal === 'finance' ? 'fin-' : activePortal === 'ia' ? 'ia-' : 'ent-';
+    return Object.fromEntries(
+      Object.entries(dbData).filter(([key]) => key.startsWith(portalPrefix))
+    );
+  };
 
+  const portalCategories = getCategoriesForActivePortal();
+
+  // Merge items and archives from all categories in the active portal
+  const getAllPortalData = () => {
+    let allItems = [];
+    let allArchives = [];
+    Object.entries(portalCategories).forEach(([catKey, catVal]) => {
+      const mappedItems = (catVal.items || []).map(item => ({ ...item, categoryKey: catKey }));
+      const mappedArchives = (catVal.archives || []).map(item => ({ ...item, categoryKey: catKey }));
+      allItems = [...allItems, ...mappedItems];
+      allArchives = [...allArchives, ...mappedArchives];
+    });
+    return { items: allItems, archives: allArchives };
+  };
+
+  const { items: allPortalItems, archives: allPortalArchives } = getAllPortalData();
+
+  // Filter based on currently active tag (either 'Tous' or specific category)
+  const getFilteredByCategoryData = () => {
+    if (activeCategory === 'Tous') {
+      return { items: allPortalItems, archives: allPortalArchives };
+    }
+    const catData = dbData[activeCategory];
+    if (catData) {
+      return { 
+        items: (catData.items || []).map(item => ({ ...item, categoryKey: activeCategory })), 
+        archives: (catData.archives || []).map(item => ({ ...item, categoryKey: activeCategory })) 
+      };
+    }
+    return { items: [], archives: [] };
+  };
+
+  const { items, archives } = getFilteredByCategoryData();
+
+  // Color updates requested by user:
+  // IA: Blue Original (#3B82F6)
+  // QHSE: Orange (#F97316)
+  // FINANCE: Green (#10B981)
+  // BUSINESS (entrepreneuriat): #ebbb81
   const getAccentColor = (key) => {
+    if (key === 'Tous') {
+      if (activePortal === 'ia') return '#3B82F6';
+      if (activePortal === 'qhse') return '#F97316';
+      if (activePortal === 'finance') return '#10B981';
+      return '#ebbb81';
+    }
     switch (key) {
-      case 'qhse-humain': return '#8B5CF6';
-      case 'qhse-risques': return '#EF4444';
-      case 'qhse-performance': return '#10B981';
-      case 'qhse-science': return '#3B82F6';
-      case 'qhse-strategie': return '#F59E0B';
-      case 'fin-entreprises': return '#F59E0B';
-      case 'fin-valorisation': return '#10B981';
-      case 'fin-brvm': return '#3B82F6';
-      case 'fin-psychologie': return '#8B5CF6';
-      case 'ent-creation': return '#F59E0B';
-      case 'ent-culture': return '#10B981';
-      case 'ent-strategie': return '#3B82F6';
-      case 'ent-innovation': return '#8B5CF6';
-      case 'ent-monde': return '#EF4444';
+      case 'ia-informer':
+      case 'ia-comprendre':
+      case 'ia-pratiquer':
+        return '#3B82F6';
+      case 'qhse-conformite':
+      case 'qhse-prevention':
+      case 'qhse-performance':
+        return '#F97316';
+      case 'fin-entreprises':
+      case 'fin-valorisation':
+      case 'fin-brvm':
+      case 'fin-psychologie':
+        return '#10B981';
+      case 'ent-creation':
+      case 'ent-culture':
+      case 'ent-strategie':
+      case 'ent-innovation':
+      case 'ent-monde':
+        return '#ebbb81';
       default: return '#10B981';
     }
   };
 
-  const accentColor = getAccentColor(activeCategory);
+  const accentColor = getAccentColor(activeCategory === 'Tous' ? 'Tous' : activeCategory);
 
   const handlePortalChange = (portalKey) => {
     setActivePortal(portalKey);
     setIsPortfolioActive(false);
     setActiveArticle(null);
-    const defaultCategory = portalKey === 'qhse' ? 'qhse-humain' : portalKey === 'finance' ? 'fin-entreprises' : 'ent-creation';
-    setActiveCategory(defaultCategory);
+    setActiveInfoPage(null);
+    setActiveCategory('Tous'); // Default to 'Tous' on portal change
     setTimeFilter('week');
     setFormatFilter('all');
-    setActiveTagFilter('Tous');
     setSearchQuery('');
   };
 
   const handleOpenPortfolio = () => {
     setIsPortfolioActive(true);
     setActiveArticle(null);
+    setActiveInfoPage(null);
   };
 
-  const getCategoriesForActivePortal = () => {
-    const portalPrefix = activePortal === 'qhse' ? 'qhse-' : activePortal === 'finance' ? 'fin-' : 'ent-';
-    return Object.fromEntries(
-      Object.entries(dbData).filter(([key]) => key.startsWith(portalPrefix))
-    );
-  };
-
-  // Reset filters when changing category/subject from Header
   const handleCategoryChange = (categoryKey) => {
     setActiveCategory(categoryKey);
     setTimeFilter('week');
     setFormatFilter('all');
-    setActiveTagFilter('Tous');
     setSearchQuery('');
     setActiveArticle(null);
+    setActiveInfoPage(null);
+  };
+
+  const handleOpenArticle = (item) => {
+    setActiveInfoPage(null);
+    setIsPortfolioActive(false);
+    setActiveArticle(item);
   };
 
   const handleOpenInfoPage = (pageKey) => {
-    const pages = {
-      mentions: {
-        id: "info-mentions",
-        category: "Légal",
-        title: "Mentions Légales",
-        readTime: "3 min de lecture",
-        author: "Directeur de la Publication",
-        avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80",
-        publishedAt: "Mis à jour le 5 Juillet 2026",
-        thumbnail: "https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=800&q=80",
-        summary: "Informations légales obligatoires concernant l'éditeur, l'hébergeur et la propriété intellectuelle de la plateforme Magazine IA.",
-        content: `### 1. ÉDITEUR DU SITE\nLe site internet Magazine IA est édité par la société d'édition éditoriale MAGAZINE IA SAS, au capital de 50 000 €, immatriculée au Registre du Commerce et des Sociétés (RCS) de Paris sous le numéro 987 654 321.\n\nSiège social : 45 Avenue des Champs-Élysées, 75008 Paris, France.\nDirecteur de la publication : Jonlois.\nContact : contact@magazineia.com\n\n### 2. HÉBERGEMENT DU SITE\nLa plateforme est hébergée par la société Vercel Inc., située à San Francisco, Californie, États-Unis.\nHébergement des bases de données : Supabase Inc., San Francisco, Californie, États-Unis.\n\n### 3. PROPRIÉTÉ INTELLECTUELLE\nTous les droits de propriété intellectuelle sur les éléments structurels du site (design, code source, graphiques) appartiennent exclusivement à MAGAZINE IA SAS. Les contenus tiers curés (miniatures YouTube, extraits d'articles) restent la propriété exclusive de leurs auteurs originaux. L'éditeur s'engage à citer systématiquement les sources et les créateurs originaux.`
-      },
-      politique: {
-        id: "info-politique",
-        category: "Confidentialité",
-        title: "Politique de Confidentialité",
-        readTime: "4 min de lecture",
-        author: "Responsable RGPD",
-        avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80",
-        publishedAt: "Mis à jour le 5 Juillet 2026",
-        thumbnail: "https://images.unsplash.com/photo-1557682250-33bd709cbe85?auto=format&fit=crop&w=800&q=80",
-        summary: "Notre charte d'engagement concernant la protection de vos données personnelles et le respect de votre vie privée.",
-        content: `### 1. COLLECTE DES DONNÉES\nWe collectons uniquement les données nécessaires au bon fonctionnement de la plateforme :\n- Adresse e-mail (si abonnement à la newsletter ou inscription au canal).\n- Données de navigation anonymes (via cookies essentiels) pour mesurer l'audience et la performance de notre site.\n\n### 2. UTILISATION DES DONNÉES\nVos données personnelles ne sont jamais partagées, vendues ou cédées à des tiers. Elles sont uniquement utilisées pour vous transmettre notre curation de veille quotidienne ou gérer vos préférences de lecture.\n\n### 3. VOS DROITS\nConformément au Règlement Général sur la Protection des Données (RGPD), vous disposez d'un droit d'accès, de rectification, de portabilité et de suppression de vos données personnelles. Pour exercer ce droit, vous pouvez nous contacter à l'adresse suivante : rgpd@magazineia.com.`
-      },
-      propos: {
-        id: "info-propos",
-        category: "À Propos",
-        title: "À Propos de Magazine IA",
-        readTime: "5 min de lecture",
-        author: "Jonlois - Rédacteur en Chef",
-        avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80",
-        publishedAt: "Éditorial de Juillet 2026",
-        thumbnail: "https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?auto=format&fit=crop&w=800&q=80",
-        summary: "Découvrez notre mission, notre méthodologie de curation scientifique et l'équipe derrière le média leader en veille stratégique QHSE.",
-        content: `### NOTRE MISSION\nDans un monde industriel et technologique en constante évolution, les professionnels de la Qualité, de l'Hygiène, de la Sécurité et de l'Environnement (QHSE) ont besoin de s'appuyer sur des connaissances solides, validées scientifiquement et directement applicables sur le terrain. La mission de Veille.IA QHSE est d'offrir un filtre ultra-sélectif pour extraire la substantifique moelle de la recherche et des conférences spécialisées.\n\n### NOS 5 PILIERS CLÉS\nNous structurons nos curations scientifiques et techniques autour de 5 piliers fondamentaux :\n- **Pilier 1 : L'Humain & FOF** : Analyse des comportements, culture sécurité, leadership et psychologie du travail.\n- **Pilier 2 : Risques & Fiabilité** : Méthodologies d'analyse de risques (HAZOP, AMDEC, RCA) et résilience.\n- **Pilier 3 : Performance & Qualité** : Lean management, excellence opérationnelle, normes ISO 9001.\n- **Pilier 4 : Science & Données** : Applications de l'IA, data analytics, IoT et maintenance prédictive.\n- **Pilier 5 : Stratégie & Environnement** : ISO 14001, transition écologique, critères ESG et économie circulaire.\n\n### NOTRE MÉTHODOLOGIE\nNotre équipe, secondée par des outils d'analyse sémantique, extrait quotidiennement des revues scientifiques internationales, des publications universitaires et des conférences de référence (INRS, ICSI, ADEME, etc.). Chaque ressource retenue fait l'objet d'une analyse rigoureuse (synthèse d'idées, concepts clés, méthodes) et reçoit une notation stricte sur 10 basée sur sa rigueur scientifique et son utilité opérationnelle.`
-      }
-    };
-    
-    if (pages[pageKey]) {
-      setActiveArticle(pages[pageKey]);
-    }
+    setActiveArticle(null);
+    setIsPortfolioActive(false);
+    setActiveInfoPage(pageKey);
   };
 
   const getHeroTitle = () => {
-    let subject = "Humain & FOF";
-    if (activeCategory === 'qhse-humain') subject = "Humain & FOF";
-    else if (activeCategory === 'qhse-risques') subject = "Risques & Fiabilité";
-    else if (activeCategory === 'qhse-performance') subject = "Performance & Qualité";
-    else if (activeCategory === 'qhse-science') subject = "Science & Données";
-    else if (activeCategory === 'qhse-strategie') subject = "Stratégie & Environnement";
-    else if (activeCategory === 'fin-entreprises') subject = "Entreprises & Analyse";
-    else if (activeCategory === 'fin-valorisation') subject = "Finance & Valorisation";
-    else if (activeCategory === 'fin-brvm') subject = "BRVM & Économie";
-    else if (activeCategory === 'fin-psychologie') subject = "Psychologie & Patrimoine";
+    let subject = "IA & Tech";
+    if (activeCategory === 'Tous') {
+      if (activePortal === 'ia') subject = "IA & Tech";
+      else if (activePortal === 'qhse') subject = "QHSE";
+      else if (activePortal === 'finance') subject = "Finance";
+      else if (activePortal === 'entrepreneuriat') subject = "Business";
+    } else {
+      const catData = dbData[activeCategory];
+      subject = catData ? catData.label : "veille";
+    }
 
     return (
       <>
@@ -359,26 +354,32 @@ function App() {
     }
   };
 
-  // Get current raw list (archives or weekly items)
   const getCurrentContentList = () => {
     if (timeFilter === 'archives') return archives;
     return items;
   };
 
   const currentList = getCurrentContentList();
-  const subcategories = ['Tous', ...new Set(currentList.map(item => item.category))];
 
-  const getSubcategoryCount = (subcat) => {
-    let list = currentList;
-    
-    // Apply time and format filters to subcategory counts
+  const filterTags = ['Tous', ...Object.keys(portalCategories)];
+
+  const getSubcategoryCount = (catKey) => {
+    if (catKey === 'Tous') {
+      let list = allPortalItems;
+      if (timeFilter !== 'archives') {
+        list = applyTimeFilter(list);
+      }
+      list = applyFormatFilter(list);
+      return list.length;
+    }
+    const catData = dbData[catKey];
+    if (!catData) return 0;
+    let list = catData.items || [];
     if (timeFilter !== 'archives') {
       list = applyTimeFilter(list);
     }
     list = applyFormatFilter(list);
-
-    if (subcat === 'Tous') return list.length;
-    return list.filter(item => item.category === subcat).length;
+    return list.length;
   };
 
   const applyTimeFilter = (list) => {
@@ -386,7 +387,6 @@ function App() {
       const todayName = getTodayName();
       return list.filter(item => item.publishedAt === todayName);
     }
-    // 'week' and 'all' returns all Lundi-Vendredi contents of the active week
     return list;
   };
 
@@ -396,27 +396,18 @@ function App() {
     } else if (formatFilter === 'articles') {
       return list.filter(item => item.type === 'article');
     }
-    return list; // 'all'
+    return list;
   };
 
-  // Global Filtering Logic
   const getFilteredList = () => {
     let list = currentList;
 
-    // Apply time filter
     if (timeFilter !== 'archives') {
       list = applyTimeFilter(list);
     }
 
-    // Apply format filter
     list = applyFormatFilter(list);
 
-    // Apply subcategory tag filter
-    if (activeTagFilter !== 'Tous') {
-      list = list.filter(item => item.category === activeTagFilter);
-    }
-
-    // Apply search query filter
     if (searchQuery.trim() !== '') {
       const query = searchQuery.toLowerCase();
       list = list.filter(item => 
@@ -433,20 +424,80 @@ function App() {
   const filteredList = getFilteredList();
 
   return (
-    <div className="w-screen h-screen flex flex-col bg-[#050505] text-white overflow-hidden">
+    <div className="w-screen h-screen flex flex-col bg-[var(--bg-color)] text-[var(--text-color)] overflow-hidden transition-colors duration-300">
       {/* Top Floating Header Capsule */}
       <Header 
         activeCategory={activeCategory} 
         onCategoryChange={handleCategoryChange}
-        categories={getCategoriesForActivePortal()}
+        categories={portalCategories}
         activePortal={activePortal}
         onPortalChange={handlePortalChange}
         onOpenPortfolio={handleOpenPortfolio}
         isPortfolioActive={isPortfolioActive}
+        isVisible={isHeaderVisible}
       />
 
+      {/* Floating Premium Dark/Light Mode Switch */}
+      <div 
+        onClick={() => setIsDarkMode(!isDarkMode)}
+        className="fixed right-4 sm:right-6 bottom-20 z-50 w-12 h-24 bg-[var(--glass-bg)] border border-[var(--border-color)] rounded-full flex flex-col justify-between items-center py-2.5 cursor-pointer shadow-[0_12px_40px_rgba(0,0,0,0.18)] backdrop-blur-xl select-none hover:scale-105 active:scale-95 transition-all duration-300 group"
+      >
+        <div className="relative flex flex-col justify-between items-center h-full w-full">
+          {/* Sliding background capsule/knob */}
+          <motion.div
+            className="absolute w-9 h-9 rounded-full bg-[var(--text-color)] flex items-center justify-center shadow-lg"
+            animate={{ y: isDarkMode ? 40 : 0 }}
+            transition={{ type: "spring", stiffness: 350, damping: 25 }}
+          >
+            {/* Inner dynamic icon inside the slider */}
+            {isDarkMode ? (
+              <motion.div
+                initial={{ rotate: -90, scale: 0.5 }}
+                animate={{ rotate: 0, scale: 1 }}
+                transition={{ duration: 0.2 }}
+                className="text-[var(--bg-color)]"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4.5 h-4.5">
+                  <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+                </svg>
+              </motion.div>
+            ) : (
+              <motion.div
+                initial={{ rotate: 90, scale: 0.5 }}
+                animate={{ rotate: 0, scale: 1 }}
+                transition={{ duration: 0.2 }}
+                className="text-[var(--bg-color)]"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4.5 h-4.5">
+                  <circle cx="12" cy="12" r="4" />
+                  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+                </svg>
+              </motion.div>
+            )}
+          </motion.div>
+
+          {/* Underlay Sun Icon (Muted, disappears under slider) */}
+          <div className={`z-10 flex items-center justify-center w-9 h-9 transition-colors duration-300 ${!isDarkMode ? 'text-transparent' : 'text-[var(--text-muted)] group-hover:text-[var(--text-color)]'}`}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+              <circle cx="12" cy="12" r="4" />
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+            </svg>
+          </div>
+
+          {/* Underlay Moon Icon (Muted, disappears under slider) */}
+          <div className={`z-10 flex items-center justify-center w-9 h-9 transition-colors duration-300 ${isDarkMode ? 'text-transparent' : 'text-[var(--text-muted)] group-hover:text-[var(--text-color)]'}`}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
       {/* Main Content scrollable pane */}
-      <div className="flex-1 overflow-y-auto no-scrollbar flex flex-col pt-4 bg-[#050505]">
+      <div 
+        className="flex-1 overflow-y-auto no-scrollbar flex flex-col pt-4 bg-[var(--bg-color)] transition-colors duration-300"
+        onScroll={handleScroll}
+      >
         
         <AnimatePresence mode="wait">
           {isPortfolioActive ? (
@@ -459,6 +510,20 @@ function App() {
               transition={{ duration: 0.2 }}
             >
               <PortfolioDashboard accentColor={accentColor} />
+            </motion.div>
+          ) : activeInfoPage ? (
+            /* Immersive Professional White Info Page View */
+            <motion.div
+              key="info-page"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.2 }}
+            >
+              <InfoPageDetail 
+                pageKey={activeInfoPage}
+                onBack={() => setActiveInfoPage(null)}
+              />
             </motion.div>
           ) : activeArticle ? (
             /* Immersive Article Detail View */
@@ -504,34 +569,34 @@ function App() {
                       className="relative inline-flex rounded-full h-2 w-2"
                     />
                   </span>
-                  <span style={{ color: accentColor }} className="text-[10px] font-black uppercase tracking-widest">
+                  <span style={{ color: accentColor }} className="text-[10px] font-black uppercase tracking-widest font-sans">
                     Veille Active
                   </span>
-                  <span className="text-gray-800 text-xs font-bold">|</span>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-gray-500">
+                  <span className="text-[var(--text-color)]/20 text-xs font-bold font-sans">|</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)] font-sans">
                     {items.length + archives.length} Contenus Analysés
                   </span>
                 </div>
 
-                <h2 className="text-3xl sm:text-5xl font-black text-white leading-tight tracking-tight mb-4 max-w-2xl font-sans">
+                <h2 className="text-3xl sm:text-5xl font-black text-[var(--text-color)] leading-tight tracking-tight mb-4 max-w-2xl font-sans transition-colors">
                   {getHeroTitle()}
                 </h2>
 
-                <p className="text-xs sm:text-sm text-gray-400 leading-relaxed max-w-xl mb-6">
-                  Chaque matin, l'IA passe l'actualité au crible, articles de presse et vidéos YouTube, et sort les <span className="text-white font-semibold">meilleurs contenus</span> qui valent vraiment la peine.
+                <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed max-w-xl mb-6 font-sans transition-colors">
+                  Chaque matin, l'IA passe l'actualité au crible, articles de presse et vidéos YouTube, et sort les <span className="text-[var(--text-color)] font-semibold">meilleurs contenus</span> qui valent vraiment la peine.
                 </p>
 
                 {/* Tag badges row */}
-                <div className="flex flex-wrap justify-center gap-2 max-w-2xl">
-                  <span className="flex items-center gap-1.5 px-3 py-1.5 bg-[#0C0E0C] border border-[#1E221F] rounded-full text-[10px] font-extrabold tracking-wide text-[#9AA29E] shadow-sm">
+                <div className="flex flex-wrap justify-center gap-2 max-w-2xl font-sans font-black">
+                  <span className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--pill-bg)] border border-[var(--border-color)] rounded-full text-[10px] font-extrabold tracking-wide text-[var(--pill-text)] shadow-sm transition-colors">
                     <Sparkles className="w-3.5 h-3.5" style={{ color: accentColor }} />
                     Sélection par IA
                   </span>
-                  <span className="flex items-center gap-1.5 px-3 py-1.5 bg-[#0C0E0C] border border-[#1E221F] rounded-full text-[10px] font-extrabold tracking-wide text-[#9AA29E] shadow-sm">
+                  <span className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--pill-bg)] border border-[var(--border-color)] rounded-full text-[10px] font-extrabold tracking-wide text-[var(--pill-text)] shadow-sm transition-colors">
                     <Cpu className="w-3.5 h-3.5" style={{ color: accentColor }} />
                     Curation 100% vérifiée
                   </span>
-                  <span className="flex items-center gap-1.5 px-3 py-1.5 bg-[#0C0E0C] border border-[#1E221F] rounded-full text-[10px] font-extrabold tracking-wide text-[#9AA29E] shadow-sm">
+                  <span className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--pill-bg)] border border-[var(--border-color)] rounded-full text-[10px] font-extrabold tracking-wide text-[var(--pill-text)] shadow-sm transition-colors">
                     <Calendar className="w-3.5 h-3.5" style={{ color: accentColor }} />
                     {getFormattedDate()}
                   </span>
@@ -539,15 +604,16 @@ function App() {
               </section>
 
               {/* Filters & Search Toolbar (Row 1) */}
-              <div className="w-full max-w-4xl mx-auto px-6 py-5 bg-[#050505] border-y border-[#1E221F] flex flex-col md:flex-row items-center justify-between gap-4 shrink-0 z-10">
+              <div className="w-full max-w-4xl mx-auto px-6 py-5 bg-[var(--bg-color)] border-y border-[var(--border-color)] flex flex-col md:flex-row items-center justify-between gap-4 shrink-0 z-10 font-sans transition-colors duration-300">
                 
                 {/* 1. Time Filter Pills (Period) */}
-                <div className="flex gap-1.5 w-full md:w-auto bg-[#0C0E0C] p-1 rounded-full border border-[#1E221F] overflow-x-auto no-scrollbar">
+                <div className="flex gap-1.5 w-full md:w-auto bg-[var(--pill-bg)] p-1 rounded-full border border-[var(--border-color)] overflow-x-auto no-scrollbar transition-colors">
                   {[
                     { id: 'today', label: "Aujourd'hui" },
                     { id: 'week', label: 'Cette semaine' },
                     { id: 'all', label: 'Tout' },
-                    { id: 'archives', label: 'Archives (30j)' }
+                    { id: 'archives', label: 'Archives (30j)' },
+                    { id: 'bookmarks', label: 'Favoris' }
                   ].map((filter) => {
                     const isActive = timeFilter === filter.id;
                     return (
@@ -555,12 +621,12 @@ function App() {
                         key={filter.id}
                         onClick={() => {
                           setTimeFilter(filter.id);
-                          setActiveTagFilter('Tous');
+                          setActiveCategory('Tous');
                         }}
                         className={`relative flex items-center justify-center px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-wider transition-all duration-200 select-none cursor-pointer border whitespace-nowrap ${
                           isActive 
-                            ? 'text-black bg-white border-white shadow-sm' 
-                            : 'text-gray-400 hover:text-white bg-transparent border-transparent hover:bg-white/5'
+                            ? 'text-[var(--bg-color)] bg-[var(--text-color)] border-[var(--text-color)] shadow-sm' 
+                            : 'text-[var(--pill-text)] hover:text-[var(--text-color)] bg-transparent border-transparent hover:bg-[var(--text-color)]/5'
                         }`}
                       >
                         <span className="relative z-10">{filter.label}</span>
@@ -570,7 +636,7 @@ function App() {
                 </div>
 
                 {/* 2. Format Filter Pills (Vidéos / Articles) */}
-                <div className="flex gap-1.5 w-full md:w-auto bg-[#0C0E0C] p-1 rounded-full border border-[#1E221F] overflow-x-auto no-scrollbar">
+                <div className="flex gap-1.5 w-full md:w-auto bg-[var(--pill-bg)] p-1 rounded-full border border-[var(--border-color)] overflow-x-auto no-scrollbar transition-colors">
                   {[
                     { id: 'all', label: 'Tous formats' },
                     { id: 'videos', label: 'Vidéos', icon: <Play className="w-3 h-3" /> },
@@ -584,7 +650,7 @@ function App() {
                         className={`relative flex items-center gap-1.5 justify-center px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-wider transition-all duration-200 select-none cursor-pointer border whitespace-nowrap ${
                           isActive 
                             ? 'text-white border-transparent' 
-                            : 'text-gray-400 hover:text-white bg-transparent border-transparent hover:bg-white/5'
+                            : 'text-[var(--pill-text)] hover:text-[var(--text-color)] bg-transparent border-transparent hover:bg-[var(--text-color)]/5'
                         }`}
                         style={{ 
                           backgroundColor: isActive ? accentColor : '',
@@ -601,93 +667,183 @@ function App() {
                 {/* 3. Live Search Input */}
                 <div className="relative w-full md:w-64">
                   <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                    <Search className="h-3.5 w-3.5 text-gray-500" />
+                    <Search className="h-3.5 w-3.5 text-[var(--text-muted)]" />
                   </span>
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Recherche rapide..."
-                    className="w-full pl-9 pr-4 py-2.5 border border-[#1E221F] rounded-full text-xs font-medium placeholder-gray-500 focus:outline-none focus:ring-1 bg-[#0C0E0C] text-white transition-colors"
+                    className="w-full pl-9 pr-4 py-2.5 border border-[var(--border-color)] rounded-full text-xs font-medium placeholder-[var(--text-muted)] focus:outline-none focus:ring-1 bg-[var(--pill-bg)] text-[var(--text-color)] transition-all"
                     style={{ 
-                      borderColor: searchQuery.trim() !== '' ? accentColor : '#1E221F',
+                      borderColor: searchQuery.trim() !== '' ? accentColor : 'var(--border-color)',
                     }}
                   />
                 </div>
               </div>
 
-              {/* Subcategories Tag filters bar (Row 2) */}
-              <div className="w-full max-w-4xl mx-auto px-6 py-3.5 flex items-center justify-between overflow-x-auto no-scrollbar z-10 border-b border-[#1E221F] bg-[#050505] sticky top-[72px]">
-                <div className="flex gap-2 min-w-max">
-                  {subcategories.map((subcat) => {
-                    const isActive = activeTagFilter === subcat;
-                    const count = getSubcategoryCount(subcat);
-                    if (count === 0 && !isActive) return null; // hide empty tags
-                    return (
-                      <button
-                        key={subcat}
-                        onClick={() => setActiveTagFilter(subcat)}
-                        className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider transition-all duration-200 select-none cursor-pointer border`}
-                        style={{ 
-                          backgroundColor: isActive ? accentColor : '#0C0E0C',
-                          borderColor: isActive ? accentColor : '#1E221F',
-                          color: isActive ? '#FFFFFF' : '#9AA29E'
-                        }}
-                      >
-                        <span>{subcat}</span>
-                        <span 
-                          className="text-[8px] font-bold px-1.5 py-0.5 rounded-full"
-                          style={{
-                            backgroundColor: isActive ? 'rgba(255,255,255,0.2)' : '#1E221F',
-                            color: isActive ? '#FFFFFF' : '#6E7672'
+              {/* Categories Tag filters bar (Row 2) */}
+              {activePortal !== 'ia' && (
+                <div 
+                  className={`w-full max-w-4xl mx-auto px-6 py-3.5 flex items-center justify-between overflow-x-auto no-scrollbar z-10 border-b border-[var(--border-color)] bg-[var(--bg-color)] sticky transition-all duration-300 font-sans ${
+                    isHeaderVisible ? 'top-[78px] opacity-100' : 'top-0 -translate-y-full opacity-0 pointer-events-none'
+                  }`}
+                >
+                  <div className="flex gap-2 min-w-max">
+                    {filterTags.map((tagKey) => {
+                      const isActive = activeCategory === tagKey;
+                      const label = tagKey === 'Tous' ? 'Tous' : portalCategories[tagKey]?.label;
+                      const count = getSubcategoryCount(tagKey);
+                      if (count === 0 && !isActive) return null; // hide empty tags
+                      return (
+                        <button
+                          key={tagKey}
+                          onClick={() => handleCategoryChange(tagKey)}
+                          className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider transition-all duration-200 select-none cursor-pointer border`}
+                          style={{ 
+                            backgroundColor: isActive ? accentColor : 'var(--pill-bg)',
+                            borderColor: isActive ? accentColor : 'var(--border-color)',
+                            color: isActive ? '#FFFFFF' : 'var(--pill-text)'
                           }}
                         >
-                          {count}
-                        </span>
-                      </button>
-                    );
-                  })}
+                          <span>{label}</span>
+                          <span 
+                            className="text-[8px] font-bold px-1.5 py-0.5 rounded-full"
+                            style={{
+                              backgroundColor: isActive ? 'rgba(255,255,255,0.2)' : 'var(--border-color)',
+                              color: isActive ? '#FFFFFF' : 'var(--text-muted)'
+                            }}
+                          >
+                            {count}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  
+                  <div className="hidden sm:block text-[10px] text-[var(--text-muted)] font-extrabold uppercase tracking-widest">
+                    {filteredList.length} contenus
+                  </div>
                 </div>
-                
-                <div className="hidden sm:block text-[10px] text-gray-500 font-extrabold uppercase tracking-widest">
-                  {filteredList.length} contenus
-                </div>
-              </div>
+              )}
 
               {/* Magazine Grid View */}
-              <main className="flex-1 bg-[#050505] pb-12">
-                <MagazineGrid 
-                  items={timeFilter === 'archives' ? [] : filteredList}
-                  archives={timeFilter === 'archives' ? filteredList : []}
-                  activeFilter={timeFilter}
-                  onOpenArticle={setActiveArticle}
-                  onOpenVideo={setActiveArticle}
-                  accentColor={accentColor}
-                />
+              <main className="flex-1 bg-[var(--bg-color)] pb-12 transition-colors duration-300">
+                {timeFilter === 'bookmarks' ? (
+                  (() => {
+                    const portalPrefix = activePortal === 'qhse' ? 'qhse-' : activePortal === 'finance' ? 'fin-' : activePortal === 'ia' ? 'ia-' : 'ent-';
+                    const portalBookmarks = bookmarkedItems.filter(item => item.categoryKey && item.categoryKey.startsWith(portalPrefix));
+                    
+                    const filterBySearch = (list) => {
+                      if (searchQuery.trim() === '') return list;
+                      const q = searchQuery.toLowerCase();
+                      return list.filter(item => 
+                        item.title.toLowerCase().includes(q) || 
+                        item.summary.toLowerCase().includes(q) ||
+                        item.category.toLowerCase().includes(q) ||
+                        item.author.toLowerCase().includes(q)
+                      );
+                    };
+
+                    const bookmarkedArticles = filterBySearch(portalBookmarks.filter(item => item.type === 'article'));
+                    const bookmarkedVideos = filterBySearch(portalBookmarks.filter(item => item.type === 'video'));
+
+                    return (
+                      <div className="w-full max-w-4xl mx-auto px-6 sm:px-8 pt-10 pb-16 bg-[var(--bg-color)] flex flex-col gap-10 transition-colors duration-300">
+                        {/* SECTION 1: VIDEOS */}
+                        <div className="flex flex-col text-left">
+                          <h2 className="text-xl font-black text-[var(--text-color)] font-sans mb-6 flex items-center gap-2 transition-colors duration-300">
+                            <Play className="w-5 h-5" style={{ color: accentColor }} />
+                            Vidéos favorites ({bookmarkedVideos.length})
+                          </h2>
+                          {bookmarkedVideos.length === 0 ? (
+                            <p className="text-sm text-[var(--text-muted)] font-sans italic bg-[var(--card-bg)] p-6 rounded-2xl border border-[var(--border-color)]">
+                              Aucune vidéo enregistrée dans vos favoris pour cette rubrique.
+                            </p>
+                          ) : (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                              {bookmarkedVideos.map(item => (
+                                <VibrantCard
+                                  key={item.id}
+                                  item={item}
+                                  layout="bento"
+                                  isBookmarked={true}
+                                  onToggleBookmark={handleToggleBookmark}
+                                  onOpenArticle={handleOpenArticle}
+                                  onOpenVideo={(video) => setSelectedVideo(video)}
+                                  accentColor={accentColor}
+                                />
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* SECTION 2: ARTICLES */}
+                        <div className="flex flex-col text-left">
+                          <h2 className="text-xl font-black text-[var(--text-color)] font-sans mb-6 flex items-center gap-2 transition-colors duration-300">
+                            <BookOpen className="w-5 h-5" style={{ color: accentColor }} />
+                            Articles favoris ({bookmarkedArticles.length})
+                          </h2>
+                          {bookmarkedArticles.length === 0 ? (
+                            <p className="text-sm text-[var(--text-muted)] font-sans italic bg-[var(--card-bg)] p-6 rounded-2xl border border-[var(--border-color)]">
+                              Aucun article enregistré dans vos favoris pour cette rubrique.
+                            </p>
+                          ) : (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                              {bookmarkedArticles.map(item => (
+                                <VibrantCard
+                                  key={item.id}
+                                  item={item}
+                                  layout="bento"
+                                  isBookmarked={true}
+                                  onToggleBookmark={handleToggleBookmark}
+                                  onOpenArticle={handleOpenArticle}
+                                  onOpenVideo={(video) => setSelectedVideo(video)}
+                                  accentColor={accentColor}
+                                />
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })()
+                ) : (
+                  <MagazineGrid 
+                    items={timeFilter === 'archives' ? [] : filteredList}
+                    archives={timeFilter === 'archives' ? filteredList : []}
+                    activeFilter={timeFilter}
+                    onOpenArticle={handleOpenArticle}
+                    onOpenVideo={(video) => setSelectedVideo(video)}
+                    bookmarkedIds={bookmarkedItems.map(i => i.url)}
+                    onToggleBookmark={handleToggleBookmark}
+                    accentColor={accentColor}
+                  />
+                )}
               </main>
             </motion.div>
           )}
         </AnimatePresence>
 
         {/* Footer Editorial bar */}
-        <footer className="w-full py-8 px-6 sm:px-12 bg-[#050505] border-t border-[#1E221F] flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-gray-500 font-sans mt-auto">
-          <p>© 2026 Magazine IA. Tous droits réservés.</p>
+        <footer className="w-full py-8 px-6 sm:px-12 bg-[var(--bg-color)] border-t border-[var(--border-color)] flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-[var(--text-muted)] font-sans mt-auto transition-colors duration-300">
+          <p>© 2026 Magazinia. Tous droits réservés.</p>
           <div className="flex gap-6">
             <button 
               onClick={() => handleOpenInfoPage('mentions')} 
-              className="hover:text-white transition-colors cursor-pointer select-none font-sans text-xs text-gray-500 bg-transparent border-none p-0 focus:outline-none"
+              className="hover:text-[var(--text-color)] transition-colors cursor-pointer select-none font-sans text-xs text-[var(--text-muted)] bg-transparent border-none p-0 focus:outline-none"
             >
               Mentions Légales
             </button>
             <button 
               onClick={() => handleOpenInfoPage('politique')} 
-              className="hover:text-white transition-colors cursor-pointer select-none font-sans text-xs text-gray-500 bg-transparent border-none p-0 focus:outline-none"
+              className="hover:text-[var(--text-color)] transition-colors cursor-pointer select-none font-sans text-xs text-[var(--text-muted)] bg-transparent border-none p-0 focus:outline-none"
             >
               Politique de Confidentialité
             </button>
             <button 
               onClick={() => handleOpenInfoPage('propos')} 
-              className="hover:text-white transition-colors cursor-pointer select-none font-sans text-xs text-gray-500 bg-transparent border-none p-0 focus:outline-none"
+              className="hover:text-[var(--text-color)] transition-colors cursor-pointer select-none font-sans text-xs text-[var(--text-muted)] bg-transparent border-none p-0 focus:outline-none"
             >
               À Propos
             </button>
