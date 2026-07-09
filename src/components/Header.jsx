@@ -14,8 +14,8 @@ const TelegramIcon = ({ className = "w-3.5 h-3.5" }) => (
 // FINANCE -> Green (#10B981)
 // BUSINESS (entrepreneuriat) -> #ebbb81
 const PortalIconBadge = ({ Icon, color, gradientFrom, gradientTo, size = 'md' }) => {
-  const sizeClass = size === 'lg' ? 'w-12 h-12' : 'w-9 h-9';
-  const iconSize = size === 'lg' ? 22 : 17;
+  const sizeClass = size === 'lg' ? 'w-10 h-10' : 'w-8 h-8';
+  const iconSize = size === 'lg' ? 18 : 15;
   return (
     <div
       className={`${sizeClass} rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg`}
@@ -206,11 +206,12 @@ export default function Header({
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-50 bg-[var(--bg-color)] p-6 flex flex-col justify-between"
+            initial={{ y: '-100%' }}
+            animate={{ y: 0 }}
+            exit={{ y: '-100%' }}
+            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            className="fixed inset-0 z-50 p-6 flex flex-col justify-between"
+            style={{ backgroundColor: '#0a0a0f' }}
           >
             <div>
               {/* Header inside menu */}
