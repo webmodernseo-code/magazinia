@@ -229,7 +229,7 @@ export default function Header({
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={{ scale: 0.95, y: -12, opacity: 0 }}
               transition={{ type: 'spring', stiffness: 340, damping: 30 }}
-              className="absolute inset-4 rounded-3xl flex flex-col overflow-hidden"
+              className="absolute inset-x-4 top-4 rounded-3xl flex flex-col overflow-hidden"
               style={{ backgroundColor: '#0c0c0e', border: '1px solid rgba(255,255,255,0.09)' }}
             >
               {/* Header */}
@@ -247,7 +247,7 @@ export default function Header({
               </div>
 
               {/* Portal items */}
-              <div className="flex-1 flex flex-col justify-center px-5 py-4 gap-1">
+              <div className="px-5 pt-4 pb-5">
                 {activePortal === 'finance' && (
                   <div className="flex justify-end px-2 mb-2">
                     <button
