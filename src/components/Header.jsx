@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Lock } from 'lucide-react';
+import { Menu, X, Lock, Cpu, ShieldCheck, TrendingUp, Rocket, ChevronRight } from 'lucide-react';
 
 const TelegramIcon = ({ className = "w-3.5 h-3.5" }) => (
   <svg viewBox="0 0 24 24" className={className} fill="currentColor" stroke="none">
@@ -13,11 +13,40 @@ const TelegramIcon = ({ className = "w-3.5 h-3.5" }) => (
 // QHSE -> Safety Orange (#F97316)
 // FINANCE -> Green (#10B981)
 // BUSINESS (entrepreneuriat) -> #ebbb81
+const PortalIconBadge = ({ Icon, color, gradientFrom, gradientTo, size = 'md' }) => {
+  const sizeClass = size === 'lg' ? 'w-12 h-12' : 'w-9 h-9';
+  const iconSize = size === 'lg' ? 22 : 17;
+  return (
+    <div
+      className={`${sizeClass} rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg`}
+      style={{ background: `linear-gradient(135deg, ${gradientFrom} 0%, ${gradientTo} 100%)` }}
+    >
+      <Icon size={iconSize} color="white" strokeWidth={2} />
+    </div>
+  );
+};
+
 const portals = [
-  { id: 'ia', label: 'IA', color: '#3B82F6', icon: '💻' },
-  { id: 'qhse', label: 'QHSE', color: '#F97316', icon: '🛡️' },
-  { id: 'finance', label: 'FINANCE', color: '#10B981', icon: '📊' },
-  { id: 'entrepreneuriat', label: 'BUSINESS', color: '#ebbb81', icon: '🚀' }
+  {
+    id: 'ia', label: 'IA', desc: 'Intelligence Artificielle & Tech',
+    color: '#3B82F6', gradientFrom: '#3B82F6', gradientTo: '#6366F1',
+    Icon: Cpu
+  },
+  {
+    id: 'qhse', label: 'QHSE', desc: 'Qualité · Hygiène · Sécurité · Env.',
+    color: '#F97316', gradientFrom: '#F97316', gradientTo: '#EF4444',
+    Icon: ShieldCheck
+  },
+  {
+    id: 'finance', label: 'FINANCE', desc: 'Marchés financiers & Économie',
+    color: '#10B981', gradientFrom: '#10B981', gradientTo: '#059669',
+    Icon: TrendingUp
+  },
+  {
+    id: 'entrepreneuriat', label: 'BUSINESS', desc: 'Entrepreneuriat & Stratégie',
+    color: '#F59E0B', gradientFrom: '#F59E0B', gradientTo: '#D97706',
+    Icon: Rocket
+  }
 ];
 
 export default function Header({ 
@@ -225,33 +254,46 @@ export default function Header({
                     </button>
                   )}
                 </div>
-                <div className="grid grid-cols-1 gap-2.5">
-                  {portals.map((portal) => {
+                <div className="grid grid-cols-1 gap-3">
+                  {portals.map((portal, index) => {
                     const isSelected = activePortal === portal.id && !isPortfolioActive;
                     return (
-                      <button
+                      <motion.button
                         key={portal.id}
+                        initial={{ opacity: 0, x: -16 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.07, duration: 0.25 }}
                         onClick={() => { onPortalChange(portal.id); setIsMobileMenuOpen(false); }}
                         style={{ 
-                          backgroundColor: isSelected ? `${portal.color}15` : '',
-                          borderColor: isSelected ? `${portal.color}30` : 'var(--border-color)',
-                          color: isSelected ? 'var(--text-color)' : '' 
+                          backgroundColor: isSelected ? `${portal.color}12` : 'var(--pill-bg)',
+                          borderColor: isSelected ? `${portal.color}40` : 'var(--border-color)',
                         }}
-                        className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-xs font-bold uppercase tracking-wider text-left transition-colors cursor-pointer select-none border ${
-                          isSelected 
-                            ? 'text-[var(--text-color)]' 
-                            : 'text-[var(--pill-text)] bg-[var(--pill-bg)] hover:text-[var(--text-color)]'
-                        }`}
+                        className="w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl text-left transition-all cursor-pointer select-none border active:scale-[0.98]"
                       >
-                        <span className="text-sm">{portal.icon}</span>
-                        <span className="flex-1">{portal.label}</span>
-                        {isSelected && (
-                          <span 
-                            className="w-1.5 h-1.5 rounded-full" 
-                            style={{ backgroundColor: portal.color }}
-                          />
-                        )}
-                      </button>
+                        <PortalIconBadge
+                          Icon={portal.Icon}
+                          color={portal.color}
+                          gradientFrom={portal.gradientFrom}
+                          gradientTo={portal.gradientTo}
+                          size="lg"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <div
+                            className="text-xs font-black uppercase tracking-widest"
+                            style={{ color: isSelected ? portal.color : 'var(--text-color)' }}
+                          >
+                            {portal.label}
+                          </div>
+                          <div className="text-[10px] text-[var(--text-muted)] mt-0.5 truncate font-medium">
+                            {portal.desc}
+                          </div>
+                        </div>
+                        <ChevronRight
+                          size={14}
+                          style={{ color: isSelected ? portal.color : 'var(--text-muted)' }}
+                          className="flex-shrink-0"
+                        />
+                      </motion.button>
                     );
                   })}
                 </div>
