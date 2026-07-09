@@ -210,13 +210,12 @@ export default function Header({
             animate={{ y: 0 }}
             exit={{ y: '-100%' }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="fixed inset-0 z-50 p-6 flex flex-col justify-between"
+            className="fixed inset-0 z-[200] flex flex-col p-6"
             style={{ backgroundColor: '#0a0a0f' }}
           >
-            <div>
               {/* Header inside menu */}
-              <div className="flex justify-between items-center pb-6 border-b border-[var(--border-color)] mb-6">
-                <div className="text-sm font-sans font-black text-[var(--text-color)] uppercase tracking-widest">
+              <div className="flex justify-between items-center pb-5 border-b border-white/10 mb-6">
+                <div className="text-sm font-sans font-black text-white uppercase tracking-widest">
                   {getLogoText()}
                 </div>
                 
@@ -230,21 +229,20 @@ export default function Header({
                   >
                     <TelegramIcon className="w-4 h-4 text-white" />
                   </a>
-
-                  {/* Close button */}
                   <button 
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="p-2.5 bg-[var(--pill-bg)] border border-[var(--border-color)] rounded-full text-[var(--pill-text)] hover:text-[var(--text-color)] transition-colors cursor-pointer focus:outline-none"
+                    className="p-2.5 rounded-full text-white/60 hover:text-white transition-colors cursor-pointer focus:outline-none"
+                    style={{ backgroundColor: '#1c1c24', border: '1px solid rgba(255,255,255,0.1)' }}
                   >
                     <X className="w-4 h-4" />
                   </button>
                 </div>
               </div>
 
-              {/* Portal Selector for Mobile */}
+              {/* Portal Selector — single unified panel */}
               <div className="flex flex-col gap-3 text-left">
-                <div className="flex justify-between items-center px-1">
-                  <span className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">Portails Magazinia</span>
+                <div className="flex justify-between items-center px-1 mb-1">
+                  <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">Portails Magazinia</span>
                   {activePortal === 'finance' && (
                     <button 
                       onClick={() => { onOpenPortfolio(); setIsMobileMenuOpen(false); }}
@@ -255,46 +253,47 @@ export default function Header({
                     </button>
                   )}
                 </div>
-                <div className="grid grid-cols-1 gap-3">
+
+                {/* Single unified container */}
+                <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#141418', border: '1px solid rgba(255,255,255,0.07)' }}>
                   {portals.map((portal, index) => {
                     const isSelected = activePortal === portal.id && !isPortfolioActive;
                     return (
-                      <motion.button
-                        key={portal.id}
-                        initial={{ opacity: 0, x: -16 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.07, duration: 0.25 }}
-                        onClick={() => { onPortalChange(portal.id); setIsMobileMenuOpen(false); }}
-                        style={{ 
-                          backgroundColor: isSelected ? `${portal.color}12` : 'var(--pill-bg)',
-                          borderColor: isSelected ? `${portal.color}40` : 'var(--border-color)',
-                        }}
-                        className="w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl text-left transition-all cursor-pointer select-none border active:scale-[0.98]"
-                      >
-                        <PortalIconBadge
-                          Icon={portal.Icon}
-                          color={portal.color}
-                          gradientFrom={portal.gradientFrom}
-                          gradientTo={portal.gradientTo}
-                          size="lg"
-                        />
-                        <div className="flex-1 min-w-0">
-                          <div
-                            className="text-xs font-black uppercase tracking-widest"
-                            style={{ color: isSelected ? portal.color : 'var(--text-color)' }}
-                          >
-                            {portal.label}
+                      <div key={portal.id}>
+                        <button
+                          onClick={() => { onPortalChange(portal.id); setIsMobileMenuOpen(false); }}
+                          className="w-full flex items-center gap-4 px-4 py-4 text-left transition-all cursor-pointer select-none active:scale-[0.99]"
+                          style={{ backgroundColor: isSelected ? `${portal.color}10` : 'transparent' }}
+                        >
+                          <PortalIconBadge
+                            Icon={portal.Icon}
+                            color={portal.color}
+                            gradientFrom={portal.gradientFrom}
+                            gradientTo={portal.gradientTo}
+                            size="lg"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <div
+                              className="text-xs font-black uppercase tracking-widest"
+                              style={{ color: isSelected ? portal.color : 'rgba(255,255,255,0.9)' }}
+                            >
+                              {portal.label}
+                            </div>
+                            <div className="text-[10px] mt-0.5 truncate font-medium" style={{ color: 'rgba(255,255,255,0.38)' }}>
+                              {portal.desc}
+                            </div>
                           </div>
-                          <div className="text-[10px] text-[var(--text-muted)] mt-0.5 truncate font-medium">
-                            {portal.desc}
-                          </div>
-                        </div>
-                        <ChevronRight
-                          size={14}
-                          style={{ color: isSelected ? portal.color : 'var(--text-muted)' }}
-                          className="flex-shrink-0"
-                        />
-                      </motion.button>
+                          <ChevronRight
+                            size={14}
+                            style={{ color: isSelected ? portal.color : 'rgba(255,255,255,0.25)' }}
+                            className="flex-shrink-0"
+                          />
+                        </button>
+                        {/* Divider between items (not after last) */}
+                        {index < portals.length - 1 && (
+                          <div className="mx-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }} />
+                        )}
+                      </div>
                     );
                   })}
                 </div>
@@ -302,7 +301,7 @@ export default function Header({
             </div>
 
             {/* Footer inside mobile menu */}
-            <div className="text-[10px] text-[var(--text-muted)] uppercase tracking-widest text-center pt-6 border-t border-[var(--border-color)]">
+            <div className="text-[10px] uppercase tracking-widest text-center pt-5 mt-6" style={{ color: 'rgba(255,255,255,0.25)', borderTop: '1px solid rgba(255,255,255,0.07)' }}>
               © 2026 Magazinia — Premium Editorial
             </div>
           </motion.div>
