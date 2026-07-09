@@ -116,6 +116,7 @@ export default function Header({
   const portalColor = getPortalColor(activePortal);
 
   return (
+    <>
     <header 
       className={`w-full max-w-6xl mx-auto px-4 mt-6 sticky top-4 z-50 shrink-0 transition-all duration-300 ease-in-out ${
         isVisible ? 'translate-y-0 opacity-100' : '-translate-y-28 opacity-0 pointer-events-none'
@@ -202,7 +203,9 @@ export default function Header({
 
       </div>
 
-      {/* Mobile Menu — floating panel */}
+    </header>
+
+      {/* Mobile Menu — outside <header> to avoid CSS transform stacking context */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
@@ -310,8 +313,6 @@ export default function Header({
           </motion.div>
         )}
       </AnimatePresence>
-
-
-    </header>
+    </>
   );
 }
