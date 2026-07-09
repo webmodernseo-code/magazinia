@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Lock, Cpu, ShieldCheck, TrendingUp, Rocket, ChevronRight, Mail } from 'lucide-react';
+import { Menu, X, Lock, Cpu, ShieldCheck, TrendingUp, Rocket, ChevronRight, MessageCircle } from 'lucide-react';
 
 // Updated portal color themes:
 // IA -> Blue Original (#3B82F6)
@@ -182,7 +182,7 @@ export default function Header({
             style={{ backgroundColor: portalColor }}
             className={`flex items-center gap-1.5 px-4 py-2 sm:py-2.5 text-white rounded-full text-[9px] font-black uppercase tracking-widest transition-all ${getPortalShadow(activePortal)} ${getPortalHoverBg(activePortal)} select-none cursor-pointer`}
           >
-            <Mail className="w-3.5 h-3.5 text-white" />
+            <MessageCircle className="w-3.5 h-3.5 text-white" />
             <span className="hidden lg:inline">Nous contacter</span>
           </a>
 
