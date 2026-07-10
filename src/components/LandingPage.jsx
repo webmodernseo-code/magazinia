@@ -10,7 +10,7 @@ const PORTALS = [
     key: 'ia',
     label: 'IA & Tech',
     sub: 'Intelligence Artificielle',
-    desc: "Décryptez l'actualité de l'IA, des LLMs, de la robotique et des technologies de demain.",
+    desc: "LLMs, robotique, tech — l'essentiel chaque jour.",
     color: '#3B82F6',       // Bleu IA
     colorMuted: 'rgba(59,130,246,0.15)',
     image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=85',
@@ -20,7 +20,7 @@ const PORTALS = [
     key: 'qhse',
     label: 'QHSE',
     sub: 'Qualité · Hygiène · Sécurité · Env.',
-    desc: "Conformité réglementaire, prévention des risques et performance environnementale.",
+    desc: "Conformité, prévention et performance environnementale.",
     color: '#F97316',       // Orange QHSE
     colorMuted: 'rgba(249,115,22,0.15)',
     image: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=800&q=85',
@@ -30,7 +30,7 @@ const PORTALS = [
     key: 'finance',
     label: 'Finance',
     sub: 'Marchés & Investissements',
-    desc: "Suivez les marchés financiers, la BRVM, les tendances macro-économiques et les opportunités d'investissement.",
+    desc: "Marchés, BRVM et tendances macro en un coup d'œil.",
     color: '#10B981',       // Vert Finance
     colorMuted: 'rgba(16,185,129,0.15)',
     image: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=85',
@@ -40,7 +40,7 @@ const PORTALS = [
     key: 'entrepreneuriat',
     label: 'Business',
     sub: 'Entrepreneuriat & Stratégie',
-    desc: "Culture entrepreneuriale, stratégie d'entreprise, innovation et inspiration pour bâtir des projets qui durent.",
+    desc: "Stratégie, innovation et inspiration pour entreprendre.",
     color: '#D4A25A',       // Or doré Business (version sobre de #ebbb81)
     colorMuted: 'rgba(212,162,90,0.15)',
     image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=85',
@@ -285,18 +285,27 @@ export default function LandingPage({ onSelectPortal, isDarkMode, setIsDarkMode 
                   {portal.label}
                 </h2>
 
-                {/* Description — toujours visible */}
-                <p
+                {/* Description — visible au hover uniquement */}
+                <div
                   style={{
-                    fontSize: 11,
-                    color: 'rgba(255,255,255,0.62)',
-                    lineHeight: 1.6,
-                    marginTop: 6,
-                    marginBottom: 4,
+                    overflow: 'hidden',
+                    maxHeight: isHov ? '80px' : '0px',
+                    opacity: isHov ? 1 : 0,
+                    marginTop: isHov ? 6 : 0,
+                    transition: 'max-height 0.4s cubic-bezier(0.22,1,0.36,1), opacity 0.3s ease, margin-top 0.3s ease',
                   }}
                 >
-                  {portal.desc}
-                </p>
+                  <p
+                    style={{
+                      fontSize: 11,
+                      color: 'rgba(255,255,255,0.65)',
+                      lineHeight: 1.6,
+                      marginBottom: 2,
+                    }}
+                  >
+                    {portal.desc}
+                  </p>
+                </div>
 
                 {/* CTA — toujours visible */}
                 <div
