@@ -293,7 +293,7 @@ export default function LandingPage({ onSelectPortal, isDarkMode, setIsDarkMode 
                   height: '100%',
                   objectFit: 'cover',
                   objectPosition: 'center',
-                  filter: isHov ? 'brightness(0.38) grayscale(0.15)' : 'brightness(0.22) grayscale(0.4)',
+                  filter: isHov ? 'brightness(0.55) grayscale(0.05)' : 'brightness(0.42) grayscale(0.25)',
                   transition: 'filter 0.45s ease',
                 }}
                 loading="lazy"
@@ -304,7 +304,7 @@ export default function LandingPage({ onSelectPortal, isDarkMode, setIsDarkMode 
                 style={{
                   position: 'absolute',
                   inset: 0,
-                  background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)',
+                  background: 'linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.18) 55%, transparent 100%)',
                   transition: 'opacity 0.35s ease',
                 }}
               />
@@ -387,26 +387,18 @@ export default function LandingPage({ onSelectPortal, isDarkMode, setIsDarkMode 
                   {portal.label}
                 </h2>
 
-                {/* Description — visible au hover */}
-                <div
+                {/* Description — toujours visible */}
+                <p
                   style={{
-                    overflow: 'hidden',
-                    maxHeight: isHov ? 80 : 0,
-                    opacity: isHov ? 1 : 0,
-                    transition: 'max-height 0.4s cubic-bezier(0.22,1,0.36,1), opacity 0.3s ease',
+                    fontSize: 11,
+                    color: 'rgba(255,255,255,0.62)',
+                    lineHeight: 1.6,
+                    marginTop: 6,
+                    marginBottom: 4,
                   }}
                 >
-                  <p
-                    style={{
-                      fontSize: 11,
-                      color: 'rgba(255,255,255,0.6)',
-                      lineHeight: 1.55,
-                      marginBottom: 12,
-                    }}
-                  >
-                    {portal.desc}
-                  </p>
-                </div>
+                  {portal.desc}
+                </p>
 
                 {/* CTA — toujours visible */}
                 <div
