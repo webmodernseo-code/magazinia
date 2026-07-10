@@ -52,7 +52,8 @@ export default function Header({
   onOpenPortfolio,
   isPortfolioActive,
   isVisible = true,
-  onGoHome
+  onGoHome,
+  isLandingActive = false
 }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -113,7 +114,7 @@ export default function Header({
   return (
     <>
     <header 
-      className={`w-full max-w-6xl mx-auto px-4 mt-6 sticky top-4 z-50 shrink-0 transition-all duration-300 ease-in-out ${
+      className={`w-full max-w-6xl mx-auto px-4 mt-6 sticky top-4 z-[110] shrink-0 transition-all duration-300 ease-in-out ${
         isVisible ? 'translate-y-0 opacity-100' : '-translate-y-28 opacity-0 pointer-events-none'
       }`}
     >
@@ -145,8 +146,28 @@ export default function Header({
 
         {/* Central Portals Navigation (Visible on Desktop) */}
         <nav className="hidden md:flex items-center gap-6 lg:gap-8">
+          {/* Accueil — retour landing */}
+          {onGoHome && (
+            <button
+              onClick={onGoHome}
+              className={`relative py-1 text-[10px] font-black uppercase tracking-widest transition-colors duration-200 cursor-pointer select-none focus:outline-none ${
+                isLandingActive
+                  ? 'text-[var(--text-color)]'
+                  : 'text-[var(--pill-text)] hover:text-[var(--text-color)]'
+              }`}
+            >
+              Accueil
+              {isLandingActive && (
+                <motion.div
+                  layoutId="activeHeaderNav"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 rounded-full bg-[var(--text-color)]"
+                  transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                />
+              )}
+            </button>
+          )}
           {portals.map((portal) => {
-            const isSelected = activePortal === portal.id && !isPortfolioActive;
+            const isSelected = activePortal === portal.id && !isPortfolioActive && !isLandingActive;
             return (
               <button
                 key={portal.id}

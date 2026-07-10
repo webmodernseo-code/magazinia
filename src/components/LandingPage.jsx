@@ -11,9 +11,9 @@ const PORTALS = [
     label: 'IA & Tech',
     sub: 'Intelligence Artificielle',
     desc: "Décryptez l'actualité de l'IA, des LLMs, de la robotique et des technologies de demain.",
-    // Chip électronique CPU — représente la tech & IA
+    color: '#3B82F6',       // Bleu IA
+    colorMuted: 'rgba(59,130,246,0.15)',
     image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=85',
-    // fallback: circuit board macro
     imageFallback: 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?auto=format&fit=crop&w=800&q=85',
   },
   {
@@ -21,7 +21,8 @@ const PORTALS = [
     label: 'QHSE',
     sub: 'Qualité · Hygiène · Sécurité · Env.',
     desc: "Conformité réglementaire, prévention des risques et performance environnementale.",
-    // Casque de protection + équipement EPI sur chantier
+    color: '#F97316',       // Orange QHSE
+    colorMuted: 'rgba(249,115,22,0.15)',
     image: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=800&q=85',
     imageFallback: 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?auto=format&fit=crop&w=800&q=85',
   },
@@ -30,7 +31,8 @@ const PORTALS = [
     label: 'Finance',
     sub: 'Marchés & Investissements',
     desc: "Suivez les marchés financiers, la BRVM, les tendances macro-économiques et les opportunités d'investissement.",
-    // Graphiques financiers / trading screens
+    color: '#10B981',       // Vert Finance
+    colorMuted: 'rgba(16,185,129,0.15)',
     image: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=85',
     imageFallback: 'https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=800&q=85',
   },
@@ -39,7 +41,8 @@ const PORTALS = [
     label: 'Business',
     sub: 'Entrepreneuriat & Stratégie',
     desc: "Culture entrepreneuriale, stratégie d'entreprise, innovation et inspiration pour bâtir des projets qui durent.",
-    // Bureau moderne / réunion stratégique
+    color: '#D4A25A',       // Or doré Business (version sobre de #ebbb81)
+    colorMuted: 'rgba(212,162,90,0.15)',
     image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=85',
     imageFallback: 'https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5?auto=format&fit=crop&w=800&q=85',
   },
@@ -75,134 +78,13 @@ export default function LandingPage({ onSelectPortal, isDarkMode, setIsDarkMode 
       }}
       className="flex flex-col"
     >
-      {/* ── HEADER ── */}
-      <header className="w-full max-w-5xl mx-auto px-6 sm:px-10 pt-8 pb-0 flex items-center justify-between">
-        {/* Logo */}
-        <div className="flex items-center gap-2.5 select-none">
-          <div
-            style={{
-              width: 32,
-              height: 32,
-              borderRadius: 10,
-              background: 'var(--text-color)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <span
-              style={{
-                color: 'var(--bg-color)',
-                fontWeight: 900,
-                fontSize: 14,
-                letterSpacing: '-0.03em',
-              }}
-            >
-              M
-            </span>
-          </div>
-          <span
-            style={{
-              fontWeight: 900,
-              fontSize: 16,
-              letterSpacing: '-0.03em',
-              color: 'var(--text-color)',
-            }}
-          >
-            Magazinia
-          </span>
-        </div>
-
-        {/* Right actions */}
-        <div className="flex items-center gap-3">
-          {/* Live indicator */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6,
-              padding: '6px 12px',
-              borderRadius: 99,
-              border: '1px solid var(--border-color)',
-              background: 'var(--pill-bg)',
-            }}
-          >
-            <span style={{ position: 'relative', display: 'flex', width: 6, height: 6 }}>
-              <span
-                className="animate-ping"
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  borderRadius: '50%',
-                  background: 'var(--text-color)',
-                  opacity: 0.5,
-                }}
-              />
-              <span
-                style={{
-                  position: 'relative',
-                  width: 6,
-                  height: 6,
-                  borderRadius: '50%',
-                  background: 'var(--text-color)',
-                }}
-              />
-            </span>
-            <span
-              style={{
-                fontSize: 9,
-                fontWeight: 800,
-                textTransform: 'uppercase',
-                letterSpacing: '0.18em',
-                color: 'var(--text-muted)',
-              }}
-            >
-              Veille Active
-            </span>
-          </div>
-
-          {/* Dark / Light mode toggle — même style que l'app */}
-          {setIsDarkMode && (
-            <div
-              onClick={() => setIsDarkMode(!isDarkMode)}
-              title={isDarkMode ? 'Passer en mode clair' : 'Passer en mode sombre'}
-              style={{
-                width: 44,
-                height: 44,
-                borderRadius: 99,
-                border: '1px solid var(--border-color)',
-                background: 'var(--pill-bg)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-                flexShrink: 0,
-              }}
-            >
-              {isDarkMode ? (
-                /* Sun icon — cliquer pour passer en clair */
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 16, height: 16, color: 'var(--text-muted)' }}>
-                  <circle cx="12" cy="12" r="4" />
-                  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
-                </svg>
-              ) : (
-                /* Moon icon — cliquer pour passer en sombre */
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 16, height: 16, color: 'var(--text-muted)' }}>
-                  <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-                </svg>
-              )}
-            </div>
-          )}
-        </div>
-      </header>
 
       {/* ── HERO ── */}
       <motion.section
         initial={{ opacity: 0, y: -16 }}
         animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: -16 }}
         transition={{ duration: 0.55, ease: 'easeOut', delay: 0.1 }}
-        className="w-full max-w-5xl mx-auto px-6 sm:px-10 pt-10 pb-8 text-center"
+        className="w-full max-w-5xl mx-auto px-6 sm:px-10 pt-16 pb-8 text-center"
       >
         <p
           style={{
@@ -273,9 +155,9 @@ export default function LandingPage({ onSelectPortal, isDarkMode, setIsDarkMode 
                 overflow: 'hidden',
                 cursor: 'pointer',
                 aspectRatio: '1 / 1',
-                border: `1px solid ${isHov ? 'var(--text-color)' : 'var(--border-color)'}`,
+                border: `1px solid ${isHov ? portal.color + '60' : 'var(--border-color)'}`,
                 boxShadow: isHov
-                  ? '0 16px 48px rgba(0,0,0,0.22)'
+                  ? `0 16px 48px rgba(0,0,0,0.22), 0 0 0 1px ${portal.color}25`
                   : '0 2px 12px rgba(0,0,0,0.08)',
                 transform: isHov ? 'translateY(-4px) scale(1.012)' : 'translateY(0) scale(1)',
                 transition: 'transform 0.35s cubic-bezier(0.22,1,0.36,1), box-shadow 0.35s ease, border-color 0.25s ease',
@@ -309,7 +191,21 @@ export default function LandingPage({ onSelectPortal, isDarkMode, setIsDarkMode 
                 }}
               />
 
-              {/* ── Number top-left ── */}
+              {/* ── Bande couleur en bas de carte (accent sobre) ── */}
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  height: 3,
+                  background: portal.color,
+                  opacity: isHov ? 0.9 : 0.45,
+                  transition: 'opacity 0.35s ease',
+                }}
+              />
+
+              {/* ── Number top-left (dans la couleur du portail) ── */}
               <div
                 style={{
                   position: 'absolute',
@@ -319,7 +215,8 @@ export default function LandingPage({ onSelectPortal, isDarkMode, setIsDarkMode 
                   fontWeight: 800,
                   letterSpacing: '0.12em',
                   textTransform: 'uppercase',
-                  color: 'rgba(255,255,255,0.35)',
+                  color: portal.color,
+                  opacity: 0.85,
                 }}
               >
                 0{PORTALS.indexOf(portal) + 1}
@@ -358,14 +255,15 @@ export default function LandingPage({ onSelectPortal, isDarkMode, setIsDarkMode 
                   padding: '0 20px 20px',
                 }}
               >
-                {/* Catégorie label */}
+                {/* Catégorie label (couleur du portail) */}
                 <p
                   style={{
                     fontSize: 9,
                     fontWeight: 800,
                     textTransform: 'uppercase',
                     letterSpacing: '0.2em',
-                    color: 'rgba(255,255,255,0.5)',
+                    color: portal.color,
+                    opacity: 0.9,
                     marginBottom: 6,
                   }}
                 >
@@ -406,7 +304,7 @@ export default function LandingPage({ onSelectPortal, isDarkMode, setIsDarkMode 
                     display: 'flex',
                     alignItems: 'center',
                     gap: 6,
-                    marginTop: 4,
+                    marginTop: 8,
                   }}
                 >
                   <span
@@ -415,7 +313,7 @@ export default function LandingPage({ onSelectPortal, isDarkMode, setIsDarkMode 
                       fontWeight: 800,
                       textTransform: 'uppercase',
                       letterSpacing: '0.15em',
-                      color: isHov ? '#ffffff' : 'rgba(255,255,255,0.55)',
+                      color: isHov ? portal.color : 'rgba(255,255,255,0.55)',
                       transition: 'color 0.25s ease',
                     }}
                   >
@@ -431,9 +329,9 @@ export default function LandingPage({ onSelectPortal, isDarkMode, setIsDarkMode 
                     style={{
                       width: 12,
                       height: 12,
-                      color: 'rgba(255,255,255,0.55)',
+                      color: isHov ? portal.color : 'rgba(255,255,255,0.45)',
                       transform: isHov ? 'translateX(3px)' : 'translateX(0)',
-                      transition: 'transform 0.25s ease',
+                      transition: 'transform 0.25s ease, color 0.25s ease',
                     }}
                   >
                     <path d="M5 12h14M12 5l7 7-7 7" />

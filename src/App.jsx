@@ -465,6 +465,7 @@ function App() {
         isPortfolioActive={isPortfolioActive}
         isVisible={isHeaderVisible}
         onGoHome={handleGoToLanding}
+        isLandingActive={showLanding}
       />
 
       {/* Floating Premium Dark/Light Mode Switch */}
