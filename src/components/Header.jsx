@@ -51,7 +51,8 @@ export default function Header({
   onPortalChange,
   onOpenPortfolio,
   isPortfolioActive,
-  isVisible = true
+  isVisible = true,
+  onGoHome
 }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -120,7 +121,20 @@ export default function Header({
       <div className="w-full dark-glass rounded-full px-6 py-2.5 sm:py-3.5 flex justify-between items-center shadow-[0_8px_30px_rgba(0,0,0,0.15)] pointer-events-auto transition-colors duration-300">
         
         {/* Logo (Left) */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
+          {/* Home button */}
+          {onGoHome && (
+            <button
+              onClick={onGoHome}
+              title="Accueil — Changer de portail"
+              className="flex items-center justify-center w-7 h-7 rounded-full bg-[var(--pill-bg)] border border-[var(--border-color)] text-[var(--text-muted)] hover:text-[var(--text-color)] hover:border-[var(--text-color)]/20 transition-all cursor-pointer focus:outline-none shrink-0"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <polyline points="9 22 9 12 15 12 15 22" />
+              </svg>
+            </button>
+          )}
           <div 
             onClick={() => onPortalChange(activePortal)}
             className="flex items-center gap-1.5 text-sm font-sans font-black text-[var(--text-color)] uppercase tracking-widest cursor-pointer select-none transition-colors"

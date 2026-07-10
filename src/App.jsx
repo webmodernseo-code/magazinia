@@ -7,12 +7,14 @@ import VibrantCard from './components/VibrantCard';
 import VideoModal from './components/VideoModal';
 import InfoPageDetail from './components/InfoPageDetail';
 import PortfolioDashboard from './components/PortfolioDashboard';
+import LandingPage from './components/LandingPage';
 import { magazineData } from './data/magazineData';
 import { supabase } from './lib/supabaseClient';
 import { BookOpen, Play, Calendar, Search, Sparkles, Cpu, Star } from 'lucide-react';
 
 function App() {
   const [dbData, setDbData] = useState(magazineData);
+  const [showLanding, setShowLanding] = useState(true); // Show landing page on first load
   const [activePortal, setActivePortal] = useState('ia'); // Default to 'ia' portal
   const [isPortfolioActive, setIsPortfolioActive] = useState(false);
   const [activeCategory, setActiveCategory] = useState('Tous'); // Default to 'Tous' showing all categories
@@ -290,6 +292,18 @@ function App() {
     setSearchQuery('');
   };
 
+  const handleLandingSelect = (portalKey) => {
+    handlePortalChange(portalKey);
+    setShowLanding(false);
+  };
+
+  const handleGoToLanding = () => {
+    setShowLanding(true);
+    setActiveArticle(null);
+    setActiveInfoPage(null);
+    setIsPortfolioActive(false);
+  };
+
   const handleOpenPortfolio = () => {
     setIsPortfolioActive(true);
     setActiveArticle(null);
@@ -425,6 +439,21 @@ function App() {
 
   return (
     <div className="w-screen h-screen flex flex-col bg-[var(--bg-color)] text-[var(--text-color)] overflow-hidden transition-colors duration-300">
+      {/* ── LANDING PAGE ── */}
+      <AnimatePresence mode="wait">
+        {showLanding && (
+          <motion.div
+            key="landing"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, scale: 0.97 }}
+            transition={{ duration: 0.4, ease: 'easeInOut' }}
+            className="absolute inset-0 z-[100] overflow-y-auto no-scrollbar"
+          >
+            <LandingPage onSelectPortal={handleLandingSelect} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+          </motion.div>
+        )}
+      </AnimatePresence>
       {/* Top Floating Header Capsule */}
       <Header 
         activeCategory={activeCategory} 
@@ -435,6 +464,7 @@ function App() {
         onOpenPortfolio={handleOpenPortfolio}
         isPortfolioActive={isPortfolioActive}
         isVisible={isHeaderVisible}
+        onGoHome={handleGoToLanding}
       />
 
       {/* Floating Premium Dark/Light Mode Switch */}
