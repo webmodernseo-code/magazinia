@@ -6,40 +6,60 @@
 }
 
 :root {
-  --bg-color: #FAFAFB;
-  --text-color: #0F172A;
-  --card-bg: #FFFFFF;
-  --border-color: #E2E8F0;
-  --pill-bg: #F1F5F9;
-  --pill-text: #475569;
-  --glass-bg: rgba(255, 255, 255, 0.75);
-  --text-muted: #64748B;
-  --card-hover-bg: #F8FAFC;
+  --bg-color: #fdfbf7;
+  --bg-gradient: linear-gradient(135deg, #fdfbf7 0%, #faf6ee 100%);
+  --text-color: #0f0f11;
+  --text-muted: #5c5c64;
+  --card-bg: #ffffff;
+  --border-color: rgba(15, 15, 17, 0.08);
+  --card-shadow: 0 10px 30px -5px rgba(15, 15, 17, 0.04), 0 4px 12px -2px rgba(15, 15, 17, 0.02);
+  --pill-bg: rgba(15, 15, 17, 0.04);
+  --pill-text: #5c5c64;
+  --glass-bg: rgba(253, 251, 247, 0.8);
+  --card-hover-bg: #faf6ee;
+
+  /* Brand Accent Orange */
+  --accent-primary: #E05300;
+  --accent-bright: #FF7A33;
+  --cta-bg: #0c0c0e;
+  --cta-text: #ffffff;
 }
 
 .dark {
   --bg-color: #050505;
-  --text-color: #FFFFFF;
-  --card-bg: #0C0E0C;
-  --border-color: #1E221F;
-  --pill-bg: #0C0E0C;
-  --pill-text: #9AA29E;
+  --bg-gradient: none;
+  --text-color: #ffffff;
+  --text-muted: #9aa29e;
+  --card-bg: #0c0e0c;
+  --border-color: #1e221f;
+  --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  --pill-bg: #0c0e0c;
+  --pill-text: #9aa29e;
   --glass-bg: rgba(12, 14, 12, 0.85);
-  --text-muted: #9AA29E;
-  --card-hover-bg: #0F1210;
+  --card-hover-bg: #0f1210;
+
+  /* Brand Accent in Dark Mode */
+  --accent-primary: #FF7A33;
+  --accent-bright: #FFA87D;
+  --cta-bg: #ffffff;
+  --cta-text: #050505;
 }
 
 @layer base {
   body {
     background-color: var(--bg-color);
+    background-image: var(--bg-gradient);
     color: var(--text-color);
     @apply antialiased;
     font-family: 'Inter', sans-serif;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.3s ease, background-image 0.3s ease, color 0.3s ease;
   }
   
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
   }
 }
 

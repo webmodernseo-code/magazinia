@@ -438,7 +438,10 @@ function App() {
   const filteredList = getFilteredList();
 
   return (
-    <div className="w-screen h-screen flex flex-col bg-[var(--bg-color)] text-[var(--text-color)] overflow-hidden transition-colors duration-300">
+    <div 
+      style={{ background: isDarkMode ? '#050505' : 'var(--bg-gradient)' }}
+      className="w-screen h-screen flex flex-col text-[var(--text-color)] overflow-hidden transition-colors duration-300"
+    >
       {/* ── LANDING PAGE ── */}
       <AnimatePresence mode="wait">
         {showLanding && (
@@ -526,7 +529,7 @@ function App() {
 
       {/* Main Content scrollable pane */}
       <div 
-        className="flex-1 overflow-y-auto no-scrollbar flex flex-col pt-4 bg-[var(--bg-color)] transition-colors duration-300"
+        className="flex-1 overflow-y-auto no-scrollbar flex flex-col pt-4 bg-transparent transition-colors duration-300"
         onScroll={handleScroll}
       >
         
@@ -635,7 +638,7 @@ function App() {
               </section>
 
               {/* Filters & Search Toolbar (Row 1) */}
-              <div className="w-full max-w-4xl mx-auto px-6 py-5 bg-[var(--bg-color)] border-y border-[var(--border-color)] flex flex-col md:flex-row items-center justify-between gap-4 shrink-0 z-10 font-sans transition-colors duration-300">
+              <div className="w-full max-w-4xl mx-auto px-6 py-5 bg-[var(--glass-bg)] backdrop-blur-md border-y border-[var(--border-color)] flex flex-col md:flex-row items-center justify-between gap-4 shrink-0 z-10 font-sans transition-colors duration-300">
                 
                 {/* 1. Time Filter Pills (Period) */}
                 <div className="flex gap-1.5 w-full md:w-auto bg-[var(--pill-bg)] p-1 rounded-full border border-[var(--border-color)] overflow-x-auto no-scrollbar transition-colors">
@@ -716,7 +719,7 @@ function App() {
               {/* Categories Tag filters bar (Row 2) */}
               {activePortal !== 'ia' && (
                 <div 
-                  className={`w-full max-w-4xl mx-auto px-6 py-3.5 flex items-center justify-between overflow-x-auto no-scrollbar z-10 border-b border-[var(--border-color)] bg-[var(--bg-color)] sticky transition-all duration-300 font-sans ${
+                  className={`w-full max-w-4xl mx-auto px-6 py-3.5 flex items-center justify-between overflow-x-auto no-scrollbar z-10 border-b border-[var(--border-color)] bg-[var(--glass-bg)] backdrop-blur-md sticky transition-all duration-300 font-sans ${
                     isHeaderVisible ? 'top-[78px] opacity-100' : 'top-0 -translate-y-full opacity-0 pointer-events-none'
                   }`}
                 >
@@ -759,7 +762,7 @@ function App() {
               )}
 
               {/* Magazine Grid View */}
-              <main className="flex-1 bg-[var(--bg-color)] pb-12 transition-colors duration-300">
+              <main className="flex-1 bg-transparent pb-12 transition-colors duration-300">
                 {timeFilter === 'bookmarks' ? (
                   (() => {
                     const portalPrefix = activePortal === 'qhse' ? 'qhse-' : activePortal === 'finance' ? 'fin-' : activePortal === 'ia' ? 'ia-' : 'ent-';
@@ -780,7 +783,7 @@ function App() {
                     const bookmarkedVideos = filterBySearch(portalBookmarks.filter(item => item.type === 'video'));
 
                     return (
-                      <div className="w-full max-w-4xl mx-auto px-6 sm:px-8 pt-10 pb-16 bg-[var(--bg-color)] flex flex-col gap-10 transition-colors duration-300">
+                      <div className="w-full max-w-4xl mx-auto px-6 sm:px-8 pt-10 pb-16 bg-transparent flex flex-col gap-10 transition-colors duration-300">
                         {/* SECTION 1: VIDEOS */}
                         <div className="flex flex-col text-left">
                           <h2 className="text-xl font-black text-[var(--text-color)] font-sans mb-6 flex items-center gap-2 transition-colors duration-300">
@@ -857,7 +860,7 @@ function App() {
         </AnimatePresence>
 
         {/* Footer Editorial bar */}
-        <footer className="w-full py-8 px-6 sm:px-12 bg-[var(--bg-color)] border-t border-[var(--border-color)] flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-[var(--text-muted)] font-sans mt-auto transition-colors duration-300">
+        <footer className="w-full py-8 px-6 sm:px-12 bg-transparent border-t border-[var(--border-color)] flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-[var(--text-muted)] font-sans mt-auto transition-colors duration-300">
           <p>© 2026 Magazinia. Tous droits réservés.</p>
           <div className="flex gap-6">
             <button 

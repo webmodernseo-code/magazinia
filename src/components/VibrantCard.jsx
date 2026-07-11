@@ -320,10 +320,10 @@ const getCategoryLocalFallback = (catKey, itemTitle = '') => {
     <motion.div
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{ scale: 1.01 }}
+      whileHover={{ scale: 1.015, boxShadow: '0 12px 30px -8px rgba(15, 15, 17, 0.12)' }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
-      className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl flex flex-col justify-between group h-full cursor-pointer transition-all duration-300 p-4"
+      className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl flex flex-col justify-between group h-full cursor-pointer transition-all duration-300 p-4 shadow-[var(--card-shadow)]"
       onClick={handleClick}
     >
       <div>
@@ -387,7 +387,7 @@ const getCategoryLocalFallback = (catKey, itemTitle = '') => {
 
           {/* Title */}
           <h3 
-            className="text-lg font-bold text-[var(--text-color)] leading-snug line-clamp-2 mt-2 transition-colors duration-300 group-hover:opacity-85"
+            className="text-lg font-extrabold text-[var(--text-color)] leading-tight tracking-tight line-clamp-2 mt-2 transition-colors duration-300 group-hover:opacity-85"
           >
             {title}
           </h3>

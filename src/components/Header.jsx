@@ -259,17 +259,17 @@ export default function Header({
               exit={{ scale: 0.95, y: -12, opacity: 0 }}
               transition={{ type: 'spring', stiffness: 340, damping: 30 }}
               className="absolute inset-x-4 top-4 rounded-3xl flex flex-col overflow-hidden"
-              style={{ backgroundColor: '#0c0c0e', border: '1px solid rgba(255,255,255,0.09)' }}
+              style={{ backgroundColor: 'var(--card-bg)', border: '1px solid var(--border-color)', boxShadow: 'var(--card-shadow)' }}
             >
               {/* Header */}
-              <div className="flex justify-between items-center px-6 pt-6 pb-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
-                <div className="text-sm font-sans font-black text-white uppercase tracking-widest">
+              <div className="flex justify-between items-center px-6 pt-6 pb-5" style={{ borderBottom: '1px solid var(--border-color)' }}>
+                <div className="text-sm font-sans font-black text-[var(--text-color)] uppercase tracking-widest">
                   {getLogoText()}
                 </div>
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-2 rounded-full text-white/50 hover:text-white transition-colors cursor-pointer focus:outline-none"
-                  style={{ backgroundColor: '#1e1e26', border: '1px solid rgba(255,255,255,0.1)' }}
+                  className="p-2 rounded-full text-[var(--pill-text)] hover:text-[var(--text-color)] transition-colors cursor-pointer focus:outline-none"
+                  style={{ backgroundColor: 'var(--pill-bg)', border: '1px solid var(--border-color)' }}
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -289,7 +289,7 @@ export default function Header({
                   </div>
                 )}
 
-                <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#141417', border: '1px solid rgba(255,255,255,0.06)' }}>
+                <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: 'var(--card-bg)', border: '1px solid var(--border-color)' }}>
                   {portals.map((portal, index) => {
                     const isSelected = activePortal === portal.id && !isPortfolioActive;
                     return (
@@ -309,22 +309,22 @@ export default function Header({
                           <div className="flex-1 min-w-0">
                             <div
                               className="text-xs font-black uppercase tracking-widest"
-                              style={{ color: isSelected ? portal.color : 'rgba(255,255,255,0.88)' }}
+                              style={{ color: isSelected ? portal.color : 'var(--text-color)' }}
                             >
                               {portal.label}
                             </div>
-                            <div className="text-[10px] mt-0.5 truncate font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                            <div className="text-[10px] mt-0.5 truncate font-medium" style={{ color: 'var(--text-muted)' }}>
                               {portal.desc}
                             </div>
                           </div>
                           <ChevronRight
                             size={13}
-                            style={{ color: isSelected ? portal.color : 'rgba(255,255,255,0.2)' }}
+                            style={{ color: isSelected ? portal.color : 'var(--border-color)' }}
                             className="flex-shrink-0"
                           />
                         </button>
                         {index < portals.length - 1 && (
-                          <div className="mx-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }} />
+                          <div className="mx-5" style={{ borderBottom: '1px solid var(--border-color)' }} />
                         )}
                       </div>
                     );
@@ -334,7 +334,7 @@ export default function Header({
 
               {/* Footer */}
               <div className="px-6 pb-5 text-center">
-                <p className="text-[9px] uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.2)' }}>
+                <p className="text-[9px] uppercase tracking-widest" style={{ color: 'var(--text-muted)' }}>
                   © 2026 Magazinia — Premium Editorial
                 </p>
               </div>
