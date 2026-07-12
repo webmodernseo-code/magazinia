@@ -458,18 +458,20 @@ function App() {
         )}
       </AnimatePresence>
       {/* Top Floating Header Capsule */}
-      <Header 
-        activeCategory={activeCategory} 
-        onCategoryChange={handleCategoryChange}
-        categories={portalCategories}
-        activePortal={activePortal}
-        onPortalChange={handlePortalChange}
-        onOpenPortfolio={handleOpenPortfolio}
-        isPortfolioActive={isPortfolioActive}
-        isVisible={isHeaderVisible}
-        onGoHome={handleGoToLanding}
-        isLandingActive={showLanding}
-      />
+      {!showLanding && (
+        <Header 
+          activeCategory={activeCategory} 
+          onCategoryChange={handleCategoryChange}
+          categories={portalCategories}
+          activePortal={activePortal}
+          onPortalChange={handlePortalChange}
+          onOpenPortfolio={handleOpenPortfolio}
+          isPortfolioActive={isPortfolioActive}
+          isVisible={isHeaderVisible}
+          onGoHome={handleGoToLanding}
+          isLandingActive={showLanding}
+        />
+      )}
 
       {/* Floating Premium Dark/Light Mode Switch */}
       <div 

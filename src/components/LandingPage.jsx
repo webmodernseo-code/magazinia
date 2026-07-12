@@ -12,8 +12,8 @@ const PORTALS = [
     sub: 'Intelligence Artificielle',
     desc: "LLMs, agents, vibecoding — l'essentiel de l'IA au quotidien.",
     color: '#3B82F6',       // Bleu IA
-    image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=85',
-    imageFallback: 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?auto=format&fit=crop&w=800&q=85',
+    image: 'https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=800&q=85',
+    imageFallback: 'https://images.unsplash.com/photo-1684369175833-3725c88b0d47?auto=format&fit=crop&w=800&q=85',
   },
   {
     key: 'qhse',
@@ -21,7 +21,7 @@ const PORTALS = [
     sub: 'Sécurité & Environnement',
     desc: "Conformité ISO, risques ATEX, prévention et performance durable.",
     color: '#F97316',       // Orange QHSE
-    image: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=800&q=85',
+    image: 'https://images.unsplash.com/photo-1508962914676-134849a727f0?auto=format&fit=crop&w=800&q=85',
     imageFallback: 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?auto=format&fit=crop&w=800&q=85',
   },
   {
@@ -30,8 +30,8 @@ const PORTALS = [
     sub: 'Marchés & Investissements',
     desc: "Bourse BRVM, analyses macro, dividendes et stratégies d'investissement.",
     color: '#10B981',       // Vert Finance
-    image: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=85',
-    imageFallback: 'https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=800&q=85',
+    image: 'https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=800&q=85',
+    imageFallback: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=85',
   },
   {
     key: 'entrepreneuriat',
@@ -39,8 +39,8 @@ const PORTALS = [
     sub: 'Entrepreneuriat & Stratégie',
     desc: "Méthodes Lean, culture startup, opportunités aux USA et en Afrique.",
     color: '#ebbb81',       // Or doré Business
-    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=85',
-    imageFallback: 'https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5?auto=format&fit=crop&w=800&q=85',
+    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=85',
+    imageFallback: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=85',
   },
 ];
 
