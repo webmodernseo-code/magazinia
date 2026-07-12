@@ -26,7 +26,7 @@ function App() {
   const [selectedVideo, setSelectedVideo] = useState(null); // video modal
   const [isHeaderVisible, setIsHeaderVisible] = useState(true); // Header and filter visibility on scroll
   const [lastScrollY, setLastScrollY] = useState(0); // Track last scroll position
-  const [isDarkMode, setIsDarkMode] = useState(true); // Theme control
+  const [isDarkMode, setIsDarkMode] = useState(false); // Theme control (default to Light Mode)
 
   // Bookmarks State & Persistence
   const [bookmarkedItems, setBookmarkedItems] = useState(() => {
@@ -593,14 +593,21 @@ function App() {
                   }}
                   className="flex items-center gap-2 mb-4 border px-3 py-1.5 rounded-full"
                 >
-                  <span className="relative flex h-2 w-2">
+                  <span className="relative flex h-3.5 w-3.5 items-center justify-center">
+                    {/* Shadow diamond behind */}
                     <span 
-                      style={{ backgroundColor: accentColor }}
-                      className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
+                      style={{ backgroundColor: 'var(--text-color)', opacity: 0.15 }}
+                      className="absolute h-2.5 w-2.5 transform rotate-45 translate-x-[1.5px] translate-y-[1.5px] transition-colors duration-300"
                     />
+                    {/* Pulsating outer diamond ring */}
                     <span 
-                      style={{ backgroundColor: accentColor }}
-                      className="relative inline-flex rounded-full h-2 w-2"
+                      style={{ borderColor: accentColor }}
+                      className="animate-ping absolute inline-flex h-full w-full border opacity-40 transform rotate-45"
+                    />
+                    {/* Foreground orange/portal-colored diamond */}
+                    <span 
+                      style={{ backgroundColor: accentColor, boxShadow: `0 0 8px ${accentColor}50` }}
+                      className="relative h-2.5 w-2.5 transform rotate-45 transition-all duration-300 hover:rotate-90"
                     />
                   </span>
                   <span style={{ color: accentColor }} className="text-[10px] font-black uppercase tracking-widest font-sans">
