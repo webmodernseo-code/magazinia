@@ -474,66 +474,69 @@ function App() {
       )}
 
       {/* Floating Premium Dark/Light Mode Switch */}
-      <div 
-        onClick={() => setIsDarkMode(!isDarkMode)}
-        className="fixed right-4 sm:right-6 bottom-20 z-50 w-12 h-24 bg-[var(--glass-bg)] border border-[var(--border-color)] rounded-full flex flex-col justify-between items-center py-2.5 cursor-pointer shadow-[0_12px_40px_rgba(0,0,0,0.18)] backdrop-blur-xl select-none hover:scale-105 active:scale-95 transition-all duration-300 group"
-      >
-        <div className="relative flex flex-col justify-between items-center h-full w-full">
-          {/* Sliding background capsule/knob */}
-          <motion.div
-            className="absolute w-9 h-9 rounded-full bg-[var(--text-color)] flex items-center justify-center shadow-lg"
-            animate={{ y: isDarkMode ? 40 : 0 }}
-            transition={{ type: "spring", stiffness: 350, damping: 25 }}
-          >
-            {/* Inner dynamic icon inside the slider */}
-            {isDarkMode ? (
-              <motion.div
-                initial={{ rotate: -90, scale: 0.5 }}
-                animate={{ rotate: 0, scale: 1 }}
-                transition={{ duration: 0.2 }}
-                className="text-[var(--bg-color)]"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4.5 h-4.5">
-                  <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-                </svg>
-              </motion.div>
-            ) : (
-              <motion.div
-                initial={{ rotate: 90, scale: 0.5 }}
-                animate={{ rotate: 0, scale: 1 }}
-                transition={{ duration: 0.2 }}
-                className="text-[var(--bg-color)]"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4.5 h-4.5">
-                  <circle cx="12" cy="12" r="4" />
-                  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
-                </svg>
-              </motion.div>
-            )}
-          </motion.div>
+      {!showLanding && (
+        <div 
+          onClick={() => setIsDarkMode(!isDarkMode)}
+          className="fixed right-4 sm:right-6 bottom-20 z-50 w-12 h-24 bg-[var(--glass-bg)] border border-[var(--border-color)] rounded-full flex flex-col justify-between items-center py-2.5 cursor-pointer shadow-[0_12px_40px_rgba(0,0,0,0.18)] backdrop-blur-xl select-none hover:scale-105 active:scale-95 transition-all duration-300 group"
+        >
+          <div className="relative flex flex-col justify-between items-center h-full w-full">
+            {/* Sliding background capsule/knob */}
+            <motion.div
+              className="absolute w-9 h-9 rounded-full bg-[var(--text-color)] flex items-center justify-center shadow-lg"
+              animate={{ y: isDarkMode ? 40 : 0 }}
+              transition={{ type: "spring", stiffness: 350, damping: 25 }}
+            >
+              {/* Inner dynamic icon inside the slider */}
+              {isDarkMode ? (
+                <motion.div
+                  initial={{ rotate: -90, scale: 0.5 }}
+                  animate={{ rotate: 0, scale: 1 }}
+                  transition={{ duration: 0.2 }}
+                  className="text-[var(--bg-color)]"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4.5 h-4.5">
+                    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+                  </svg>
+                </motion.div>
+              ) : (
+                <motion.div
+                  initial={{ rotate: 90, scale: 0.5 }}
+                  animate={{ rotate: 0, scale: 1 }}
+                  transition={{ duration: 0.2 }}
+                  className="text-[var(--bg-color)]"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4.5 h-4.5">
+                    <circle cx="12" cy="12" r="4" />
+                    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+                  </svg>
+                </motion.div>
+              )}
+            </motion.div>
 
-          {/* Underlay Sun Icon (Muted, disappears under slider) */}
-          <div className={`z-10 flex items-center justify-center w-9 h-9 transition-colors duration-300 ${!isDarkMode ? 'text-transparent' : 'text-[var(--text-muted)] group-hover:text-[var(--text-color)]'}`}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-              <circle cx="12" cy="12" r="4" />
-              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
-            </svg>
-          </div>
+            {/* Underlay Sun Icon (Muted, disappears under slider) */}
+            <div className={`z-10 flex items-center justify-center w-9 h-9 transition-colors duration-300 ${!isDarkMode ? 'text-transparent' : 'text-[var(--text-muted)] group-hover:text-[var(--text-color)]'}`}>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                <circle cx="12" cy="12" r="4" />
+                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+              </svg>
+            </div>
 
-          {/* Underlay Moon Icon (Muted, disappears under slider) */}
-          <div className={`z-10 flex items-center justify-center w-9 h-9 transition-colors duration-300 ${isDarkMode ? 'text-transparent' : 'text-[var(--text-muted)] group-hover:text-[var(--text-color)]'}`}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-            </svg>
+            {/* Underlay Moon Icon (Muted, disappears under slider) */}
+            <div className={`z-10 flex items-center justify-center w-9 h-9 transition-colors duration-300 ${isDarkMode ? 'text-transparent' : 'text-[var(--text-muted)] group-hover:text-[var(--text-color)]'}`}>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+              </svg>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Main Content scrollable pane */}
-      <div 
-        className="flex-1 overflow-y-auto no-scrollbar flex flex-col pt-4 bg-transparent transition-colors duration-300"
-        onScroll={handleScroll}
-      >
+      {!showLanding && (
+        <div 
+          className="flex-1 overflow-y-auto no-scrollbar flex flex-col pt-4 bg-transparent transition-colors duration-300"
+          onScroll={handleScroll}
+        >
         
         <AnimatePresence mode="wait">
           {isPortfolioActive ? (
@@ -893,6 +896,7 @@ function App() {
           </div>
         </footer>
       </div>
+      )}
 
       {/* Video Reader Modal */}
       <AnimatePresence>

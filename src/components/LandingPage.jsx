@@ -74,12 +74,38 @@ export default function LandingPage({ onSelectPortal, isDarkMode, setIsDarkMode 
       }}
       className="flex flex-col w-full"
     >
-      {/* ── TOP NAVBAR WITH THEME TOGGLE ── */}
-      <div className="w-full max-w-[960px] mx-auto px-6 pt-6 flex justify-end items-center">
-        <button
-          onClick={() => setIsDarkMode(!isDarkMode)}
-          className="flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--border-color)] bg-[var(--card-bg)] text-[var(--text-color)] text-[10px] font-black uppercase tracking-wider cursor-pointer shadow-[var(--card-shadow)] hover:scale-105 active:scale-95 transition-all duration-300 select-none focus:outline-none"
+      {/* ── TOP NAVBAR ── */}
+      <div className="w-full max-w-[960px] mx-auto px-6 pt-6 flex justify-between items-center">
+        {/* Left: Back to main site */}
+        <a
+          href="https://webmodernseo.co"
+          className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider text-[var(--text-muted)] hover:text-[var(--text-color)] transition-colors focus:outline-none select-none"
         >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Retour à WebModernSEO</span>
+        </a>
+
+        {/* Right: Contact & Theme Switch */}
+        <div className="flex items-center gap-3">
+          <a
+            href="https://t.me/veilleia"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-full border border-[var(--border-color)] bg-[var(--card-bg)] text-[var(--text-color)] text-[10px] font-black uppercase tracking-wider shadow-[var(--card-shadow)] hover:bg-[var(--accent-primary)] hover:text-white hover:border-[var(--accent-primary)] transition-all select-none focus:outline-none"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <span>Nous contacter</span>
+          </a>
+
+          <button
+            onClick={() => setIsDarkMode(!isDarkMode)}
+            className="flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--border-color)] bg-[var(--card-bg)] text-[var(--text-color)] text-[10px] font-black uppercase tracking-wider cursor-pointer shadow-[var(--card-shadow)] hover:scale-105 active:scale-95 transition-all duration-300 select-none focus:outline-none"
+          >
           {isDarkMode ? (
             <>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--accent-bright)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
@@ -98,6 +124,7 @@ export default function LandingPage({ onSelectPortal, isDarkMode, setIsDarkMode 
           )}
         </button>
       </div>
+    </div>
 
       {/* ── HERO ── */}
       <motion.section
